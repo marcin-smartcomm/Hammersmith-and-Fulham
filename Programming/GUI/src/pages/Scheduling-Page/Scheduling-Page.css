@@ -1,0 +1,744 @@
+.scheduling-container
+{
+    width: 100%;
+    height: 100%;
+}
+
+.scheduling-sp-top-section
+{
+    display: flex;
+    width: 100%;
+    height: 10%;
+    align-items: center;
+}
+
+.scheduling-sp-back-btn-containrer
+{
+    height: 100%;
+    width: 15%;
+}
+
+.scheduling-sp-back-btn
+{
+    border: 2px solid var(--generic-border-color-inactive);
+    color: var(--generic-text-color-inactive);
+    font-size: 150%;
+    height: 80%;
+    width: 80%;
+}
+
+.scheduling-sp-main-section
+{
+    width: 100%;
+    height: 90%;
+    background-color: black;
+}
+
+.scheduling-sp-main-section-top
+{
+    display: flex;
+    width: 100%;
+    height: 7%;
+}
+
+    .scheduling-sp-main-section-top-room-name-container
+    {
+        width: 50%;
+        height: 100%;
+        color: var(--generic-text-color-schedule-white);
+        justify-content: flex-start;
+        margin-left: 1vw;
+        font-size: 150%;
+    }
+
+    .scheduling-sp-main-section-top-date-container
+    {
+        width: 50%;
+        height: 100%;
+        color: var(--generic-text-color-schedule-white);
+        justify-content: flex-end;
+        margin-right: 1vw;
+        font-size: 150%;
+    }
+
+
+
+.scheduling-sp-main-section-middle
+{
+    display: flex;
+    width: 100%;
+    height: 63%;
+}
+
+.scheduling-sp-main-section-section-left
+{
+    width: 33%;
+    height: 100%;
+}
+
+.scheduling-sp-main-section-availability-info
+{
+    width: 34%;
+    height: 100%;
+}
+
+    .scheduling-sp-main-section-section-center
+    {
+        width: 100%;
+        height: 100%;
+    }
+
+        .scheduling-sp-main-section-section-center-available-text
+        {
+            width: 100%;
+            height: 15%;
+            color: var(--generic-text-color-schedule-green);
+            font-size: 250%;
+            font-weight: bold;
+        }
+
+        .scheduling-sp-main-section-section-center-reserved-text
+        {
+            width: 100%;
+            height: 15%;
+            color: var(--generic-text-color-schedule-red);
+            font-size: 250%;
+            font-weight: bold;
+        }
+
+        .scheduling-sp-main-section-section-center-info2
+        {
+            width: 100%;
+            height: 3%;
+            font-size: 140%;
+            color: var(--generic-text-color-schedule-grey);
+        }
+
+        .scheduling-sp-main-section-section-center-info3
+        {
+            align-items: end;
+            padding-bottom: 3%;
+            width: 100%;
+            height: 45%;
+            color: var(--generic-text-color-schedule-green);
+            font-size: 350%;
+            font-weight: bold;
+        }
+
+        .scheduling-sp-main-section-section-center-info4
+        {
+            width: 100%;
+            height: 3%;
+            color: var(--generic-text-color-schedule-grey);
+        }
+
+        .scheduling-sp-main-section-section-center-available-time-container
+        {
+            height: 52%;
+        }
+
+            .scheduling-sp-main-section-section-center-available-time-block
+            {
+                color: var(--generic-text-color-schedule-green);
+                width: 40%;
+                align-items: center;
+            }
+
+            .scheduling-sp-main-section-section-center-reserved-time-block
+            {
+                color: var(--generic-text-color-schedule-red);
+                width: 40%;
+                align-items: center;
+            }
+
+                .scheduling-sp-main-section-section-center-time-block
+                {
+                    font-size: 700%;
+                }
+
+                .scheduling-sp-main-section-section-center-label-green
+                {
+                    border: 1px solid var(--generic-text-color-schedule-green);
+                    font-weight: bold;
+                }
+
+                .scheduling-sp-main-section-section-center-label-red
+                {
+                    border: 1px solid var(--generic-text-color-schedule-red);
+                    font-weight: bold;
+                }
+        
+        .scheduling-sp-main-section-section-center-quick-add-container
+        {
+            width: 100%;
+            height: 30%;
+            align-items: end;
+        }
+
+        .scheduling-sp-main-section-section-center-meeting-subject
+        {
+            width: 100%;
+            height: 10%;
+            color: var(--generic-text-color-schedule-white);
+            font-size: 200%;
+        }
+
+        .scheduling-sp-main-section-section-center-meeting-organiser
+        {
+            align-items: end;
+            width: 100%;
+            height: 7%;
+            color: var(--generic-text-color-schedule-grey);
+            font-size: 120%;
+        }
+
+        .scheduling-sp-main-section-section-center-meeting-duration
+        {
+            align-items: baseline;
+            width: 100%;
+            height: 10%;
+            color: var(--generic-text-color-schedule-grey);
+            font-size: 120%;
+        }
+
+            .scheduling-sp-main-section-section-center-quick-add-btn
+            {
+                font-size: 200%;
+                color: white;
+                margin-bottom: 5%;
+                background-color: rgba(var(--generic-bg-color-schedule-white), 0.5);
+                width: 15%;
+                height: 60%;
+                border-radius: 50%;
+            }
+
+.scheduling-sp-main-section-section-right
+{
+    width: 33%;
+    height: 100%;
+}
+
+    .scheduling-sp-main-section-section-right-filler
+    {
+        height: 100%;
+        width: 70%;
+    }
+
+    .scheduling-sp-main-section-section-right-extra-btns-container
+    {
+        flex-wrap: wrap;
+        align-items: end;
+        margin-bottom: 5%;
+        height: 100%;
+        width: 30%;
+    }
+
+        .scheduling-sp-extra-btn
+        {
+            width: 51%;
+            height: 17%;
+            border-radius: 50%;
+            font-size: 200%;
+            color: var(--generic-text-color-schedule-white);
+            background-color: rgba(var(--generic-bg-color-schedule-white), 0.5);
+        }
+
+        .non-vis
+        {
+            display: none;
+        }
+
+.scheduling-sp-main-section-bottom
+{
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: scroll;
+    width: 100%;
+    height: 30%;
+}
+
+    .scheduling-sp-timeline
+    {
+        display: flex;
+        /*width: 7680px;*/
+        width: 1280px;
+        height: 15%;
+        background-color: rgba(var(--generic-bg-color-schedule-white), 0.1);
+    }
+
+        .scheduling-sp-timelie-time-segment
+        {
+            font-size: 150%;
+            background-color: black;
+            color: var(--generic-text-color-schedule-grey);
+            min-width: 320px;
+        }
+
+    .scheduling-sp-timeline-grid
+    {
+        display: flex;
+        height: 85%;
+        /*width: 7680px;*/
+        width: 1280px;
+    }
+
+        .scheduling-sp-timeline-grid-segment
+        {
+            height: 100%;
+            min-width: 157px;
+            border-right: 3px solid white;
+            background-color: rgba(var(--generic-bg-color-schedule-white), 0.1);
+        }
+
+        .scheduling-sp-timeline-grid-segment-half
+        {
+            height: 100%;
+            min-width: 157px;
+            border-right: 3px solid grey;
+            background-color: rgba(var(--generic-bg-color-schedule-white), 0.1);
+        }
+
+        .scheduling-sp-timeline-grid-segment-last
+        {
+            height: 100%;
+            min-width: 160px;
+            background-color: rgba(var(--generic-bg-color-schedule-white), 0.1);
+        }
+
+        .timeline-time-indicator
+        {
+            position: absolute;
+            height: 149px;
+            border-left: 4px solid;
+            z-index: 1;
+        }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.red-booking-slot
+{
+    position: absolute;
+    height: 149px;
+    background-color: var(--generic-text-color-schedule-red);
+}
+
+.green-booking-slot
+{
+    position: absolute;
+    height: 149px;
+    background-color: rgb(100, 63, 63);
+    border-left: 1px solid red;
+}
+
+.grey-booking-slot
+{
+    position: absolute;
+    height: 149px;
+    background-color: grey;
+}
+
+.selected-free-block
+{
+    background-color: grey;
+}
+
+.selected-red-block
+{
+    background-color: rgb(255, 83, 83);
+}
+
+.selected-green-block
+{
+    background-color: rgb(255, 83, 83);
+}
+
+.selected-grey-block
+{
+    background-color: rgb(201, 201, 201);
+}
+
+.meeting-details-popup-bg
+{
+    position: absolute;
+    top: 150px;
+    height: 650px;
+    width: 1280px;
+    background-color: rgba(var(--generic-bg-color-schedule-black), 0.8);
+}
+
+    .meeting-details-popup-info-section-container
+    {
+        width: 500px;
+        height: 400px;
+        background-color: rgb(26, 26, 26);
+    }
+        .meeting-details-popup-top-text
+        {
+            font-size: 150%;
+            font-weight: bold;
+            height: 15%;
+            color: var(--generic-text-color-schedule-white);
+            border-bottom: 1px rgb(77, 77, 77) solid;
+        }
+
+        .meeting-details-popup-subject-text
+        {
+            display: flex;
+            align-items: end;
+            font-size: 200%;
+            font-weight: bold;
+            margin-left: 5%;
+            height: 20%;
+            color: var(--generic-text-color-schedule-white);
+        }
+
+        .meeting-details-popup-organiser-text
+        {
+            display: flex;
+            align-items: end;
+            font-size: 130%;
+            font-weight: bold;
+            margin-left: 5%;
+            height: 12%;
+            color: var(--generic-text-color-schedule-white);
+        }
+
+        .meeting-details-popup-organiser-text-2
+        {
+            display: flex;
+            align-items: baseline;
+            font-size: 130%;
+            font-weight: bold;
+            margin-top: 5%;
+            margin-left: 5%;
+            height: 23%;
+            color: var(--generic-text-color-schedule-white);
+        }
+
+        .meeting-details-popup-duration-text
+        {
+            display: flex;
+            align-items: baseline;
+            margin-top: 2%;
+            font-size: 130%;
+            font-weight: bold;
+            margin-left: 5%;
+            height: 8%;
+            color: var(--generic-text-color-schedule-grey);
+        }
+
+        .meeting-details-popup-close-btn
+        {
+            height: 13%;
+            font-weight: bold;
+            font-size: 150%;
+            color: var(--generic-text-color-schedule-white);
+            border-top: 1px rgb(77, 77, 77) solid;
+        }
+
+.new-meeting-popup-bg
+{
+    position: absolute;
+    top: 150px;
+    height: 650px;
+    width: 1280px;
+    background-color: rgba(var(--generic-bg-color-schedule-black), 0.8);
+}
+    .new-meeting-popup-info-section-container
+    {
+        width: 500px;
+        height: 600px;
+        background-color: rgb(26, 26, 26);
+    }
+
+    .new-meeting-popup-top-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 10%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .new-meeting-popup-organiser-and-subject-container
+    {
+        width: 100%;
+        height: 25%;
+        flex-wrap: wrap;
+        align-items: baseline;
+    }
+
+        .new-meeting-popup-organiser-text
+        {
+            display: flex;
+            align-items: center;
+            font-size: 130%;
+            font-weight: bold;
+            width: 80%;
+            height: 48%;
+            color: var(--generic-text-color-schedule-white);
+            border-bottom: 1px rgb(77, 77, 77) solid;
+        }
+
+        .new-meeting-popup-subject-text-container
+        {
+            display: flex;
+            align-items: center;
+            font-size: 130%;
+            font-weight: bold;
+            width: 80%;
+            height: 48%;
+            color: var(--generic-text-color-schedule-white);
+            border-bottom: 1px rgb(77, 77, 77) solid;
+        }
+
+            .new-meeting-popup-subject-text
+            {
+                background-color: rgb(26, 26, 26);
+                border: 0px solid rgb(26, 26, 26);
+                height: 80%;
+                width: 100%;
+                color: var(--generic-text-color-schedule-grey);
+                font-size: 130%;
+            }
+    
+    .new-meeting-popup-spacer
+    {
+        width: 100%;
+        height: 10%;
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .new-meeting-popup-start-end-times-container
+    {
+        height: 45%;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+        .new-meeting-popup-start-time
+        {
+            display: flex;
+            width: 80%;
+            height: 20%;
+            align-items: center;
+            font-size: 180%;
+            font-weight: bold;
+            color: var(--generic-text-color-schedule-grey);
+            border-bottom: 1px rgb(77, 77, 77) solid;
+        }
+
+            .new-meeting-popup-start-time-value
+            {
+                margin-left: 64%;
+                text-align: end;
+            }
+
+        .new-meeting-popup-end-time-text-container
+        {
+            width: 30%;
+            height: 80%;
+            font-size: 180%;
+            font-weight: bold;
+            color: var(--generic-text-color-schedule-grey);
+        }
+
+        .new-meeting-popup-end-times-container
+        {
+            width: 70%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+        }
+
+            .new-meeting-end-time-container
+            {
+                width: 45%;
+                height: 45%;
+                align-items: center;
+                font-size: 180%;
+                color: var(--generic-text-color-schedule-grey);
+            }
+
+            .new-meeting-selected-end-time
+            {
+                font-weight: bold;
+                border-bottom: 1px rgb(77, 77, 77) solid;
+            }
+
+    .new-meeting-popup-btns-container
+    {
+        display: flex;
+        width: 100%;
+        height: 9%;
+        border-top: 1px rgb(77, 77, 77) solid ;
+    }
+
+        .new-meeting-popup-cancel-btn
+        {
+            width: 49%;
+            height: 100%;
+            color: var(--generic-text-color-schedule-white);
+            font-weight: bold;
+            font-size: 130%;
+            border-right: 1px rgb(77, 77, 77) solid ;
+        }
+
+        .new-meeting-popup-reserve-btn
+        {
+            width: 50%;
+            height: 100%;
+            color: rgb(12, 198, 245);
+            font-weight: bold;
+            font-size: 130%;
+        }
+
+.end-meeting-popup-bg
+{
+    position: absolute;
+    top: 150px;
+    height: 650px;
+    width: 1280px;
+    background-color: rgba(var(--generic-bg-color-schedule-black), 0.8);
+}
+    .end-meeting-popup-info-section-container
+    {
+        display: flex;
+        flex-wrap: wrap;
+        width: 500px;
+        height: 300px;
+        background-color: rgb(26, 26, 26);
+    }
+
+    .end-meeting-popup-top-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 20%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .end-meeting-popup-middle-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 60%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .end-meeting-popup-cancel-btn
+    {
+        width: 49%;
+        height: 20%;
+        color: var(--generic-text-color-schedule-white);
+        font-weight: bold;
+        font-size: 130%;
+        border-right: 1px rgb(77, 77, 77) solid ;
+    }
+
+    .end-meeting-popup-end-btn
+    {
+        width: 50%;
+        height: 20%;
+        color: rgb(12, 198, 245);
+        font-weight: bold;
+        font-size: 130%;
+    }
+
+.extend-meeting-popup-bg
+{
+    position: absolute;
+    top: 150px;
+    height: 650px;
+    width: 1280px;
+    background-color: rgba(var(--generic-bg-color-schedule-black), 0.8);
+}
+    .extend-meeting-popup-info-section-container
+    {
+        display: flex;
+        flex-wrap: wrap;
+        width: 500px;
+        height: 500px;
+        background-color: rgb(26, 26, 26);
+    }
+
+    .extend-meeting-popup-top-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 15%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .extend-meeting-popup-middle-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 20%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+    }
+
+    .extend-meeting-popup-extend-by-text
+    {
+        font-size: 150%;
+        font-weight: bold;
+        height: 8%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+    .extend-meeting-popup-available-times
+    {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 150%;
+        font-weight: bold;
+        height: 42%;
+        width: 100%;
+        color: var(--generic-text-color-schedule-white);
+        border-bottom: 1px rgb(77, 77, 77) solid;
+    }
+
+        .extend-meeting-popup-time-slot
+        {
+            text-align: center;
+            width: 22%;
+            height: 40%;
+        }
+
+        .extend-time-slot-selected
+        {
+            border: 1px solid white
+        }
+
+    .extend-meeting-popup-cancel-btn
+    {
+        width: 49%;
+        height: 15%;
+        color: var(--generic-text-color-schedule-white);
+        font-weight: bold;
+        font-size: 130%;
+        border-right: 1px rgb(77, 77, 77) solid ;
+    }
+
+    .extend-meeting-popup-extend-btn
+    {
+        width: 50%;
+        height: 15%;
+        color: rgb(12, 198, 245);
+        font-weight: bold;
+        font-size: 130%;
+    }

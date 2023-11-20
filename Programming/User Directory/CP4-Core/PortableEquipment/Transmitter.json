@@ -1,0 +1,8 @@
+{
+  "IPID": 32,
+  "transmitterName": "Video Input",
+  "transmitterType": "AV",
+  "currentRoomServerAttached": "192.168.1.243",
+  "currentRoomIDAttached": "1",
+  "transmitterStreamAddress": "192.168.1.123/live.sdp"
+}

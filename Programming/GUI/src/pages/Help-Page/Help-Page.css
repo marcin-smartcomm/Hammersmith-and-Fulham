@@ -1,0 +1,45 @@
+.temperature-help-page-text
+{
+    margin-top: 2%;
+    margin-left: 2%;
+    width: 90%;
+    height: 50%;
+    font-size: 200%;
+    color: var(--generic-text-color-inactive);
+}
+
+.lighting-help-page-main-container
+{
+    width: 100%;
+    height: 100%;
+}
+
+    .lighting-help-page-text
+    {
+        margin-top: 2%;
+        margin-left: 2%;
+        width: 90%;
+        height: 50%;
+        font-size: 200%;
+        color: var(--generic-text-color-inactive);
+    }
+
+.tv-help-page-text
+{
+    margin-top: 2%;
+    margin-left: 2%;
+    width: 90%;
+    height: 50%;
+    font-size: 200%;
+    color: var(--generic-text-color-inactive);
+}
+
+.pc-laptop-help-page-text
+{
+    margin-top: 2%;
+    margin-left: 2%;
+    width: 90%;
+    height: 50%;
+    font-size: 200%;
+    color: var(--generic-text-color-inactive);
+}

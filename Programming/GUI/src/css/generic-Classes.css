@@ -1,0 +1,150 @@
+.centered
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#logo
+{
+    flex-wrap: wrap;
+    min-width: 50%;
+    min-height: 70%;
+}
+
+    .logo-civic
+    {
+        width: 80%;
+        height: 50%;
+        color: var(--generic-text-color-inactive);
+        font-size: 320%;
+    }
+
+    .logo-campus
+    {
+        width: 80%;
+        min-height: 33%;
+        color: var(--generic-text-color-inactive);
+        font-size: 225%;
+    }
+
+    .logo-hammersmith
+    {
+        width: 80%;
+        min-height: 33%;
+        color: var(--generic-text-color-inactive);
+        font-size: 135%;
+    }
+
+#dateAndTime
+{
+    color: var(--generic-text-color-inactive);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: right;
+    margin-right: 5%;
+    min-width: 50%;
+    min-height: 100%;
+}
+
+#hoursAndMinutes
+{
+    font-size: 300%;
+    min-width: 100%;
+    min-height: 50%;
+}
+
+#dayAndMonth
+{
+    font-size: 250%;
+    min-width: 100%;
+    min-height: 50%;
+}
+
+.side-menu
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 35%;
+    height: 95%;
+    border-right: 3px solid var(--seperation-line-color);
+}
+
+.page-container
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 65%;
+    height: 100%;
+}
+
+    .page-top-section
+    {
+        display: flex;
+        justify-content: baseline;
+        width: 100%;
+        height: 10%;
+    }
+
+        .page-top-icon
+        {
+            width: 10%;
+            height: 100%;
+            font-size: 250%;
+            color: var(--generic-border-color-active);
+        }
+
+        .page-top-name
+        {
+            display: flex;
+            align-items: center;
+            justify-content: baseline;
+            width: 70%;
+            height: 100%;
+            font-size: 250%;
+            color: var(--generic-text-color-inactive);
+        }
+
+        .page-top-section-menu-btn-container
+        {
+            margin-top: 1%;
+            display: flex;
+            justify-content: center;
+            height: 80%;
+            width: 20%;
+        }
+
+            .page-top-section-menu-btn
+            {
+                width: 90%;
+                height: 90%;
+                font-size: 160%;
+            }
+
+    .page-custom-section
+    {
+        width: 100%;
+        height: 75%;
+    }
+
+    .page-bottom-section
+    {
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 100%;
+        height: 15%;
+    }
+
+        .page-bottom-section-btn
+        {
+            width: 40%;
+            height: 90%;
+            font-size: 200%;
+        }
+
+.unable-to-connect
+{
+    color: var(--generic-text-color-inactive);
+    font-size: 200%;
+    text-align: center;
+}

@@ -1,0 +1,16 @@
+{
+  "tvs": [
+    {
+      "IPID": 48,
+      "TVName": "TV Display 1",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    },
+    {
+      "IPID": 49,
+      "TVName": "TV Display 2",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    }
+  ]
+}

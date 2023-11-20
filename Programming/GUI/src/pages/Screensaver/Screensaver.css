@@ -1,0 +1,8 @@
+.screen-saver
+{
+    text-align: center;
+    font-size: 500%;
+    color: var(--generic-text-color-inactive);
+    min-width: 100%;
+    min-height: 100%;
+}

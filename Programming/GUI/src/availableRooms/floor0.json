@@ -1,0 +1,59 @@
+{
+    "room": 
+    [
+        {
+            "name": "Foyer / Shared Workspace",
+            "ipAddress": "192.168.1.241",
+            "roomID": "1",
+            "isGroupable": true
+        },
+        {
+            "name": "Registar Waiting Room",
+            "ipAddress": "192.168.1.241",
+            "roomID": "2",
+            "isGroupable": true
+        },
+        {
+            "name": "Committee Room 01",
+            "ipAddress": "192.168.1.241",
+            "roomID": "3",
+            "isGroupable": true
+        },
+        {
+            "name": "Committee Room 02",
+            "ipAddress": "192.168.1.244",
+            "roomID": "4",
+            "isGroupable": true
+        },
+        {
+            "name": "Committee Room 03",
+            "ipAddress": "192.168.1.244",
+            "roomID": "5",
+            "isGroupable": true
+        },
+        {
+            "name": "Committee Room 04",
+            "ipAddress": "192.168.1.244",
+            "roomID": "6",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 01",
+            "ipAddress": "192.168.1.244",
+            "roomID": "7",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 02",
+            "ipAddress": "192.168.1.100",
+            "roomID": "2",
+            "isGroupable": true
+        },
+        {
+            "name": "Small Hall",
+            "ipAddress": "192.168.1.100",
+            "roomID": "1",
+            "isGroupable": true
+        }
+    ]
+}

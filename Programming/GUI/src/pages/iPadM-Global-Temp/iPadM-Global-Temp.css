@@ -1,0 +1,79 @@
+.global-temp-main-container
+{
+    width: 100%;
+    height: 100%;
+}
+
+    .global-temp-target-temp-text
+    {
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        width: 100%;
+        height: 15%;
+        color: var(--generic-text-color-inactive);
+        font-size: 150%;
+    }
+
+    .global-temp-target-temp
+    {
+        width: 100%;
+        height: 20%;
+        color: var(--generic-text-color-inactive);
+        font-size: 500%;
+        font-weight: bold;
+    }
+
+    .global-temp-temp-text
+    {
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        width: 100%;
+        height: 10%;
+        color: var(--generic-text-color-inactive);
+        font-size: 150%;
+    }
+
+    .global-temp-controls-btns
+    {
+        margin-top: 3%;
+        display: flex;
+        width: 100%;
+        height: 25%;
+    }
+
+        .global-temp-controls-spacer
+        {
+            width: 25%;
+            height: 100%;
+        }
+
+        .global-temp-controls-btn-container
+        {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 25%;
+            height: 100%;
+        }
+
+            .global-temp-controls-btn
+            {
+                width: 80%;
+                height: 50%;
+                font-size: 400%;
+                color: var(--generic-text-color-inactive);
+            }
+
+            .global-temp-controls-btn-name
+            {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                font-size: 150%;
+                width: 80%;
+                height: 30%;
+                color: var(--generic-text-color-inactive);
+            }

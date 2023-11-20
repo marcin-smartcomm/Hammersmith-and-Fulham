@@ -1,0 +1,95 @@
+.lighting-page-controls
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 30%;
+}
+
+    .lighting-page-controls-name
+    {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        width: 100%;
+        height: 50%;
+        color: var(--generic-text-color-inactive);
+        font-size: 200%;
+    }
+
+    .lighting-page-controls-btns
+    {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        height: 50%;
+    }
+
+        .lighting-page-controls-spacer
+        {
+            width: 25%;
+            height: 50%;
+        }
+
+        .lighting-page-controls-btn-container
+        {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 25%;
+            height: 90%;
+        }
+
+            .lighting-page-controls-onoff-btn
+            {
+                width: 80%;
+                height: 100%;
+                font-size: 200%;
+                color: var(--generic-text-color-inactive);
+            }
+
+            .lighting-page-controls-btn
+            {
+                width: 80%;
+                height: 100%;
+                font-size: 300%;
+                color: var(--generic-text-color-inactive);
+            }
+
+            .lighting-page-controls-btn-name
+            {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                font-size: 150%;
+                width: 80%;
+                height: 30%;
+                color: var(--generic-text-color-inactive);
+            }
+
+.ligths-page-scene-controls
+{
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    height: 50%;
+}
+
+    .lighting-page-scene-controls-name
+    {
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        width: 100%;
+        height: 20%;
+        color: var(--generic-text-color-inactive);
+        font-size: 200%;
+    }
+
+    .lighting-page-scene-controls-btn
+    {
+        font-size: 150%;
+        width: 25%;
+        height: 25%;
+    }

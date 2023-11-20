@@ -1,0 +1,28 @@
+{
+  "hasDivisibleRooms": false,
+  "numberOfWalls": 2,
+  "actors": [1,2,3],
+
+  "divisionScenarios":[
+    {
+      "masterRoomID": 1,
+      "slaveRoomIDs": [2,3],
+      "roomIDsNotInPlay": []
+    },
+    {
+      "masterRoomID": 1,
+      "slaveRoomIDs": [2],
+      "roomIDsNotInPlay": [3]
+    },
+    {
+      "masterRoomID": 3,
+      "slaveRoomIDs": [2],
+      "roomIDsNotInPlay": [1]
+    },
+    {
+      "masterRoomID": 0,
+      "slaveRoomIDs": [],
+      "roomIDsNotInPlay": [1, 2, 3]
+    }
+  ]
+}

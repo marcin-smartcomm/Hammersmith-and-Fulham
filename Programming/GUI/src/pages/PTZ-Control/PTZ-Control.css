@@ -1,0 +1,120 @@
+.ptz-camera-page-top-section
+{
+    display: flex;
+    width: 100%;
+    height: 10%;
+}
+    .ptz-caera-control-top-section-back-btn-container
+    {
+        width: 20%;
+        height: 100%;
+    }
+
+        .ptz-camera-page-back-btn
+        {
+            font-size: 200%;
+            width: 90%;
+            height: 100%;
+        }
+
+    .ptz-camera-page-top-section-text
+    {
+        width: 60%;
+        height: 100%;
+        color: var(--generic-text-color-inactive);
+        font-size: 150%;
+    }
+
+    .ptz-camera-cam-select-btn
+    {
+        margin-right: 1%;
+        font-size: 200%;
+        width: 20%;
+        height: 100%;
+        background-color: var(--bg-color);
+        text-align: center;
+    }
+
+    .cam-select-option
+    {
+        text-align: center;
+    }
+
+.ptz-camera-page-middle-section
+{
+    width: 100%;
+    height: 70%;
+}
+
+    .ptz-camera-page-zoom-btns-container
+    {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 25%;
+        height: 50%;
+        font-size: 200%;
+    }
+
+        .ptz-camera-page-zoom-btn
+        {
+            width: 60%;
+            height: 25%;
+        }
+
+        .ptz-camera-page-zoom-text
+        {
+            width: 80%;
+            height: 20%;
+            color: var(--generic-text-color-inactive);
+        }
+
+    .ptz-camera-page-keypad-container
+    {
+        flex-wrap: wrap;
+        width: 45%;
+        height: 100%;
+    }
+
+        .ptz-camera-page-keypad-btn-row
+        {
+            flex-wrap: wrap;
+            width: 100%;
+            height: 33%;
+        }
+
+            .ptz-camera-page-keypad-btn-space
+            {
+                font-size: 800%;
+                height: 100%;
+                width: 33%;
+                color: var(--generic-text-color-inactive);
+            }
+
+            .keypad-select-btn
+            {
+                width: 25%;
+                height: 83%;
+                font-size: 500%;
+                font-weight: bold;
+            }
+
+            .btn-keypad-pressed
+            {
+                color: var(--generic-border-color-active);
+            }
+
+.ptz-camera-page-bottom-section
+{
+    justify-content: space-around;
+    width: 100%;
+    height: 20%;
+}
+
+    .ptz-camera-page-preset-btn
+    {
+        width: 25%;
+        height: 60%;
+        font-size: 150%;
+    }

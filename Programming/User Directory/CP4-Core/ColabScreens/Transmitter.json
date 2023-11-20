@@ -1,0 +1,21 @@
+{
+    "transmitters":
+    [
+        {
+            "IPID": 64,
+            "transmitterName": "Signage Player 1"
+        },
+        {
+            "IPID": 65,
+            "transmitterName": "Signage Player 2"
+        },
+        {
+            "IPID": 66,
+            "transmitterName": "Signage Player 3"
+        },
+        {
+            "IPID": 67,
+            "transmitterName": "Signage Player 4"
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+.colab-screens-main-container
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+
+    .colab-screens-device-text
+    {
+        display: flex;
+        align-items: end;
+        width: 100%;
+        height: 15%;
+        color: var(--generic-text-color-inactive);
+        font-size: 150%;
+    }
+
+    .colab-screens-receivers-container
+    {
+        flex-wrap: wrap;
+        width: 100%;
+        height: 60%;
+    }
+
+        .colab-screens-receiver-container
+        {
+            width: 100%;
+            height: 20%;
+            border-bottom: 1px solid var(--generic-text-color-inactive);
+        }
+
+            .colab-screens-receiver-text
+            {
+                display: flex;
+                align-items: center;
+                width: 70%;
+                height: 100%;
+                color: var(--generic-text-color-inactive);
+                font-size: 150%;
+            }
+
+            .colab-screens-change-source-btn
+            {
+                width: 25%;
+                height: 70%;
+                font-size: 120%;
+            }

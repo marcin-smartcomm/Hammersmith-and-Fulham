@@ -1,0 +1,55 @@
+.combine-rooms-main-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+  .combine-rooms-top-section
+  {
+    width: 100%;
+    height: 10%;
+    font-size: 200%;
+    color: var(--generic-text-color-inactive);
+  }
+
+    .combine-rooms-top-section-text
+    {
+      text-align: center;
+      width: 80%;
+    }
+
+  .combine-rooms-master-room-text
+  {
+    font-size: 130%;
+    width: 100%;
+    color: var(--generic-text-color-inactive);
+  }
+
+  .combine-rooms-room-list-section
+  {
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
+    height: 90%;
+  }
+
+    .combine-room-room-btn
+    {
+      text-align: center;
+      font-size: 150%;
+      width: 50%;
+      height: 17%;
+      margin: 3px 1%;
+    }
+  
+  .combine-btn
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 15%;
+    height: 5%;
+  }

@@ -1,0 +1,28 @@
+{
+  "receivers": [
+    {
+      "IPID": 16,
+      "receiverName": "TV Receiver 1",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    },
+    {
+      "IPID": 17,
+      "receiverName": "TV Receiver 2",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    },
+    {
+      "IPID": 18,
+      "receiverName": "Video Recording",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    },
+    {
+      "IPID": 19,
+      "receiverName": "Audio Receiver",
+      "currentRoomServerAttached": "192.168.1.243",
+      "currentRoomIDAttached": "1"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+.virtually-grouped-main-container
+{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  left: 0;
+  top: 0;
+}
+
+  .virtually-grouped-top-section
+  {
+    font-size: 300%;
+    color: var(--generic-text-color-inactive);
+  }
+
+  .virtually-grouped-middle-section
+  {
+    text-align: center;
+    font-size: 300%;
+    color: var(--generic-text-color-inactive);
+  }
+
+    #virtualMasterRoom
+    {
+      font-weight: bold;
+      color: var(--generic-border-color-active);
+    }
+
+    .restore-btn
+    {
+      width: 30%;
+      height: 30%;
+      font-size: 200%;
+    }

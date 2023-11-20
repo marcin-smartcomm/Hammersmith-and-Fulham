@@ -1,0 +1,63 @@
+.side-menu-help-main-contaienr
+{
+    width: 100%;
+    height: 100%;
+}
+
+    .side-menu-help-top-section-container
+    {
+        width: 100%;
+        height: 10%;
+    }
+
+        .side-menu-help-icon
+        {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 20%;
+            height: 100%;
+            font-size: 200%;
+            color: var(--generic-border-color-active);
+        }
+
+        .side-menu-help-text
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 60%;
+            font-size: 200%;
+            color: var(--generic-text-color-inactive);
+        }
+
+        .side-menu-help-close-btn
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5%;
+            width: 20%;
+            height: 80%;
+            font-size: 200%;
+            color: var(--generic-text-color-inactive);
+        }
+
+    .side-menu-help-options-container
+    {
+        overflow: scroll;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 90%;
+    }
+
+        .side-menu-help-option-btn
+        {
+            flex-wrap: wrap;
+            width: 70%;
+            height: 11vh;
+            font-size: 150%;
+            margin-bottom: 3%;
+            margin-top: 3%;
+        }

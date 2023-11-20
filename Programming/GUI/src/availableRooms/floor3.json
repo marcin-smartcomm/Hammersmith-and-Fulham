@@ -1,0 +1,17 @@
+{
+    "room": 
+    [
+        {
+            "name": "Opposition Meeting Room",
+            "ipAddress": "192.168.1.246",
+            "roomID": "1",
+            "isGroupable": true
+        },
+        {
+            "name": "Opposition Office",
+            "ipAddress": "192.168.1.246",
+            "roomID": "2",
+            "isGroupable": true
+        }
+    ]
+}

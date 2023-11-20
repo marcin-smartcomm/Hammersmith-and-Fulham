@@ -1,0 +1,40 @@
+{
+  "availableScenes":[
+    {
+      "sceneName": "Day",
+      "sceneNum": 2
+    },
+    {
+      "sceneName": "Evening",
+      "sceneNum": 3
+    },
+    {
+      "sceneName": "Off",
+      "sceneNum": 4
+    },
+    {
+      "sceneName": "Gloomy Day",
+      "sceneNum": 5
+    },
+    {
+      "sceneName": "Night",
+      "sceneNum": 6
+    },
+    {
+      "sceneName": "Standby",
+      "sceneNum": 7
+    },
+    {
+      "sceneName": "Presentation",
+      "sceneNum": 8
+    },
+    {
+      "sceneName": "User Preset 1",
+      "sceneNum": 9
+    },
+    {
+      "sceneName": "User Preset 2",
+      "sceneNum": 10
+    }
+  ]
+}

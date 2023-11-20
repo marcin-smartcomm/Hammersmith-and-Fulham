@@ -1,0 +1,98 @@
+.temperature-page-display
+{
+    width: 100%;
+    height: 40%;
+}
+
+    .temperature-page-display-item
+    {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        height: 100%;
+        width: 33%;
+    }
+
+        .temperature-page-display-item-name
+        {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            width: 100%;
+            height: 60%;
+            font-size: 190%;
+            margin-bottom: 5%;
+            color: var(--generic-text-color-inactive);
+        }
+
+        .temperature-page-display-item-value
+        {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            width: 100%;
+            height: 35%;
+            font-size: 500%;
+            text-align: center;
+            color: var(--generic-text-color-inactive);
+        }
+
+.temperature-page-controls
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 60%;
+}
+
+    .temperature-page-controls-name
+    {
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        width: 100%;
+        height: 40%;
+        color: var(--generic-text-color-inactive);
+        font-size: 200%;
+    }
+
+    .temperature-page-controls-btns
+    {
+        display: flex;
+        width: 100%;
+        height: 60%;
+    }
+
+        .temperature-page-controls-spacer
+        {
+            width: 25%;
+            height: 100%;
+        }
+
+        .temperature-page-controls-btn-container
+        {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 25%;
+            height: 100%;
+        }
+
+            .temperature-page-controls-btn
+            {
+                width: 80%;
+                height: 40%;
+                font-size: 400%;
+                color: var(--generic-text-color-inactive);
+            }
+
+            .temperature-page-controls-btn-name
+            {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                font-size: 150%;
+                width: 80%;
+                height: 30%;
+                color: var(--generic-text-color-inactive);
+            }

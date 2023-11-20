@@ -1,0 +1,36 @@
+.pc-laptop-page-text-container
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 50%;
+    color: var(--generic-text-color-inactive);
+}
+
+    .pc-laptop-page-text1
+    {
+        display: flex;
+        align-items: end;
+        width: 100%;
+        height: 80%;
+        font-size: 200%;
+    }
+    .pc-laptop-page-text2
+    {
+        width: 100%;
+        height: 20%;
+        font-size: 200%;
+    }
+
+.pc-laptop-page-btn-container
+{
+    width: 100%;
+    height: 50%;
+}
+
+    .pc-laptop-page-ptz-btn
+    {
+        width: 50%;
+        height: 30%;
+        font-size: 150%;
+    }

@@ -1,0 +1,89 @@
+.side-menu-settings-main-contaienr
+{
+    width: 100%;
+    height: 100%;
+}
+
+    .side-menu-settings-top-section-container
+    {
+        width: 100%;
+        height: 10%;
+    }
+
+        .side-menu-settings-icon
+        {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 20%;
+            height: 100%;
+            font-size: 200%;
+            color: var(--generic-border-color-active);
+        }
+
+        .side-menu-settings-text
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 60%;
+            font-size: 150%;
+            color: var(--generic-text-color-inactive);
+        }
+
+        .side-menu-settings-close-btn
+        {
+            margin-right: 5%;
+            width: 20%;
+            height: 80%;
+            font-size: 200%;
+            color: var(--generic-text-color-inactive);
+        }
+
+    .side-menu-settings-top-section
+    {
+        width: 100%;
+        height: 10%;
+        color: var(--generic-text-color-inactive);
+        font-size: 200%;
+    }
+
+    .side-menu-settings-options-container
+    {
+        display: block;
+        overflow: scroll;
+        width: 100%;
+        height: 90%;
+    }
+
+        .side-menu-settings-option-btn
+        {
+            flex-wrap: wrap;
+            width: 70%;
+            height: 13%;
+            margin: auto;
+            margin-top: 5%;
+        }
+
+            .side-menu-settings-panel-settings-btn-text
+            {
+                width: 100%;
+                height: 100%;
+                font-size: 150%;
+            }
+
+            .side-menu-settings-light-mode-state-text
+            {
+                text-align: center;
+                width: 100%;
+                height: 28%;
+                font-size: 120%;
+            }
+
+            .side-menu-settings-light-mode-btn-text
+            {
+                width: 100%;
+                height: 65%;
+                font-size: 150%;
+            }

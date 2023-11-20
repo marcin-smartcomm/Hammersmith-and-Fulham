@@ -1,0 +1,58 @@
+.meeting-ending-info-section
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    background-color: rgba(var(--generic-bg-color-schedule-black), 0.6);
+}
+
+    .meeting-ending-info-container
+    {
+        width: 80%;
+        height: 80%;
+        background-color: var(--bg-color);
+    }
+
+        .meeting-ending-info-close-btn-container
+        {
+            display: flex;
+            justify-content: end;
+            width: 100%;
+            height: 10%;
+            color: var(--generic-text-color-inactive);
+        }
+
+            .meeting-ending-info-close-btn
+            {
+                width: 10%;
+                height: 90%;
+                font-size: 250%;
+            }
+
+        .meeting-ending-info-text-container
+        {
+            display: flex;
+            flex-wrap: wrap;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 60%;
+            color: var(--generic-text-color-inactive);
+            font-size: 250%;
+        }
+
+        .meeting-ending-booking-btn-container
+        {
+            width: 100%;
+            height: 20%;
+        }
+
+            .meeting-ending-booking-btn
+            {
+                width: 30%;
+                height: 60%;
+                font-size: 200%;
+            }

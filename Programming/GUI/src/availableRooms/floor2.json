@@ -1,0 +1,35 @@
+{
+    "room": 
+    [
+        {
+            "name": "Riverside Room",
+            "ipAddress": "192.168.1.245",
+            "roomID": "1",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 06",
+            "ipAddress": "192.168.1.245",
+            "roomID": "2",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 07",
+            "ipAddress": "192.168.1.245",
+            "roomID": "3",
+            "isGroupable": false
+        },
+        {
+            "name": "Courtyard Room 08",
+            "ipAddress": "192.168.1.245",
+            "roomID": "4",
+            "isGroupable": true
+        },
+        {
+            "name": "Council Chamber",
+            "ipAddress": "192.168.1.245",
+            "roomID": "5",
+            "isGroupable": true
+        }
+    ]
+}

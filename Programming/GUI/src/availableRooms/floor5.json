@@ -1,0 +1,65 @@
+{
+    "room": 
+    [
+        {
+            "name": "Meeting Room Small 01",
+            "ipAddress": "192.168.1.247",
+            "roomID": "1",
+            "isGroupable": true
+        },
+        {
+            "name": "Meeting Room Small 02",
+            "ipAddress": "192.168.1.247",
+            "roomID": "2",
+            "isGroupable": true
+        },
+        {
+            "name": "Meeting Room Large 01",
+            "ipAddress": "192.168.1.247",
+            "roomID": "3",
+            "isGroupable": true
+        },
+        {
+            "name": "Meeting Room Large 02",
+            "ipAddress": "192.168.1.247",
+            "roomID": "4",
+            "isGroupable": true
+        },
+        {
+            "name": "Leaders Office",
+            "ipAddress": "192.168.1.247",
+            "roomID": "5",
+            "isGroupable": true
+        },
+        {
+            "name": "Office Collaboration",
+            "ipAddress": "192.168.1.247",
+            "roomID": "10",
+            "isGroupable": true
+        },
+        {
+            "name": "Members Meeting Room 1",
+            "ipAddress": "192.168.1.247",
+            "roomID": "6",
+            "isGroupable": true
+        },
+        {
+            "name": "Members Cabinet Room",
+            "ipAddress": "192.168.1.247",
+            "roomID": "7",
+            "isGroupable": true
+        },
+        {
+            "name": "Members Office",
+            "ipAddress": "192.168.1.247",
+            "roomID": "8",
+            "isGroupable": true
+        },
+        {
+            "name": "Chief Executive Office",
+            "ipAddress": "192.168.1.247",
+            "roomID": "9",
+            "isGroupable": true
+        }
+    ]
+}

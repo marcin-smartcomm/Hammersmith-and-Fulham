@@ -1,0 +1,12 @@
+.tv-now-playing-info-text
+{
+    font-size: 300%;
+    height: 100%;
+    color: var(--generic-text-color-inactive);
+}
+
+.tv-page-back-btn
+{
+    width: 90%;
+    height: 75%;
+}

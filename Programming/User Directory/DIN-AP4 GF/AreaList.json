@@ -1,0 +1,101 @@
+{
+  "areaList":
+  [
+    {
+      "AreaNum": 6,
+      "AreaNumAnalogJoin": 1,
+      "AreaPresetsDigitalJoinStart": 0,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 7,
+      "AreaNumAnalogJoin": 2,
+      "AreaPresetsDigitalJoinStart": 20,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 8,
+      "AreaNumAnalogJoin": 3,
+      "AreaPresetsDigitalJoinStart": 40,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 9,
+      "AreaNumAnalogJoin": 4,
+      "AreaPresetsDigitalJoinStart": 60,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 11,
+      "AreaNumAnalogJoin": 5,
+      "AreaPresetsDigitalJoinStart": 80,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 14,
+      "AreaNumAnalogJoin": 6,
+      "AreaPresetsDigitalJoinStart": 100,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 15,
+      "AreaNumAnalogJoin": 7,
+      "AreaPresetsDigitalJoinStart": 120,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 26,
+      "AreaNumAnalogJoin": 8,
+      "AreaPresetsDigitalJoinStart": 140,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 27,
+      "AreaNumAnalogJoin": 9,
+      "AreaPresetsDigitalJoinStart": 160,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 28,
+      "AreaNumAnalogJoin": 10,
+      "AreaPresetsDigitalJoinStart": 180,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 29,
+      "AreaNumAnalogJoin": 11,
+      "AreaPresetsDigitalJoinStart":200,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 30,
+      "AreaNumAnalogJoin": 12,
+      "AreaPresetsDigitalJoinStart": 220,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 31,
+      "AreaNumAnalogJoin": 13,
+      "AreaPresetsDigitalJoinStart": 240,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 32,
+      "AreaNumAnalogJoin": 14,
+      "AreaPresetsDigitalJoinStart": 260,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 33,
+      "AreaNumAnalogJoin": 15,
+      "AreaPresetsDigitalJoinStart": 280,
+      "currentScene": "Off"
+    },
+    {
+      "AreaNum": 34,
+      "AreaNumAnalogJoin": 16,
+      "AreaPresetsDigitalJoinStart": 300,
+      "currentScene": "Off"
+    }
+  ]
+}

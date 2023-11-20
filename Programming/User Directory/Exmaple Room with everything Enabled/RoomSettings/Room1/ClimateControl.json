@@ -1,0 +1,10 @@
+{
+  "currentTemp_AV_ID": 32,
+  "currentTemp": 20.2,
+  "spaceCO2_AV_ID": 33,
+  "spaceCO2": 292,
+  "setpoint_AV_ID": 34,
+  "setpoint": 22.0,
+  "occupancy_MSV_ID": 35,
+  "occupancy": 1
+}

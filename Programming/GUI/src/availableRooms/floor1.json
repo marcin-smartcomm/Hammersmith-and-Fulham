@@ -1,0 +1,41 @@
+{
+    "room": 
+    [
+        {
+            "name": "Assembly Hall",
+            "ipAddress": "192.168.1.244",
+            "roomID": "1",
+            "isGroupable": true
+        },
+        {
+            "name": "Marble Gallery",
+            "ipAddress": "192.168.1.244",
+            "roomID": "2",
+            "isGroupable": true
+        },
+        {
+            "name": "Nigel Playfair Room",
+            "ipAddress": "192.168.1.244",
+            "roomID": "3",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 03",
+            "ipAddress": "192.168.1.244",
+            "roomID": "4",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 04",
+            "ipAddress": "192.168.1.244",
+            "roomID": "5",
+            "isGroupable": true
+        },
+        {
+            "name": "Courtyard Room 05",
+            "ipAddress": "192.168.1.244",
+            "roomID": "6",
+            "isGroupable": true
+        }
+    ]
+}

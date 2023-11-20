@@ -1,0 +1,60 @@
+{
+  "zones": [
+    {
+      "zoneID": 1,
+      "zoneName": "Digital Signage Entrance West",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [1]
+    },
+    {
+      "zoneID": 2,
+      "zoneName": "Digital Signage Entrance East",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [2]
+    },
+    {
+      "zoneID": 3,
+      "zoneName": "Digital Signage Foyer Shared West",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [3]
+    },
+    {
+      "zoneID": 4,
+      "zoneName": "Digital Signage Foyer Shared East",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [4]
+    },
+    {
+      "zoneID": 5,
+      "zoneName": "Digital Signage Foyer Open Area",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [5,6,7,8]
+    },
+    {
+      "zoneID": 6,
+      "zoneName": "Digital Signage Level 04",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [9,10]
+    },
+    {
+      "zoneID": 7,
+      "zoneName": "Digital Signage Level 05",
+      "shutdownTime": "20:00",
+      "shutdownHour": 20,
+      "shutDownMinute": 0,
+      "boxIDMembers": [11,12]
+    }
+  ]
+}

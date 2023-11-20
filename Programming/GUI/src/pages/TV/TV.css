@@ -1,0 +1,20 @@
+.tv-page-source-btns-container
+{
+    width: 100%;
+    height: 100%;
+    flex-wrap: wrap;
+    overflow: scroll;
+}
+
+    .tv-page-source-btn-container
+    {
+        width: 100%;
+        height: 25%;
+    }
+
+        .tv-page-source-select-btn
+        {
+            width: 40%;
+            height: 70%;
+            font-size: 200%;
+        }

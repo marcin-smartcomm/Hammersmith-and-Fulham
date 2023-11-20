@@ -1,0 +1,51 @@
+.fire-alarm-info-section
+{
+    position: absolute;
+    width: 1240px;
+    height: 760px;
+    left: 0px;
+    top: 0px;
+    background-color: white;
+    border: 20px yellow solid
+}
+
+    .fire-alarm-left-section
+    {
+        height: 100%;
+        width: 50%;
+    }
+
+        .fire-alarm-img
+        {
+            width: 90%;
+            height: 60%;
+        }
+
+    .fire-alarm-right-section
+    {
+        flex-wrap: wrap;
+        height: 100%;
+        width: 50%;
+    }
+
+        .fire-alarm-right-section-top-text
+        {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 50%;
+            font-size: 600%;
+        }
+
+        .fire-alarm-right-section-bottom-text
+        {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 50%;
+            font-size: 300%;
+        }

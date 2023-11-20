@@ -1,0 +1,4 @@
+TV Control Types:
+0 - rs232
+1 - cec
+2 - CrestronConnected

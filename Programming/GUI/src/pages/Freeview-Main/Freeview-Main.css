@@ -1,0 +1,149 @@
+.freeview-main-main-container
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+
+    .freeview-main-top-text
+    {
+        width: 100%;
+        height: 5%;
+        color: var(--generic-text-color-inactive);
+        font-size: 130%;
+    }
+
+    .freeview-main-page-input-field
+    {
+        width: 60%;
+        height: 80%;
+        background-color: var(--bg-color);
+        color: var(--generic-text-color-inactive);
+        font-size: 200%;
+        border: none
+    }
+
+    .freeview-main-controls-section
+    {
+        flex-wrap: wrap;
+        width: 100%;
+        height: 95%;
+    }
+
+        .freeview-main-ch-btns-container
+        {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 25%;
+            height: 70%;
+        }
+
+            .freeview-main-ch-btn-spacer
+            {
+                width: 100%;
+                height: 35%;
+            }
+
+            .freeview-main-ch-btn
+            {
+                width: 70%;
+                height: 10%;
+                font-size: 130%;
+            }
+
+            .freeview-main-ch-btn-text
+            {
+                width: 70%;
+                height: 10%;
+                color: var(--generic-text-color-inactive);
+                font-size: 130%;
+            }
+
+        .freeview-main-page-keypad-container
+        {
+            width: 50%;
+            height: 70%;
+            flex-wrap: wrap;
+        }    
+    
+            .freeview-main-page-keypad-btn-row
+            {
+                flex-wrap: wrap;
+                width: 100%;
+                height: 33%;
+            }
+    
+                .freeview-main-page-keypad-btn-space
+                {
+                    font-size: 800%;
+                    height: 100%;
+                    width: 33%;
+                    color: var(--generic-text-color-inactive);
+                }
+    
+                .freeview-main-page-keypad-select-btn
+                {
+                    width: 25%;
+                    height: 83%;
+                    font-size: 500%;
+                    font-weight: bold;
+                }
+
+                .freeview-main-btn-keypad-pressed
+                {
+                    color: var(--generic-border-color-active);
+                }
+
+        .freeview-main-change-name-container
+        {
+            width: 25%;
+            height: 70%;
+        }
+
+            .freeview-main-change-name-btn
+            {
+                width: 80%;
+                height: 12%;
+                font-size: 130%;
+            }
+
+        .freeview-main-color-btns-container
+        {
+            width: 100%;
+            height: 15%;
+        }
+
+            .freevew-main-color-btn-spacer
+            {
+                width: 20%;
+                height: 100%;
+            }
+
+            .freeview-main-color-btn
+            {
+                text-align: center;
+                width: 15%;
+                height: 100%;
+                font-size: 250%;
+            }
+
+            .freeview-main-color-btn-red { color: red; }
+            .freeview-main-color-btn-green { color: green; }
+            .freeview-main-color-btn-yellow { color: yellow; }
+            .freeview-main-color-btn-blue { color: blue; }
+
+        .freeview-main-additional-controls-container
+        {
+            flex-wrap: wrap;
+            width: 100%;
+            height: 15%;
+        }
+
+            .freeview-main-additional-btn
+            {
+                margin: auto;
+                width: 30%;
+                height: 70%;
+                font-size: 130%;
+            }

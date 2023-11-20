@@ -1,0 +1,112 @@
+.side-menu-mic-top-section-container
+{
+    width: 100%;
+    height: 10%;
+}
+
+    .side-menu-mic-icon
+    {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 20%;
+        height: 100%;
+        font-size: 200%;
+        color: var(--generic-border-color-active);
+    }
+
+    .side-menu-mic-text-volume
+    {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 60%;
+        font-size: 150%;
+        color: var(--generic-text-color-inactive);
+    }
+
+    .side-menu-mic-close-btn
+    {
+        margin-right: 5%;
+        width: 20%;
+        height: 80%;
+        font-size: 200%;
+        color: var(--generic-text-color-inactive);
+    }
+
+.side-menu-mic-mid-section-container
+{
+    width: 100%;
+    height: 80%;
+}
+
+    .side-menu-mic-slider-container
+    {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 40%;
+        height: 100%;
+    }
+
+        .mic-slider
+        {
+            -webkit-appearance: none;
+            -webkit-transform: rotate(270deg);
+            background: linear-gradient(to right, var(--generic-text-color-inactive) 0%, var(--generic-text-color-inactive) 50%, var(--generic-border-color-grey) 50%, var(--generic-border-color-grey) 100%);
+            min-width: 250%;
+            height: 3%;
+            margin-left: -45%;
+        }
+        
+        .mic-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: none;
+            height: 40px;
+            width: 15px;
+            background: var(--generic-text-color-inactive);
+        }
+
+    .mic-raise-lower-btn-container
+    {
+        flex-wrap: wrap;
+        width: 35%;
+        height: 100%;
+        color: var(--generic-text-color-inactive);
+    }
+
+        .mic-level-text
+        {
+            margin-top: 8%;
+            width: 100%;
+            height: 20%;
+            font-size: 150%;
+        }
+
+        .mic-raise-btn-text
+        {
+            width: 100%;
+            height: 10%;
+        }
+
+        .mic-raise-lower-btn
+        {
+            width: 90%;
+            height: 15%;
+            font-size: 450%;
+        }
+
+.side-menu-mic-bottom-section-container
+{
+    width: 100%;
+    height: 10%;
+}
+
+    .side-menu-mic-mute-btn
+    {
+        width: 40%;
+        height: 90%;
+        font-size: 150%;
+        margin-right: 10%;
+    }

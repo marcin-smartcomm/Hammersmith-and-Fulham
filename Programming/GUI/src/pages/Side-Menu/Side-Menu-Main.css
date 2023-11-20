@@ -1,0 +1,218 @@
+.room-name-container
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 200%;
+    min-height: 8%;
+}
+
+.room-name-container-ipad
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 100%;
+    height: 8%;
+}
+
+.side-menu-main-room-name-container
+{
+    width: 100%;
+    height: 12%;
+    color: var(--generic-text-color-inactive);
+    font-size: 150%;
+}
+
+    .side-menu-main-room-name-text
+    {
+        overflow: hidden;
+        width: 80%;
+        height: 100%;
+    }
+
+    .side-menu-main-floor-select-arrow
+    {
+        width: 20%;
+        height: 100%;
+    }
+
+.side-menu-main-mins-remaining-container
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 18%;
+}
+
+    .side-menu-main-mins-remaining
+    {
+        width: 60%;
+        height: 50%;
+        padding-top: 2%;
+        border-top: var(--generic-text-color-inactive) 1px solid;
+        color: var(--generic-border-color-active);
+        font-size: 300%;
+    }
+
+    .side-menu-main-mins-remaining-text
+    {
+        width: 60%;
+        height: 30%;
+        padding-bottom: 2%;
+        border-bottom: var(--generic-text-color-inactive) 1px solid;
+        color: var(--generic-text-color-inactive);
+        font-size: 120%;
+    }
+
+.current-meeting-duration-container
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 180%;
+    min-height: 5%;
+}
+
+.current-meeting-name-and-subject-container
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 150%;
+    min-height: 5%;
+}
+
+.booking-btn-container
+{
+    width: 100%;
+    text-align: center;
+    font-size: 150%;
+    min-height: 20%;
+}
+
+.next-meeting-duration-container
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 180%;
+    min-height: 5%;
+}
+
+.next-meeting-name-and-subject-container
+{
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    text-align: center;
+    font-size: 150%;
+    min-height: 5%;
+}
+
+.btn-container
+{
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+    min-height: 21%
+}
+
+.btn-container-ipad
+{
+    justify-content: space-around;
+    width: 100%;
+    height: 21%
+}
+
+.btn-container-ipad2
+{
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 37%
+}
+
+.btn-container-ipad3
+{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 20%;
+}
+
+.audio-text-container
+{
+    font-size: 150%;
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    min-height: 5%;
+}
+
+.audio-text-container-ipad
+{
+    font-size: 150%;
+    color: var(--generic-text-color-inactive);
+    width: 100%;
+    height: 5%;
+}
+
+.side-menu-main-btn
+{
+    flex-wrap: wrap;
+    width: 45%;
+    height: 70%;
+}
+
+.side-menu-main-btn-ipad
+{
+    flex-wrap: wrap;
+    width: 45%;
+    height: 40%;
+}
+
+.side-menu-main-btn-ipad2
+{
+    margin: 1%;
+    flex-wrap: wrap;
+    width: 40%;
+    height: 80%;
+}
+
+.side-menu-main-btn-icon
+{
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    font-size: 200%;
+    width: 100%;
+    height: 50%;
+}
+
+.side-menu-main-btn-icon-ipad
+{
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    font-size: 200%;
+    width: 100%;
+    height: 50%;
+}
+
+.side-menu-main-btn-text
+{
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    font-size: 150%;
+    width: 100%;
+    height: 40%;
+}
+
+.side-menu-main-btn-text-ipad
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 150%;
+    width: 100%;
+    height: 50%;
+}

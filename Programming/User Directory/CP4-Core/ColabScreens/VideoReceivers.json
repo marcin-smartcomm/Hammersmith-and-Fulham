@@ -1,0 +1,19 @@
+{
+  "receivers": [
+    {
+      "IPID": 96,
+      "receiverName": "4th Receiver 1",
+      "transmitterAssigned": "Signage Player 1"
+    },
+    {
+      "IPID": 97,
+      "receiverName": "4th Receiver 2",
+      "transmitterAssigned": "Signage Player 2"
+    },
+    {
+      "IPID": 98,
+      "receiverName": "5th Receiver 1",
+      "transmitterAssigned": "Signage Player 3"
+    }
+  ]
+}
