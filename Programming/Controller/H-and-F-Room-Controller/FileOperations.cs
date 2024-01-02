@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace H_and_F_Room_Controller
 {
@@ -217,7 +219,7 @@ namespace H_and_F_Room_Controller
             catch (Exception ex)
             {
                 ConsoleLogger.WriteLine("issue in fileManager.loadRoomJson\n" + ex.ToString());
-                return null;
+                return "";
             }
         }
 
@@ -240,13 +242,14 @@ namespace H_and_F_Room_Controller
             }
         }
 
-        public static int GetNumberOfRooms()
+        public static List<string> GetRoomDirectories()
         {
             try
             {
-                return Directory.GetDirectories(@"..\..\user\RoomSettings").Length;
+                List<string> roomDirectories = Directory.GetDirectories(@"..\..\user\RoomSettings").ToList();
+                return roomDirectories;
             }
-            catch (Exception ex) { ConsoleLogger.WriteLine(ex.Message); return 0; }
+            catch (Exception ex) { ConsoleLogger.WriteLine(ex.Message); return null; }
         }
     }
 }

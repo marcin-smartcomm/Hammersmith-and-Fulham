@@ -14,6 +14,7 @@ function ConnectToSystem(){
             CheckRoomMasterCall(currentRoomInfo.roomID)
             GetCurrentDivisionScenarioCall()
             GetLightingProcessorInfoCall(currentRoomInfo.roomID)
+            GetCurrentSourceCall(currentRoomInfo.roomID, true)
         }, 1000);
     }
     if(panelType == "iPadM")
@@ -28,6 +29,7 @@ function ConnectToSystem(){
             InitializeHomeScreen()
             CheckRoomMasterCall(currentRoomInfo.roomID)
             GetLightingProcessorInfoCall(currentRoomInfo.roomID)
+            GetCurrentSourceCall(currentRoomInfo.roomID, true)
         }, 1000);
     }
 }
@@ -160,6 +162,7 @@ function openSubpage(file, param1, pageIcon, param2, param3)
             {
                 document.querySelector('#projectBody').innerHTML = allText;
                 sideMenuVis = false;
+                sideMenuCurrentlyDisplayed = "";
             }
             else
             {
@@ -201,6 +204,15 @@ function openSubpage(file, param1, pageIcon, param2, param3)
   
   if(!file.includes("Help-Page"))
     InitializeSubpageVariables(file, param1, pageIcon, param2, param3);
+}
+
+function ChangeSubpageToSelectedSource(source)
+{
+    if(source.sourceName.includes("Freeview")) source.sourceName = "TV"
+    currentRoomInfo.menuItems.forEach(item => {
+        if(source.sourceName === item.menuItemName) 
+            openSubpage(item.menuItemPageAssigned, item.menuItemName, item.menuItemIcon)
+    });
 }
 
 function openPopUp(file, param1)
@@ -379,6 +391,8 @@ function InitializeSubpageVariables(file, param1, pageIcon, param2, param3)
         InitializePTZControlSp(param1, pageIcon)
     else if (file.includes('Panel-Settings-TSW'))
         InitializePanelSettingsTSWSp()
+    else if (file.includes('Video-Production'))
+        InitializeVideoProductionSp()
     else if (file.includes('Screensaver'))
         InitializeScreenSaverVariables()
 

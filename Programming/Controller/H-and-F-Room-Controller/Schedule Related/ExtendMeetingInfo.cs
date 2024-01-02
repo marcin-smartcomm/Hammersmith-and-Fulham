@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace H_and_F_Room_Controller.Schedule_Related
+namespace H_and_F_Room_Controller
 {
     public class ExtendMeetingInfo
     {

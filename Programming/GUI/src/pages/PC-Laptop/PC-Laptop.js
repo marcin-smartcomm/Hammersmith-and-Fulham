@@ -1,6 +1,8 @@
 function InitializePCLaptopSp(pageName, pageIcon)
 {
+    $('#sourceName').text(pageName)
     InitializePCLaptopBtns(pageName, pageIcon)
+    GetCamerasCall(currentRoomInfo.roomID)
 }
 
 function InitializePCLaptopBtns(pageName, pageIcon)
@@ -15,4 +17,9 @@ function InitializePCLaptopBtns(pageName, pageIcon)
         openSubpage("PTZ-Control", pageName, pageIcon)
         PlayBtnClickSound()
     })
+}
+
+function DeterminePTZControlBtnFunctionality(cameras)
+{
+    if(cameras.length <= 0) document.getElementById("pcLaptopPTZBtn").style.visibility = 'hidden'
 }

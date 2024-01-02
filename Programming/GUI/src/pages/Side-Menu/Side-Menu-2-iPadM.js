@@ -80,6 +80,8 @@ function ActivateiPadMMainSideMenu()
         volBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Volume")
         ActivateSideMenuBtns()
+        GetSliderLevelCall(currentRoomInfo.roomID, 'vol')
+        GetMuteStateCall(currentRoomInfo.roomID, 'vol')
     })
 
     micBtn.addEventListener("touchstart", function(){
@@ -90,6 +92,8 @@ function ActivateiPadMMainSideMenu()
         micBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Mic")
         ActivateSideMenuBtns()
+        GetSliderLevelCall(currentRoomInfo.roomID, 'mic')
+        GetMuteStateCall(currentRoomInfo.roomID, 'mic')
     })
 
     shutdownBtn.addEventListener("touchstart", function(){
@@ -126,7 +130,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("iPadM-Panel-Settings", "Panel Settings", 'fa-solid fa-gear')
         UpdateSettingsFb(panelSettingsBtn.id);
-        scrollIntoViewElement = panelSettingsBtn
     })
 
     globalTempBtn.addEventListener("click", function() {
@@ -134,7 +137,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("iPadM-Global-Temp", "Global Temperature", 'fa-solid fa-temperature-half')
         UpdateSettingsFb(globalTempBtn.id);
-        scrollIntoViewElement = globalTempBtn
     })
 
     roamingIpadsBtn.addEventListener("click", function() {
@@ -142,7 +144,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("iPadM-Roaming-iPads", "Roaming iPads", 'fa-solid fa-tablet-screen-button')
         UpdateSettingsFb(roamingIpadsBtn.id);
-        scrollIntoViewElement = roamingIpadsBtn
     })
 
     portableEquipmentBtn.addEventListener("click", function() {
@@ -150,7 +151,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("iPadM-Portable-Equipment", "Portable Equipment", 'fa-solid fa-tv')
         UpdateSettingsFb(portableEquipmentBtn.id);
-        scrollIntoViewElement = portableEquipmentBtn
     })
 
     digitalSignageBtn.addEventListener("click", function() {
@@ -158,7 +158,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("Digital-Signage-Control", "Digital Signage", 'fa-solid fa-tv')
         UpdateSettingsFb(digitalSignageBtn.id);
-        scrollIntoViewElement = digitalSignageBtn
     })
 
     combineRoomsBtn.addEventListener("click", function() {
@@ -166,7 +165,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("Combine-Rooms", "Combine Rooms", 'fa-solid fa-gear')
         UpdateSettingsFb(combineRoomsBtn.id);
-        scrollIntoViewElement = combineRoomsBtn
     })
 
     screenControlBtn.addEventListener("click", function() {
@@ -174,7 +172,6 @@ function ActivateiPadMSettingsSideMenu()
         PlayBtnClickSound()
         openSubpage("Screen-Control", "Screen Control", 'fa-solid fa-tv')
         UpdateSettingsFb(screenControlBtn.id);
-        scrollIntoViewElement = screenControlBtn
     })
 
     lightModeBtn.addEventListener("click", function() {
@@ -243,5 +240,10 @@ function ActivateiPadMSettingsSideMenu()
         screenControlBtn.classList.add("btn-generic-pressed")
         screenControlBtn.scrollIntoView()
     }
+}
 
+function RoomNotBookable()
+{
+    $("#sideMenuMinsLeft").text("NOT")
+    $("#sideMenuMinsLeftInfo").text("BOOKABLE")
 }

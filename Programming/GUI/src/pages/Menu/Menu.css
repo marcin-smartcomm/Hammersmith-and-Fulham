@@ -18,12 +18,9 @@
 
     .main-menu-item
     {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 90%;
-        min-height: 13%;
-        margin-bottom: 1%;
+        height: 70px;
+        max-height: 70px;
         border: 1px solid var(--bg-color);
         border-bottom: 1px solid var(--generic-text-color-inactive);
     }
@@ -47,3 +44,11 @@
             color: var(--generic-text-color-inactive);
             font-size: 200%;
         }
+
+.source-selected-indicator
+{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--generic-border-color-active);
+}

@@ -146,6 +146,7 @@
     <Compile Include="DigitalSignage\DigitalSignageBoxes.cs" />
     <Compile Include="DigitalSignage\DigitalSignageManager.cs" />
     <Compile Include="DigitalSignage\DigitalSignageZones.cs" />
+    <Compile Include="DigitalSignage\OneLanNTB.cs" />
     <Compile Include="FileOperations.cs" />
     <Compile Include="FreeviewBoxes.cs" />
     <Compile Include="GlobalTemp.cs" />

@@ -1,5 +1,15 @@
 function GetBookingsInfoCall(roomID)
 {
+    if(currentRoomInfo.emailAddress == "")
+    {
+        if(panelType == "iPadM")
+        {
+            //Side-Menu-2-iPadM.js
+            RoomNotBookable()
+            return
+        }
+    }
+
     $.ajax({
         type: "GET",
         url: "http://"+serverIP+":50000/api/CalendarBookings",
@@ -27,6 +37,10 @@ function GetBookingsInfoCall(roomID)
 
 function GetMeetingDurationsCall(roomID)
 {
+    if(currentRoomInfo.emailAddress == "")
+        if(panelType == "iPadM")
+            return
+
     $.ajax({
         type: "GET",
         url: "http://"+serverIP+":50000/api/MeetingDurations",

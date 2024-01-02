@@ -33,12 +33,12 @@ function SideMenuBookingsInfoFill(currentAndNextBookingInfo)
 
     if(currentAndNextBookingInfo.nextMeetingStartEndTime != "")
     {
-        document.getElementById('nextMeetingDuration').innerHTML = "Next Booking: " + currentAndNextBookingInfo.nextMeetingStartEndTime;
+        document.getElementById('nextMeetingDuration').innerHTML = "Next booking: " + currentAndNextBookingInfo.nextMeetingStartEndTime;
         document.getElementById('nextMeetingNameAndSubject').innerHTML =  currentAndNextBookingInfo.nextMeetingOrganiser + " - " + currentAndNextBookingInfo.nextMeetingSubject;
     }
     else
     {
-        document.getElementById('nextMeetingDuration').innerHTML = "Next Booking:";
+        document.getElementById('nextMeetingDuration').innerHTML = "Next booking:";
         document.getElementById('nextMeetingNameAndSubject').innerHTML = "Free All Day";
     }
 }
@@ -78,7 +78,6 @@ function ActivateVolSideMenu()
     let volDownBtn = document.getElementById("sideMenuVolDownBtn")
     let volMuteBtn = document.getElementById("sideMenuVolMuteBtn")
     let volSlider = document.getElementById("sideMenuVolSlider")
-    let volSliderLevelText = document.getElementById("volLevelText")
 
     closeVolPageBtn.addEventListener("touchstart", function(){
         closeVolPageBtn.classList.add('btn-generic-pressed')
@@ -93,35 +92,58 @@ function ActivateVolSideMenu()
     })
 
     volUpBtn.addEventListener("touchstart", function(){
+        PlayBtnClickSound()
         volUpBtn.classList.add('btn-generic-pressed')
+        VolChangeCall(currentRoomInfo.roomID, "up", true)
     }, { passive: "true" })
     volUpBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volUpBtn.classList.remove('btn-generic-pressed')
+        VolChangeCall(currentRoomInfo.roomID, "up", false)
     })
 
     volDownBtn.addEventListener("touchstart", function(){
+        PlayBtnClickSound()
         volDownBtn.classList.add('btn-generic-pressed')
+        VolChangeCall(currentRoomInfo.roomID, "down", true)
     }, { passive: "true" })
     volDownBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volDownBtn.classList.remove('btn-generic-pressed')
+        VolChangeCall(currentRoomInfo.roomID, "down", false)
     })
 
     volMuteBtn.addEventListener("touchstart", function(){
-        volMuteBtn.classList.add('btn-generic-pressed')
     }, { passive: "true" })
     volMuteBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
-        volMuteBtn.classList.remove('btn-generic-pressed')
+        MuteVolCall(currentRoomInfo.roomID)
     })
 
     volSlider.disabled = true;
+}
 
-    volSliderLevelText.innerHTML = currentMinute + "%"
-    volSlider.value = currentMinute
+function UpdateVolLevel(volLevel)
+{
+    if(sideMenuCurrentlyDisplayed != "Volume") return;
+
+    let volSlider = document.getElementById("sideMenuVolSlider")
+    let volSliderLevelText = document.getElementById("volLevelText")
+    
+    volSliderLevelText.innerHTML = volLevel + "%"
+    volSlider.value = volLevel
     volSlider.style.background = `
-    linear-gradient(to right, var(--generic-text-color-inactive) 0%, var(--generic-text-color-inactive) ${currentMinute}%, var(--generic-border-color-grey) ${currentMinute}%, var(--generic-border-color-grey) 100%)`
+    linear-gradient(to right, var(--generic-text-color-inactive) 0%, var(--generic-text-color-inactive) ${volLevel}%, var(--generic-border-color-grey) ${volLevel}%, var(--generic-border-color-grey) 100%)`
+}
+
+function UpdateVolMuteState(newState)
+{
+    if(sideMenuCurrentlyDisplayed != "Volume") return;
+
+    let volMuteBtn = document.getElementById("sideMenuVolMuteBtn")
+
+    if(newState) volMuteBtn.classList.add('btn-generic-pressed')
+    if(!newState) volMuteBtn.classList.remove('btn-generic-pressed')
 }
 
 function ActivateMicSideMenu()
@@ -131,7 +153,6 @@ function ActivateMicSideMenu()
     let volDownBtn = document.getElementById("sideMenuMicDownBtn")
     let volMuteBtn = document.getElementById("sideMenuMicMuteBtn")
     let volSlider = document.getElementById("sideMenuMicSlider")
-    let volSliderLevelText = document.getElementById("micLevelText")
 
     closeVolPageBtn.addEventListener("touchstart", function(){
         closeVolPageBtn.classList.add('btn-generic-pressed')
@@ -146,35 +167,58 @@ function ActivateMicSideMenu()
     })
 
     volUpBtn.addEventListener("touchstart", function(){
+        PlayBtnClickSound()
         volUpBtn.classList.add('btn-generic-pressed')
+        MicChangeCall(currentRoomInfo.roomID, "up", true)
     }, { passive: "true" })
     volUpBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volUpBtn.classList.remove('btn-generic-pressed')
+        MicChangeCall(currentRoomInfo.roomID, "up", false)
     })
 
     volDownBtn.addEventListener("touchstart", function(){
+        PlayBtnClickSound()
         volDownBtn.classList.add('btn-generic-pressed')
+        MicChangeCall(currentRoomInfo.roomID, "down", true)
     }, { passive: "true" })
     volDownBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volDownBtn.classList.remove('btn-generic-pressed')
+        MicChangeCall(currentRoomInfo.roomID, "down", false)
     })
 
     volMuteBtn.addEventListener("touchstart", function(){
-        volMuteBtn.classList.add('btn-generic-pressed')
     }, { passive: "true" })
     volMuteBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
-        volMuteBtn.classList.remove('btn-generic-pressed')
+        MuteMicCall(currentRoomInfo.roomID)
     })
 
     volSlider.disabled = true;
+}
 
-    volSliderLevelText.innerHTML = currentMinute + "%"
-    volSlider.value = currentMinute
+function UpdateMicLevel(volLevel)
+{
+    if(sideMenuCurrentlyDisplayed != "Mic") return;
+
+    let volSlider = document.getElementById("sideMenuMicSlider")
+    let volSliderLevelText = document.getElementById("micLevelText")
+    
+    volSliderLevelText.innerHTML = volLevel + "%"
+    volSlider.value = volLevel
     volSlider.style.background = `
-    linear-gradient(to right, var(--generic-text-color-inactive) 0%, var(--generic-text-color-inactive) ${currentMinute}%, var(--generic-border-color-grey) ${currentMinute}%, var(--generic-border-color-grey) 100%)`
+    linear-gradient(to right, var(--generic-text-color-inactive) 0%, var(--generic-text-color-inactive) ${volLevel}%, var(--generic-border-color-grey) ${volLevel}%, var(--generic-border-color-grey) 100%)`
+}
+
+function UpdateMicMuteState(newState)
+{
+    if(sideMenuCurrentlyDisplayed != "Mic") return;
+
+    let volMuteBtn = document.getElementById("sideMenuMicMuteBtn")
+
+    if(newState) volMuteBtn.classList.add('btn-generic-pressed')
+    if(!newState) volMuteBtn.classList.remove('btn-generic-pressed')
 }
 
 function ActivateHelpSideMenu()
@@ -203,16 +247,16 @@ function ActivateSideMenuHelpBtns(btns)
             btns[i].classList.add("btn-generic-pressed")
         }, { passive: "true" })
         btns[i].addEventListener("touchend", function() {
-            PlayBtnClickSound()
             btns[i].classList.remove("btn-generic-pressed")
+        })
+        btns[i].addEventListener("click", function() {
+
+            PlayBtnClickSound()
             UpdateHelpFb(btns[i].id)
-            console.log(currentRoomInfo.menuItems[i].menuItemName)
             if(btns[i].innerHTML == "Video Input")
                 openSubpage(`Help-Page-Video-Input`, "Video Input", currentRoomInfo.menuItems[currentRoomInfo.menuItems.length-1].menuItemIcon)
             else
                 openSubpage(`Help-Page-${currentRoomInfo.menuItems[i].menuItemName.replace(' ', '-')}`, currentRoomInfo.menuItems[i].menuItemName, currentRoomInfo.menuItems[i].menuItemIcon)
-            
-            console.log("here 2")
         })
 
         if(currentSubpage.includes(btns[i].innerHTML.replace(' ', '-').replace('/', '-'))) 
@@ -225,6 +269,11 @@ function ActivateSideMenuHelpBtns(btns)
             else
                 openSubpage(`Help-Page-${currentRoomInfo.menuItems[i].menuItemName.replace(' ', '-')}`, currentRoomInfo.menuItems[i].menuItemName, currentRoomInfo.menuItems[i].menuItemIcon)
         } 
+    }
+
+    for(let i = 0; i < btns.length; i++){
+        if(btns[i].classList.contains("btn-generic-pressed"))
+            btns[i].scrollIntoView()
     }
 }
 

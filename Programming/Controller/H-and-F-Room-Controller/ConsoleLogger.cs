@@ -103,7 +103,7 @@ namespace H_and_F_Room_Controller
                 }
                 if (incomingMessage.Contains("IOCHange"))
                 {
-                    _cs._roomManager.WallStateChanged(int.Parse(incomingMessage.Split(':')[1]), bool.Parse(incomingMessage.Split(':')[2]));
+                    _cs.roomManager.WallStateChanged(int.Parse(incomingMessage.Split(':')[1]), bool.Parse(incomingMessage.Split(':')[2]));
                 }
                 if (incomingMessage == "debug:on") ControlSystem.debugEnabled = true;
                 if (incomingMessage == "debug:off") ControlSystem.debugEnabled = false;

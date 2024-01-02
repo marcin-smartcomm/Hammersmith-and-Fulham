@@ -1,0 +1,53 @@
+{
+    "NVXRxs": [16],
+    "NVXTxs": [32],
+
+    "AudioProcessor":
+    {
+        "controlType": 0,
+
+        "ip": "",
+        "TCPport": 0,
+
+        "rs232Port": 1,
+
+        "controlComponents": [
+            ["volLevelComponent", "1"],
+            ["volMuetComponent", "1"],
+            ["micLevelComponent", "1"],
+            ["micMuteComponent", "1"]
+        ]
+    },
+
+    "Displays": [
+        {
+            "displayType": 1,
+            "ipid": 48,
+            "controlType": 2,
+            "motorizedScreenID": 1
+        }
+    ],
+
+    "MotorizedScreens": [
+        {
+            "id": 1,
+            "controlType": 0,
+            "relay": 1,
+            "screenUpRelayState": true,
+            "screenDownRelayState": false
+        }
+    ],
+
+    "Cameras": [
+        {
+            "name": "PTZ-1",
+            "ip": "192.168.1.86",
+            "controlType": 1
+        },
+        {
+            "name": "PTZ-2",
+            "ip": "192.168.1.86",
+            "controlType": 1
+        }
+    ]
+}

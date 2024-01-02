@@ -25,6 +25,8 @@ function ActivateTSWMainSideMenu()
         volBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Volume")
         ActivateSideMenuBtns()
+        GetSliderLevelCall(currentRoomInfo.roomID, 'vol')
+        GetMuteStateCall(currentRoomInfo.roomID, 'vol')
     })
 
     micBtn.addEventListener("touchstart", function(){
@@ -35,6 +37,8 @@ function ActivateTSWMainSideMenu()
         micBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Mic")
         ActivateSideMenuBtns()
+        GetSliderLevelCall(currentRoomInfo.roomID, 'mic')
+        GetMuteStateCall(currentRoomInfo.roomID, 'mic')
     })
 
     settingsBtn.addEventListener("touchstart", function(){
@@ -70,7 +74,6 @@ function InitializeTSWHelpSideMenu()
     for(let i = 0; i < currentRoomInfo.menuItems.length; i++)
     {
         if(currentRoomInfo.menuItems[i].menuItemName.includes("HDMI Input")) continue
-        if(currentRoomInfo.menuItems[i].menuItemName.includes("Audio Input")) continue
         if(currentRoomInfo.menuItems[i].menuItemName.includes("Audio Conference")) continue
 
         let newBtn = document.createElement("div")

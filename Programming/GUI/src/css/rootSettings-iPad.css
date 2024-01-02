@@ -19,6 +19,7 @@
     --generic-border-color-active: rgb(152, 252, 85);
     --generic-text-color-inactive: white;
     --generic-text-color-active: black;
+    --generic-text-color-menu-item: black;
 
     /* REST OF VARIABLES */
     --generic-border-color-grey: grey;

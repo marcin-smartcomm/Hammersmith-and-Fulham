@@ -1,35 +1,38 @@
 using System;
+using System.IO;
+using System.Net;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Globalization;
+using Newtonsoft.Json;
 using Crestron.SimplSharp;                              // For Basic SIMPL# Classes
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threading
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using System.Net;
-using System.IO;
-using System.Globalization;
 using Crestron.SimplSharpPro.UI;
+using System.Runtime.CompilerServices;
 
 namespace H_and_F_Room_Controller
 {
     public class ControlSystem : CrestronControlSystem
     {
         public static bool debugEnabled = false;
-        PerformanceCounter cpuCounter;
+        PerformanceCounter _cpuCounter;
 
         public bool fireAlarmState = false;
+
+        public event Action<int, string> serialDataReceived;
 
         public int refreshCalendarAfterMinutes = 1;
         public DateAndTime dateAndTime;
         public BookingManager bookingManager;
         public string microsoftAuthToken;
 
-        public RoomManager _roomManager;
+        public RoomManager roomManager;
 
         public Tsw770 testPanel;
 
         public SSE_Server sse;
-        MicrosoftAppIntegrationInfo microsoftAccountInfo;
+        MicrosoftAppIntegrationInfo _microsoftAccountInfo;
         System.Timers.Timer _tokenRefreshTimer;
         System.Timers.Timer _currentTimeTimer;
 
@@ -56,9 +59,9 @@ namespace H_and_F_Room_Controller
                         bookingManager= new BookingManager(sse, this);
                         dateAndTime = new DateAndTime();
 
-                        microsoftAccountInfo = JsonConvert.DeserializeObject<MicrosoftAppIntegrationInfo>(FileOperations.loadCoreInfo("MicrosoftAccountInfo"));
+                        _microsoftAccountInfo = JsonConvert.DeserializeObject<MicrosoftAppIntegrationInfo>(FileOperations.loadCoreInfo("MicrosoftAccountInfo"));
 
-                        cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                        _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
                         _tokenRefreshTimer = new System.Timers.Timer();
                         _tokenRefreshTimer.Interval = 3000000;
@@ -75,7 +78,7 @@ namespace H_and_F_Room_Controller
                         microsoftAuthToken = string.Empty;
                         Task.Run(() => { microsoftAuthToken = GetNewToken(); });
 
-                        _roomManager = new RoomManager(this);
+                        roomManager = new RoomManager(this);
 
                         testPanel = new Tsw770(64, this);
                         testPanel.Register();
@@ -92,8 +95,10 @@ namespace H_and_F_Room_Controller
             }
         }
 
-        int previousMinute = -1;
-        int minutesPassed = 0;
+        #region Microsoft Outlook Comms
+
+        int _previousMinute = -1;
+        int _minutesPassed = 0;
         private void _currentTimeTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             DateTime timeNow = DateTime.Now;
@@ -113,30 +118,34 @@ namespace H_and_F_Room_Controller
             dateAndTime.currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(timeNow.Month);
             dateAndTime.currentYear = timeNow.Year.ToString();
 
-            if(previousMinute == -1) previousMinute = timeNow.Minute;
+            if(_previousMinute == -1) _previousMinute = timeNow.Minute;
             
-            if(previousMinute == timeNow.Minute) { }
-            if (previousMinute < timeNow.Minute || (previousMinute == 59 && timeNow.Minute == 0))
+            if(_previousMinute == timeNow.Minute) { }
+            if (_previousMinute < timeNow.Minute || (_previousMinute == 59 && timeNow.Minute == 0))
             {
-                previousMinute = timeNow.Minute;
+                _previousMinute = timeNow.Minute;
                 sse.SendTimeToAllConnected(dateAndTime);
 
-                minutesPassed++;
-                if(minutesPassed >= refreshCalendarAfterMinutes)
+                _minutesPassed++;
+                if (_minutesPassed >= refreshCalendarAfterMinutes)
                 {
-                    if (microsoftAuthToken != string.Empty)
-                        GetCalendarBookings();
-                    else if(microsoftAuthToken == string.Empty)
-                        ConsoleLogger.WriteLine("Cannot Fetch Calendar Info, Microsoft Authentication Token is Empty");
+                    if (microsoftAuthToken != string.Empty) GetCalendarBookings();
+                    else if (microsoftAuthToken == string.Empty) ConsoleLogger.WriteLine("Cannot Fetch Calendar Info, Microsoft Authentication Token is Empty");
 
-                    minutesPassed = 0;
+                    _minutesPassed = 0;
+                }
+                else
+                {
+                    foreach(var room in roomManager.rooms)
+                        if(room.GetEmailAddress() != "")
+                            bookingManager.DecreaseTimeUntilNextMeetingMinutes(room.GetRoomID());
                 }
 
                 CheckGlobalTemperatureCall();
             }
 
             if(debugEnabled)
-                ConsoleLogger.WriteLine("CPU Usage: " + cpuCounter.NextValue() + "%");
+                ConsoleLogger.WriteLine("CPU Usage: " + _cpuCounter.NextValue() + "%");
         }
 
         private void _tokenRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -153,7 +162,7 @@ namespace H_and_F_Room_Controller
                 AccessToken newToken = new AccessToken();
 
                 var resource = "https://graph.microsoft.com/.default";
-                var url = "https://login.microsoftonline.com/" + microsoftAccountInfo.tenantID + "/oauth2/v2.0/token";
+                var url = "https://login.microsoftonline.com/" + _microsoftAccountInfo.tenantID + "/oauth2/v2.0/token";
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -162,7 +171,7 @@ namespace H_and_F_Room_Controller
 
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    string json = "grant_type=client_credentials&client_id=" + microsoftAccountInfo.clientID + "&scope=" + resource + "&client_secret=" + microsoftAccountInfo.clientSecret;
+                    string json = "grant_type=client_credentials&client_id=" + _microsoftAccountInfo.clientID + "&scope=" + resource + "&client_secret=" + _microsoftAccountInfo.clientSecret;
 
                     streamWriter.Write(json);
                 }
@@ -171,7 +180,7 @@ namespace H_and_F_Room_Controller
                 {
                     var result = streamReader.ReadToEnd();
                     newToken = JsonConvert.DeserializeObject<AccessToken>(result);
-                    Console.WriteLine("Received Response: " + result.ToString());
+                    ConsoleLogger.WriteLine("Received Response: " + result.ToString());
                 }
 
                 GetCalendarBookings();
@@ -187,24 +196,32 @@ namespace H_and_F_Room_Controller
             }
         }
 
+        Task GettingCalendarBookings = null;
         public void GetCalendarBookings()
         {
-            Task.Run(() =>
+            if (microsoftAuthToken == null) return;
+            if (GettingCalendarBookings != null) if (!GettingCalendarBookings.IsCompleted) return;
+
+            GettingCalendarBookings = Task.Run(() =>
             {
-                for (int i = 0; i < FileOperations.GetNumberOfRooms(); i++)
+                foreach (var directory in FileOperations.GetRoomDirectories())
                 {
-                    RoomCoreInfo roomData = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(i+1, "Core"));
+                    int roomFolderNamePos = directory.Split('/').Length - 1;
+                    string roomFolderName = directory.Split('/')[roomFolderNamePos];
+                    int roomID = int.Parse(roomFolderName.Replace("Room", ""));
+
+                    RoomCoreInfo roomData = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(roomID, "Core"));
                     string emailsAddressToFetch = roomData.emailAddress;
 
                     if (emailsAddressToFetch != "")
                     {
                         ConsoleLogger.WriteLine("-----------------------------------------------------------------------------------");
                         ConsoleLogger.WriteLine("Fetching Calendar Info for " + emailsAddressToFetch);
-                        FetchUserInfo(emailsAddressToFetch, i+1);
-                        FetchCalendarBookings(emailsAddressToFetch, i+1);
+                        FetchUserInfo(emailsAddressToFetch, roomID);
+                        FetchCalendarBookings(emailsAddressToFetch, roomID);
                     }else
                     {
-                        if(FileOperations.GetNumberOfRooms() == 1)
+                        if(FileOperations.GetRoomDirectories().Count == 1)
                         {
                             _tokenRefreshTimer.Stop();
                         }
@@ -256,7 +273,9 @@ namespace H_and_F_Room_Controller
             Bookings bookings = new Bookings();
             ConsoleLogger.WriteLine("Fetching Bookings for: " + emailAddressToFetch);
 
-            var url = "https://graph.microsoft.com/v1.0/users/" + emailAddressToFetch + "/calendarview?startdatetime=2023-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "T00:00:00.000Z&enddatetime=2023-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "T23:00:00.000Z";
+            var url = "https://graph.microsoft.com/v1.0/users/" + emailAddressToFetch + "/calendarview?" +
+                "startdatetime=" + DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "T00:00:00.000Z&" +
+                "enddatetime=" + DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "T23:00:00.000Z";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -279,12 +298,12 @@ namespace H_and_F_Room_Controller
 
             try
             {
-                if(bookings.value.Count > 0)
-                    bookingManager.ProcessBookings(roomID, bookings);
+                if(bookings.value.Count > 0) bookingManager.ProcessBookings(roomID, bookings);
             }
             catch(Exception ex) { ConsoleLogger.WriteLine("Exception in FetchCalendarBookings() 2: " + ex.ToString()); }
         }
 
+        #endregion
 
         private void FireAlarmRelay_VersiportChange(Versiport port, VersiportEventArgs args)
         {
@@ -304,17 +323,25 @@ namespace H_and_F_Room_Controller
                 if (state)
                 {
                     ConsoleLogger.WriteLine("FireAlarm");
-                    for(int i = 0; i < FileOperations.GetNumberOfRooms(); i++)
+                    foreach (var directory in FileOperations.GetRoomDirectories())
                     {
-                        sse.UpdateAllConnected(i + 1, "FireAlarm:1");
+                        int roomFolderNamePos = directory.Split('/').Length - 1;
+                        string roomFolderName = directory.Split('/')[roomFolderNamePos];
+                        int roomID = int.Parse(roomFolderName.Replace("Room", ""));
+
+                        sse.UpdateAllConnected(roomID, "FireAlarm:1");
                     }
                 }
                 else
                 {
                     ConsoleLogger.WriteLine("FireAlarm Cleared");
-                    for (int i = 0; i < FileOperations.GetNumberOfRooms(); i++)
+                    foreach (var directory in FileOperations.GetRoomDirectories())
                     {
-                        sse.UpdateAllConnected(i + 1, "FireAlarm:0");
+                        int roomFolderNamePos = directory.Split('/').Length - 1;
+                        string roomFolderName = directory.Split('/')[roomFolderNamePos];
+                        int roomID = int.Parse(roomFolderName.Replace("Room", ""));
+
+                        sse.UpdateAllConnected(roomID, "FireAlarm:0");
                     }
                 }
             }
@@ -375,7 +402,7 @@ namespace H_and_F_Room_Controller
                         localGlobalTempCopy.globalTemp = coreGlobalTempCopy.globalTemp;
                         FileOperations.saveGlobalTemp(localGlobalTempCopy);
 
-                        _roomManager.GlobalTempChanged(coreGlobalTempCopy);
+                        roomManager.GlobalTempChanged(coreGlobalTempCopy);
                     }
 
                     ConsoleLogger.WriteLine("Received Response from Core: " + result.ToString());
@@ -389,23 +416,51 @@ namespace H_and_F_Room_Controller
             {
                 DivisibleInfo di = JsonConvert.DeserializeObject<DivisibleInfo>(FileOperations.loadCoreInfo("DivisibleInfo"));
 
-                this.VersiPorts[1].Register();
-                this.VersiPorts[1].SetVersiportConfiguration(eVersiportConfiguration.DigitalInput);
-                this.VersiPorts[2].Register();
-                this.VersiPorts[2].SetVersiportConfiguration(eVersiportConfiguration.DigitalInput);
-
-                if (di.hasDivisibleRooms)
+                if(this.SupportsVersiport)
                 {
-                    if (di.numberOfWalls > 1)
+                    this.VersiPorts[1].Register();
+                    this.VersiPorts[1].SetVersiportConfiguration(eVersiportConfiguration.DigitalInput);
+                    this.VersiPorts[2].Register();
+                    this.VersiPorts[2].SetVersiportConfiguration(eVersiportConfiguration.DigitalInput);
+
+                    if (di.hasDivisibleRooms)
                     {
-                        this.VersiPorts[1].VersiportChange += WallPartitionStateChange;
-                        this.VersiPorts[2].VersiportChange += WallPartitionStateChange;
+                        if (di.numberOfWalls > 1)
+                        {
+                            this.VersiPorts[1].VersiportChange += WallPartitionStateChange;
+                            this.VersiPorts[2].VersiportChange += WallPartitionStateChange;
+                        }
+                        else
+                            this.VersiPorts[1].VersiportChange += WallPartitionStateChange;
                     }
                     else
-                        this.VersiPorts[1].VersiportChange += WallPartitionStateChange;
+                        this.VersiPorts[1].VersiportChange += FireAlarmRelay_VersiportChange;
                 }
-                else
-                    this.VersiPorts[1].VersiportChange += FireAlarmRelay_VersiportChange;
+
+                if(this.SupportsComPort)
+                {
+                    for(uint i = 0; i < this.ComPorts.Count; i++)
+                    {
+                        this.ComPorts[i+1].Register();
+                        this.ComPorts[i+1].SerialDataReceived += ControlSystem_SerialDataReceived;
+
+                        this.ComPorts[i+1].SetComPortSpec(
+                            ComPort.eComBaudRates.ComspecBaudRate9600,
+                            ComPort.eComDataBits.ComspecDataBits8,
+                            ComPort.eComParityType.ComspecParityNone,
+                            ComPort.eComStopBits.ComspecStopBits1,
+                            ComPort.eComProtocolType.ComspecProtocolRS232,
+                            ComPort.eComHardwareHandshakeType.ComspecHardwareHandshakeNone,
+                            ComPort.eComSoftwareHandshakeType.ComspecSoftwareHandshakeNone,
+                            false
+                            );
+                    }
+                }
+
+                if(this.SupportsRelay)
+                    for(uint i = 1; i < this.RelayPorts.Count; i++)
+                        this.RelayPorts[i].Register();
+                
             }
             catch (Exception e)
             {
@@ -413,11 +468,26 @@ namespace H_and_F_Room_Controller
             }
         }
 
+        public void ChangeRelayState(uint port, bool newState)
+        {
+            if(newState) this.RelayPorts[port].Close();
+            if(!newState) this.RelayPorts[port].Open();
+            ConsoleLogger.WriteLine($"Changed Relay {port} to {newState}");
+        }
+
+        public void SendSerialData(uint comPort, string data) => this.ComPorts[comPort].Send(data);
+
+        private void ControlSystem_SerialDataReceived(ComPort ReceivingComPort, ComPortSerialDataEventArgs args)
+        {
+            if (serialDataReceived != null)
+                serialDataReceived((int)ReceivingComPort.ID, ReceivingComPort.RcvdString);
+        }
+
         private void WallPartitionStateChange(Versiport port, VersiportEventArgs args)
         {
             ConsoleLogger.WriteLine("IO Port " + port.ID + " changed state to: " + port.DigitalIn);
 
-            _roomManager.WallStateChanged((int)port.ID, port.DigitalIn);
+            roomManager.WallStateChanged((int)port.ID, port.DigitalIn);
         }
 
         public bool CheckIfAllWallsOpen(DivisibleInfo di)

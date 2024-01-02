@@ -7,6 +7,7 @@ namespace H_and_F_Core
 {
     public class DigitalSignageManager
     {
+        static NTBPost ntbPost = new NTBPost();
         static Task performingFileOperation;
 
         public static async void Power(int zoneID, string action)
@@ -16,6 +17,8 @@ namespace H_and_F_Core
 
             performingFileOperation = Task.Run(() =>
             {
+                string rs232CommandToSend = "";
+
                 DigitalSignageZones signageZones = JsonConvert.DeserializeObject<DigitalSignageZones>(FileOperations.loadJson("/DigitalSignage/zoneAssignment"));
                 DigitalSignageBoxes signageBoxes = JsonConvert.DeserializeObject<DigitalSignageBoxes>(FileOperations.loadJson("/DigitalSignage/oneLanBoxes"));
 
@@ -25,18 +28,32 @@ namespace H_and_F_Core
                         for (int i = 0; i < signageBoxes.boxes.Count; i++)
                             for (int j = 0; j < zone.boxIDMembers.Length; j++)
                                 if (signageBoxes.boxes[i].boxID == zone.boxIDMembers[j])
+                                {
                                     IPs.Add(signageBoxes.boxes[i].boxIPAddress);
+                                    if (action == "On") rs232CommandToSend = signageBoxes.boxes[i].rs232Commands[0];
+                                    if (action == "Off") rs232CommandToSend = signageBoxes.boxes[i].rs232Commands[1];
+                                }
 
-                Task.Run(() =>
+                try
                 {
-                    SignagePlayersHTTPPost(IPs, action);
-                });
+                    SignagePlayersHTTPPost(IPs, rs232CommandToSend);
+                }catch(Exception ex)
+                {
+                    ConsoleLogger.WriteLine("Exception in Power(): \n" + ex);
+                }
             });
         }
 
-        static void SignagePlayersHTTPPost(List<string> IPs, string action)
+        static void SignagePlayersHTTPPost(List<string> IPs, string rs232Command)
         {
-            foreach (var ip in IPs) { ConsoleLogger.WriteLine("Sending Command to: " + ip + " || Action: " + action); }
+            Task.Run(() =>
+            {
+                foreach (var ip in IPs)
+                {
+                    ConsoleLogger.WriteLine("Sending Command to: " + ip + " || Action: " + rs232Command);
+                    ntbPost.SendCommand(ip, rs232Command);
+                }
+            });
         }
 
         public static async void ScheduleTimeUp(int zoneID)

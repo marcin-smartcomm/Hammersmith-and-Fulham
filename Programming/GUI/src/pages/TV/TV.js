@@ -5,7 +5,6 @@ function InitializeTVSp()
 
 function AddFreeviewBtnsTVPage(freeviewBoxes)
 {
-    console.log(currentRoomInfo)
     freeviewBoxes.boxes.forEach(box => {
         if(currentRoomInfo.signageAccess == true && box.type == "signage") AddTVBoxToList(box)
         if(currentRoomInfo.signageAccess == false && box.type == "freeview") AddTVBoxToList(box)

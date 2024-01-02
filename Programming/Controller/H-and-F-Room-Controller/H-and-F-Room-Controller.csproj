@@ -177,6 +177,7 @@
     <Compile Include="Room Related\Room.cs" />
     <Compile Include="Room Related\RoomAVData.cs" />
     <Compile Include="Room Related\RoomCoreInfo.cs" />
+    <Compile Include="Room Related\RoomLighting.cs" />
     <Compile Include="Room Related\RoomManager.cs" />
     <Compile Include="Schedule Related\AccessToken.cs" />
     <Compile Include="Schedule Related\BookingManager.cs" />

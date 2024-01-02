@@ -2,6 +2,7 @@ function IniitalizeMenuSp()
 {
     AddMenuBtns()
     if(panelType == "iPadM") GetAvailableFreeviewBoxesCall()
+    GetCurrentSourceCall(currentRoomInfo.roomID, false)
 }
 
 function AddMenuBtns()
@@ -10,8 +11,6 @@ function AddMenuBtns()
 
     for(let i = 0; i < currentRoomInfo.menuItems.length; i++)
         AddMenuBtn(i, currentRoomInfo.menuItems[i])
-
-    AddEventListeners()
 }
 function AddMenuBtn(id, menuItem)
 {
@@ -49,15 +48,18 @@ function AddEventListeners()
     for(let i = 0; i < currentRoomInfo.menuItems.length; i++)
     {
         let menuItem = document.getElementById(`menuItem${i}`)
+        let menuItemIcon = document.getElementById(`menuItemIcon${i}`)
+        let menuItemText = document.getElementById(`menuItemText${i}`)
     
         menuItem.addEventListener('touchstart', function(){
             menuItem.classList.add('btn-generic-pressed')
-            menuItem.style.color =`white`
+            menuItemText.style.color = `var(--generic-text-color-menu-item-highlight)`
+            menuItemIcon.style.color = `var(--generic-text-color-menu-item-highlight)`
         }, { passive: "true" })
         menuItem.addEventListener('touchend', function(){
-            menuItem.style.color =`var(--generic-text-color-inactive)`
-            menuItem.classList.add('btn-generic-pressed')
             menuItem.classList.remove('btn-generic-pressed')
+            menuItemIcon.style.color = 'var(--generic-border-color-active)'
+            menuItemText.style.color =`var(--generic-text-color-inactive)`
         })
         menuItem.addEventListener('click', function(){
             if(!menuItemsBlocked)
@@ -121,13 +123,34 @@ function AddFreeviewBtn(id, name, iconClasses)
 
 function AddFreeviewEventListener(btn, freeviewName)
 {
+    var btnIcon = btn.children.item(0)
+    var btnText = btn.children.item(1)
+
     btn.addEventListener("touchstart", function() {
         btn.classList.add("btn-generic-pressed")
+        btnIcon.style.color = `var(--generic-text-color-menu-item-highlight)`
+        btnText.style.color = `var(--generic-text-color-menu-item-highlight)`
     }, {passive: "true"})
     btn.addEventListener("touchend", function() {
         btn.classList.remove("btn-generic-pressed")
+        btnIcon.style.color = 'var(--generic-border-color-active)'
+        btnText.style.color =`var(--generic-text-color-inactive)`
     }, {passive: "true"})
     btn.addEventListener("click", function() {
         openSubpage("Freeview-Main", `TV: ${freeviewName}`, 'fa-solid fa-tv', btn.id)
     }, {passive: "true"})
+}
+
+function HighlightCurrentlySelectedSource(currentSource)
+{
+    $.each($("[id^=menuItemText]"), function (i, element) {
+        if(element.textContent == currentSource.sourceName)
+            element.parentElement.innerHTML += `<div class='source-selected-indicator'></div>`
+        if(element.textContent == `PC/Laptop` && currentSource.sourceName == `PC-Laptop`)
+            element.parentElement.innerHTML += `<div class='source-selected-indicator'></div>`
+        if(element.textContent == 'TV' && currentSource.sourceName.includes('Freeview'))
+            element.parentElement.innerHTML += `<div class='source-selected-indicator'></div>`
+    });
+
+    AddEventListeners()
 }

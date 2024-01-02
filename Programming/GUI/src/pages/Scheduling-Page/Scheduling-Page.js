@@ -1,16 +1,24 @@
 let currentHourToDisplay;
 let timelineInitialized = false;
+let processingSchedulingRequest = false;
 
 function InitializeSchedulingPageVariables()
 {
+    timelineInitialized = false;
+    
     document.getElementById('schedulingPageBackBtn').addEventListener('touchstart', function(){
         document.getElementById('schedulingPageBackBtn').classList.add('btn-generic-pressed')
     }, { passive: "true" })
     document.getElementById('schedulingPageBackBtn').addEventListener('touchend', function(){
-        timelineInitialized = false;
         InitializeHomeScreen();
         PlayBtnClickSound()
     })
+
+    UpdateShedulingData()
+}
+
+function UpdateShedulingData()
+{
     GetBookingsInfoCall(currentRoomInfo.roomID);
     GetMeetingDurationsCall(currentRoomInfo.roomID);
     GetCurrentTimeInfoCall()
@@ -18,7 +26,7 @@ function InitializeSchedulingPageVariables()
     currentHourToDisplay = currentHour + 3;
     ScrollTimelineToView(currentHourToDisplay)
     DetermineTimeIndicatorPosiiton();
-}  
+}
 
 function DetermineTimeIndicatorPosiiton()
 {
@@ -243,6 +251,7 @@ function DrawBookingSlot(startHour, startMinute, endHour, endMinute, bookingInde
 
 function DetermineActiveTimeBlocks(currentTimeInMinutes)
 {
+    console.log(timelineInitialized)
     if(timelineInitialized) return;
 
     var nodes = document.getElementById('schedulingTimlineGrid').childNodes;
@@ -390,6 +399,7 @@ function FillOutNewMeetingPopUp(meetingInfo)
 
 function DisplayWaitingSubpage()
 {
+    processingSchedulingRequest = true;
     var meetingPopUpSp = document.getElementById("meetingPopUpSp")
     meetingPopUpSp.innerHTML = "Processing ...";
     meetingPopUpSp.style.color = "white";

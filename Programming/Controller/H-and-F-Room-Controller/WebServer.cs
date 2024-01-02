@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using static H_and_F_Room_Controller.Room;
 
 namespace H_and_F_Room_Controller
 { 
@@ -70,6 +71,7 @@ namespace H_and_F_Room_Controller
                 }
 
                 #region ScheduleCalls
+
                 else if (incomingRequest.Contains("/CalendarBookings"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
@@ -152,12 +154,13 @@ namespace H_and_F_Room_Controller
                 }
                 #endregion
 
-                #region MenuItems
+                #region ClimateCalls
                 else if (incomingRequest.Contains("/RoomTemperatures"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
 
-                    response = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GetClimateData();
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    response = foundRoom.GetClimateData();
                 }
                 else if (incomingRequest.Contains("/ChangeTemp"))
                 {
@@ -165,53 +168,11 @@ namespace H_and_F_Room_Controller
                     string direction = incomingRequest.Split('?')[1].Split(':')[1];
 
                     decimal newSetpoint = -100.0M;
-                    if (direction == "Up") newSetpoint = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].TempUp();
-                    if (direction == "Down") newSetpoint = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].TempDown();
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    if (direction == "Up") newSetpoint = foundRoom.TempUp();
+                    if (direction == "Down") newSetpoint = foundRoom.TempDown();
 
                     response = "{ \"setpoint\": " + newSetpoint + " }";
-                }
-
-                else if(incomingRequest.Contains("/RoomLighting"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room Lighting not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
-                }
-                else if(incomingRequest.Contains("/RoomFreeview"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room Freeview not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
-                }
-                else if (incomingRequest.Contains("/RoomPCLaptop"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room PC Laptop not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
-                }
-                else if (incomingRequest.Contains("/RoomHDMIInput"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room HDMI Input not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
-                }
-                else if (incomingRequest.Contains("/RoomAudioInput"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room Audio Input not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
-                }
-                else if (incomingRequest.Contains("/RoomAudioConference"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-
-                    ConsoleLogger.WriteLine("Room Audio Conference not yet implemented");
-                    response = "{ \"notImplemnted\": \"true\" }";
                 }
                 #endregion
 
@@ -222,7 +183,8 @@ namespace H_and_F_Room_Controller
                     string roomID = incomingRequest.Split('?')[1].Split(':')[0];
                     string itemName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
 
-                    _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].ChangeSourceSelected(itemName);
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.ChangeSourceSelected(itemName);
 
                     response = "{ \"itemSelectedProcessed\": \"true\" }";
                 }
@@ -231,15 +193,22 @@ namespace H_and_F_Room_Controller
                     string roomID = incomingRequest.Split('?')[1].Split(':')[0];
                     string sourceName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
 
-                    _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].ChangeSourceSelected(sourceName);
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.ChangeSourceSelected(sourceName);
 
                     response = "{ \"sourceChanged\": \"true\" }";
                 }
                 else if (incomingRequest.Contains("/GetCurrentSource"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
-                    response = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GetCurrentSource();
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    response = foundRoom.GetCurrentSource();
                 }
+
+                #endregion
+
+                #region Portable Equipment
 
                 else if (incomingRequest.Contains("/AttachVideoInput"))
                 {
@@ -255,9 +224,13 @@ namespace H_and_F_Room_Controller
                         foreach (var source in allSources.sources)
                             if (source.sourceName == portableTransmitter.sourceName) transmitterAlreadyAttached = true;
 
-                        if(!transmitterAlreadyAttached)
-                            _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].AttachPortableVideoInput(portableTransmitter);
-                    }catch(Exception ex)
+                        if (!transmitterAlreadyAttached)
+                        {
+                            Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                            foundRoom.AttachPortableVideoInput(portableTransmitter);
+                        }
+                    }
+                    catch (Exception ex)
                     {
                         ConsoleLogger.WriteLine("Problem Attaching Video Input: " + ex);
                     }
@@ -275,9 +248,84 @@ namespace H_and_F_Room_Controller
                     AVSource portableTransmitter = JsonConvert.DeserializeObject<AVSource>(rawSource);
                     foreach (var source in allSources.sources)
                         if (source.sourceName == portableTransmitter.sourceName)
-                            _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].RemovePortableVideoInput(portableTransmitter);
+                        {
+                            Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                            foundRoom.RemovePortableVideoInput(portableTransmitter);
+                        }
 
                     response = "{ \"requestProcessed\": \"true\" }";
+                }
+
+                #endregion
+
+                #region VolumeAndMicControls
+
+                else if (incomingRequest.Contains("ChangeVolumeLevel"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1].Split(':')[0]);
+                    string direction = incomingRequest.Split('?')[1].Split(':')[1];
+                    bool state = bool.Parse(incomingRequest.Split('?')[1].Split(':')[2]);
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    foundRoom.ChangeVolumeLevel(direction, state);
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+                }
+
+                else if (incomingRequest.Contains("MuteVolume"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1]);
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    foundRoom.MuteVolume();
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+                }
+
+                else if (incomingRequest.Contains("ChangeMicLevel"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1].Split(':')[0]);
+                    string direction = incomingRequest.Split('?')[1].Split(':')[1];
+                    bool state = bool.Parse(incomingRequest.Split('?')[1].Split(':')[2]);
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    foundRoom.ChangeMicLevel(direction, state);
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+                }
+
+                else if (incomingRequest.Contains("MuteMic"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1]);
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    foundRoom.MuteMic();
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+                }
+
+                else if (incomingRequest.Contains("GetSliderLevel"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1].Split(':')[0]);
+                    string sliderName = incomingRequest.Split('?')[1].Split(':')[1];
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    if (sliderName == "mic") response = "{ \"MicLevel\": \""+ foundRoom.GetMicLevel() +"\" }";
+                    if (sliderName == "vol") response = "{ \"VolLevel\": \"" + foundRoom.GetVolLevel() + "\" }";
+                }
+
+                else if (incomingRequest.Contains("GetMuteState"))
+                {
+                    int roomID = int.Parse(incomingRequest.Split('?')[1].Split(':')[0]);
+                    string settingName = incomingRequest.Split('?')[1].Split(':')[1];
+
+                    response = "{ \"CommandProcessed\": \"true\" }";
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+                    if (settingName == "mic") response = "{ \"MicMuteState\": \"" + foundRoom.GetMicMuteState() + "\" }";
+                    if (settingName == "vol") response = "{ \"VolMuteState\": \"" + foundRoom.GetVolMuteState() + "\" }";
                 }
 
                 #endregion
@@ -286,7 +334,9 @@ namespace H_and_F_Room_Controller
                 else if (incomingRequest.Contains("/GetGroupMasterStatus"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
-                    bool roomMasterStatus = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GetRoomMasterStatus();
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    bool roomMasterStatus = foundRoom.GetRoomMasterStatus();
 
                     response = "{ \"roomMasterStatus\": \"" + roomMasterStatus + "\" }";
                 }
@@ -294,7 +344,8 @@ namespace H_and_F_Room_Controller
                 {
                     string roomID = incomingRequest.Split('?')[1];
 
-                    response = _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GetRoomMasterDetails();
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    response = foundRoom.GetRoomMasterDetails();
                 }
                 else if (incomingRequest.Contains("/GroupMasterDetails"))
                 {
@@ -302,8 +353,14 @@ namespace H_and_F_Room_Controller
                     var masterRoomDetailsRaw = new StreamReader(context.Request.InputStream,
                     context.Request.ContentEncoding).ReadToEnd();
 
+                    ConsoleLogger.WriteLine(masterRoomDetailsRaw);
+                    ConsoleLogger.WriteLine("here 1");
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    ConsoleLogger.WriteLine("here 2");
                     GroupMasterRoom masterRoom = JsonConvert.DeserializeObject<GroupMasterRoom>(masterRoomDetailsRaw);
-                    string groupingResult = _controlSystem._roomManager.rooms[int.Parse(roomID)-1].AssignGroupMaster(masterRoom);
+                    ConsoleLogger.WriteLine("here 3");
+                    string groupingResult = foundRoom.AssignGroupMaster(masterRoom);
+                    ConsoleLogger.WriteLine("here 4");
 
                     ConsoleLogger.WriteLine(masterRoomDetailsRaw);
 
@@ -315,29 +372,82 @@ namespace H_and_F_Room_Controller
                     var newSourceRaw = new StreamReader(context.Request.InputStream,
                     context.Request.ContentEncoding).ReadToEnd();
 
-                    _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GroupMasterSourceChanged(JsonConvert.DeserializeObject<AVSource>(newSourceRaw));
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.GroupMasterSourceChanged(JsonConvert.DeserializeObject<AVSource>(newSourceRaw));
 
                     response = "{ \"result\": \"Success\" }";
                 }
                 else if (incomingRequest.Contains("/GroupBreakUp"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
-                    _controlSystem._roomManager.rooms[int.Parse(roomID)-1].ClearGroupMaster();
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.ClearGroupMaster();
 
                     response = "{ \"result\": \"Success\" }";
                 }
                 else if (incomingRequest.Contains("/RestoreFromVirtualGroup"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
-                    _controlSystem._roomManager.rooms[int.Parse(roomID) - 1].RestoreRoom();
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.RestoreRoom();
 
                     response = "{ \"result\": \"Success\" }";
                 }
                 #endregion
 
+                #region VideoControlCalls
+
+                else if (incomingRequest.Contains("/GetCameras"))
+                {
+                    string roomID = incomingRequest.Split('?')[1];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    response = JsonConvert.SerializeObject(foundRoom.GetCameras());
+                }
+                else if (incomingRequest.Contains("/CameraControl"))
+                {
+                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
+                    string camName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
+                    string command = incomingRequest.Split('?')[1].Split(':')[2];
+                    string byValue = incomingRequest.Split('?')[1].Split(':')[3];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.ProcessCameraControlCommand(camName, command, byValue);
+
+                    response = "{ \"command\": \"processing\" }";
+                }
+                else if (incomingRequest.Contains("/SetDisplayControlOption"))
+                {
+                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
+                    string newOption = incomingRequest.Split('?')[1].Split(':')[1];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    DisplayControlOption result = foundRoom.setDisplayControlOption(newOption);
+                    response = "{ \"DisplayControlOption\": \"None\" }";
+
+                    if (result == DisplayControlOption.Both) response = "{ \"DisplayControlOption\": \"Both\" }";
+                    if (result == DisplayControlOption.TVOnly) response = "{ \"DisplayControlOption\": \"TV\" }";
+                    if (result == DisplayControlOption.ProjectorOnly) response = "{ \"DisplayControlOption\": \"Projector\" }";
+                }
+                else if (incomingRequest.Contains("/GetDisplayControlOption"))
+                {
+                    string roomID = incomingRequest.Split('?')[1];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    DisplayControlOption result = foundRoom.getDisplayControlOption();
+                    response = "{ \"DisplayControlOption\": \"None\" }";
+
+                    if (result == DisplayControlOption.Both) response = "{ \"DisplayControlOption\": \"Both\" }";
+                    if (result == DisplayControlOption.TVOnly) response = "{ \"DisplayControlOption\": \"TV\" }";
+                    if (result == DisplayControlOption.ProjectorOnly) response = "{ \"DisplayControlOption\": \"Projector\" }";
+                }
+                #endregion
+
                 else if (incomingRequest.Contains("/GetDivisionInfo"))
                 {
-                    response = JsonConvert.SerializeObject(_controlSystem._roomManager.GetCurrentDivisionScenario());
+                    response = JsonConvert.SerializeObject(_controlSystem.roomManager.GetCurrentDivisionScenario());
                 }
 
                 else if (incomingRequest.Contains("/GetLightingInfo"))
@@ -349,23 +459,6 @@ namespace H_and_F_Room_Controller
                 else if (incomingRequest.Contains("/FireAlarmState"))
                 {
                     response = "{ \"fireAlarmState\": \"" + _controlSystem.fireAlarmState + "\" }";
-                }
-
-                else if (incomingRequest.Contains("/GetCameras"))
-                {
-                    string roomID = incomingRequest.Split('?')[1];
-                    response = JsonConvert.SerializeObject(_controlSystem._roomManager.rooms[int.Parse(roomID) - 1].GetCameras());
-                }
-                else if (incomingRequest.Contains("/CameraControl"))
-                {
-                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
-                    string camName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
-                    string command = incomingRequest.Split('?')[1].Split(':')[2];
-                    string byValue = incomingRequest.Split('?')[1].Split(':')[3];
-
-                    _controlSystem._roomManager.rooms[int.Parse(roomID)-1].CameraControlCommand(camName, command, byValue);
-
-                    response = "{ \"command\": \"processing\" }";
                 }
 
                 else if (incomingRequest.Contains("/TimeNow"))
@@ -383,6 +476,9 @@ namespace H_and_F_Room_Controller
                 else if (incomingRequest.Contains("/RoomShutdown"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    foundRoom.Shutdown();
 
                     response = "{\"roomShutDown\": \"true\"}";
                 }

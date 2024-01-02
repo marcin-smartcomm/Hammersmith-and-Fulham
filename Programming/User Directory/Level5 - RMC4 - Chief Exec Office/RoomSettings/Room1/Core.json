@@ -1,0 +1,36 @@
+{
+  "roomID": 1,
+  "floor": 5,
+  "roomName": "Chief Exec Office",
+  "emailAddress": "marcin.rycyk@smartcomm.co.uk",
+  "isGrouped": false,
+  "sourceSelected": "Off",
+  "signageAccess": false,
+  "menuItems": [
+    {
+      "menuItemName": "Temperature Control",
+      "menuItemIcon": "fa-solid fa-temperature-half",
+      "menuItemPageAssigned": "Temperature-Control"
+    },
+    {
+      "menuItemName": "Lighting",
+      "menuItemIcon": "fa-regular fa-lightbulb",
+      "menuItemPageAssigned": "Lighting"
+    },
+    {
+      "menuItemName": "TV",
+      "menuItemIcon": "fa-solid fa-tv",
+      "menuItemPageAssigned": "TV"
+    },
+    {
+      "menuItemName": "PC-Laptop",
+      "menuItemIcon": "fa-solid fa-laptop",
+      "menuItemPageAssigned": "PC-Laptop"
+    },
+    {
+      "menuItemName": "Audio Conference",
+      "menuItemIcon": "fa-solid fa-music",
+      "menuItemPageAssigned": "Audio-Conference"
+    }
+  ]
+}

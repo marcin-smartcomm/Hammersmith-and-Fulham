@@ -1,11 +1,11 @@
-﻿using H_and_F_Room_Controller.Schedule_Related;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace H_and_F_Room_Controller
 {
@@ -22,7 +22,7 @@ namespace H_and_F_Room_Controller
 
         public void ProcessBookings(int roomID, Bookings currentBookings)
         {
-            //Add 1 Hour to UTC Times
+            //Add 1 Hour if daylight saving time
             currentBookings = AddHoursToStartAndEndTimes(1, currentBookings);
             FileOperations.saveRoomBookings(roomID, "Bookings", currentBookings);
 
@@ -44,12 +44,18 @@ namespace H_and_F_Room_Controller
 
             if (newCurrentAndNextMeetingInfo.freeAllDay)
             {
+                ConsoleLogger.WriteLine("No More Meetings Today, refreshing calendar every 5 minute");
                 _cs.refreshCalendarAfterMinutes = 5;
 
-                ConsoleLogger.WriteLine("No More Meetings Today, refreshing calendar every 5 minute");
                 FileOperations.saveRoomBookingStats(roomID, newCurrentAndNextMeetingInfo);
                 FileOperations.saveMeetingDurations(roomID, meetingDurations);
                 _eventServer.UpdateAllConnected(roomID, "Bookings");
+
+                Task.Run(() => {
+                    Thread.Sleep(500);
+                    SendOffReq(roomID);
+                });
+
                 return;
             }
             else
@@ -64,34 +70,93 @@ namespace H_and_F_Room_Controller
                     FillTimeRemainingInfo(newCurrentAndNextMeetingInfo, currentBookings);
                     FillCurrentMeetingInfo(newCurrentAndNextMeetingInfo, currentBookings);
 
+                    //If current meeintg is not last
                     if (startTimes[startTimes.Length - 1] != startTimes[curretMeetingIndex])
                     {
                         FillTimeUntilInfo(newCurrentAndNextMeetingInfo, currentBookings, curretMeetingIndex + 1);
                         FillNextMeetingInfo(newCurrentAndNextMeetingInfo, currentBookings, curretMeetingIndex + 1);
                     }
+
+                    Task.Run(() => {
+                        Thread.Sleep(500);
+                        SendPrepReq(roomID);
+                    });
                 }
                 else //not in meeting so next meeting is first meeting on list
                 {
-                    ConsoleLogger.WriteLine("Not in meeting, refreshing calendar every 5 minute");
-                    _cs.refreshCalendarAfterMinutes = 5;
-
-                    FillTimeUntilInfo(newCurrentAndNextMeetingInfo, currentBookings, GetNextMeetingIndex(startTimes));
+                    int minutesUntilNextMeeting = FillTimeUntilInfo(newCurrentAndNextMeetingInfo, currentBookings, GetNextMeetingIndex(startTimes));
                     FillNextMeetingInfo(newCurrentAndNextMeetingInfo, currentBookings, GetNextMeetingIndex(startTimes));
+
+                    if(minutesUntilNextMeeting <= 10)
+                    {
+                        Task.Run(() => {
+                            Thread.Sleep(500);
+                            SendPrepReq(roomID);
+                        });
+
+                        ConsoleLogger.WriteLine($"Next meeting in {minutesUntilNextMeeting}min, refereshing calendar every 1 minute");
+                        _cs.refreshCalendarAfterMinutes = 1;
+                    }
+                    else
+                    {
+                        Task.Run(() => { 
+                            Thread.Sleep(500);
+                            SendOffReq(roomID);
+                        });
+
+                        ConsoleLogger.WriteLine("Not in meeting, refreshing calendar every 5 minute");
+                        _cs.refreshCalendarAfterMinutes = 5;
+                    }
                 }
             }
 
             FileOperations.saveRoomBookingStats(roomID, newCurrentAndNextMeetingInfo);
             FileOperations.saveMeetingDurations(roomID, meetingDurations);
 
-            _eventServer.UpdateAllConnected(roomID, "Bookings");
+            Task.Run(() => { Thread.Sleep(500); _eventServer.UpdateAllConnected(roomID, "Bookings"); });
+
+            PrintOutCurrentAndNextMeetingInfo(newCurrentAndNextMeetingInfo);
+        }
+
+        void SendPrepReq(int roomID)
+        {
+            Room foundRoom = _cs.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+            if (!foundRoom.roomPreppedforMeeting) foundRoom.PrepRoomForMeeting();
+            foundRoom.roomPreppedforMeeting = true;
+        }
+
+        void SendOffReq(int roomID)
+        {
+            Room foundRoom = _cs.roomManager.rooms.Find(x => x.GetRoomID() == roomID);
+            if (foundRoom.roomPreppedforMeeting) foundRoom.Shutdown();
+            foundRoom.roomPreppedforMeeting = false;
+        }
+
+        void PrintOutCurrentAndNextMeetingInfo(CurrentAndNextMeetingInfo newCurrentAndNextMeetingInfo)
+        {
 
             ConsoleLogger.WriteLine("----- Current Booking Stats -----");
+            ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.currentMeetingStartEndTime);
             ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.currentMeetingOrganiser);
             ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.currentMeetingSubject);
 
             ConsoleLogger.WriteLine("----- Next Booking Stats -----");
+            ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.nextMeetingStartEndTime);
             ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.nextMeetingOrganiser);
             ConsoleLogger.WriteLine(newCurrentAndNextMeetingInfo.nextMeetingSubject);
+        }
+
+        public void DecreaseTimeUntilNextMeetingMinutes(int roomID)
+        {
+            Bookings myBookings = JsonConvert.DeserializeObject<Bookings>(FileOperations.loadRoomJson(roomID, "Bookings"));
+            CurrentAndNextMeetingInfo bookingsInfo = JsonConvert.DeserializeObject<CurrentAndNextMeetingInfo>(FileOperations.loadRoomJson(roomID, "BookingStats"));
+            int[] startTimes = GetAllStartTimes(myBookings);
+
+            FillTimeUntilInfo(bookingsInfo, myBookings, GetNextMeetingIndex(startTimes));
+
+            FileOperations.saveRoomBookingStats(roomID, bookingsInfo);
+
+            Task.Run(() => { Thread.Sleep(500); _eventServer.UpdateAllConnected(roomID, "Bookings"); }); 
         }
 
         Bookings AddHoursToStartAndEndTimes(int hours, Bookings currentBookings)
@@ -135,10 +200,6 @@ namespace H_and_F_Room_Controller
         {
             MeetingInfoCardCollection newMeetingInfoCardCollection = new MeetingInfoCardCollection();
             newMeetingInfoCardCollection.meetingInfoCards = new List<MeetingInfoCard>();
-
-            foreach(Value booking in currentBookings.value)
-            {
-            }
 
             for(int i = 0; i < currentBookings.value.Count; i++)
             {
@@ -369,7 +430,7 @@ namespace H_and_F_Room_Controller
             return nextMeetingStartEndTimeString;
         }
 
-        void FillTimeUntilInfo(CurrentAndNextMeetingInfo newBookingStats, Bookings currentBookings, int nextMeetingIndex)
+        int FillTimeUntilInfo(CurrentAndNextMeetingInfo newBookingStats, Bookings currentBookings, int nextMeetingIndex)
         {
             int timeNow = DateTime.Now.Hour * 60 + DateTime.Now.Minute;
 
@@ -390,6 +451,8 @@ namespace H_and_F_Room_Controller
                 newBookingStats.hoursUntilNextMeeting = timeRemaining / 60;
                 newBookingStats.minutesUntilNextMeeting = timeRemaining - (newBookingStats.hoursUntilNextMeeting * 60);
             }
+
+            return timeRemaining;
         }
 
         int GetNextMeetingIndex(int[] startTimes)

@@ -1,0 +1,27 @@
+
+{
+  "roomID": 3,
+  "floor": 1,
+  "roomName": "Nigel Playfair Room",
+  "emailAddress": "",
+  "isGrouped": false,
+  "sourceSelected": "Off",
+  "signageAccess": false,
+  "menuItems": [
+    {
+      "menuItemName": "Temperature Control",
+      "menuItemIcon": "fa-solid fa-temperature-half",
+      "menuItemPageAssigned": "Temperature-Control"
+    },
+    {
+      "menuItemName": "Lighting",
+      "menuItemIcon": "fa-regular fa-lightbulb",
+      "menuItemPageAssigned": "Lighting"
+    },
+    {
+      "menuItemName": "Audio Input",
+      "menuItemIcon": "fa-solid fa-music",
+      "menuItemPageAssigned": "Audio-Input"
+    }
+  ]
+}

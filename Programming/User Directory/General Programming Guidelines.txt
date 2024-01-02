@@ -1,4 +1,48 @@
-TV Control Types:
+Display Types:
+0 - TV,
+1 - Projector,
+2 - Production Unit
+
+Display Control Types:
 0 - rs232
 1 - cec
 2 - CrestronConnected
+
+Display Control Options:
+0 - Both
+1 - TV Only
+2 - Projector Only
+
+Motorized Screen Control Type
+0 - relay
+1 - rs232
+
+Audio processor Control Types:
+0 - rs232
+1 - ip
+
+Camera Control Types:
+0 - http,
+1 - viscaIP
+
+
+
+
+RS232 Commands Order in config Files
+
+For TV
+"rs232Commands":
+[
+  "Power On Command",
+  "Power Off Command",
+  "HDMI1 Command",
+  "HDMI2 Command"
+]
+
+For Motorized Screens
+"rs232Commands":
+[
+  "Up Command",
+  "Down Command",
+  "Stop Command",
+]

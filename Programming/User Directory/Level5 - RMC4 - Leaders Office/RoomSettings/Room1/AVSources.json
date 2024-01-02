@@ -1,0 +1,39 @@
+{
+  "sources":[
+    {
+      "sourceName": "Freeview 1",
+      "sourceType": "AV",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "Freeview 2",
+      "sourceType": "AV",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "Freeview 3",
+      "sourceType": "AV",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "Freeview 4",
+      "sourceType": "AV",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "PC-Laptop",
+      "sourceType": "AV",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "Audio Conference",
+      "sourceType": "A",
+      "sourceStreamAddress": "192.168.1.100/live.sdp"
+    },
+    {
+      "sourceName": "Off",
+      "sourceType": "",
+      "sourceStreamAddress": ""
+    }
+  ]
+}

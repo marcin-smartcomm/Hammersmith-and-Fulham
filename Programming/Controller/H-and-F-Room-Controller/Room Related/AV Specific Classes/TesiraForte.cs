@@ -4,20 +4,39 @@ namespace H_and_F_Room_Controller
 {
     public class TesiraForte
     {
-        ControlSystem _cs;
-        TCPClient _comms;
         string _id;
+        ControlSystem _cs;
+
+        //IP Control
+        bool _ipControlled = false;
+        TCPClient _comms;
         IPConnectionHandler _commsHandler;
+
+        //RS232 Control
+        bool _rs232Controlled = false;
+        uint _rs232Port;
 
         public TesiraForte(ControlSystem cs, TCPClient comms, string id)
         {
+            _ipControlled= true;
             _cs = cs;
             _id = id;
             _comms = comms;
         }
 
-        public void Conncet()
+        public TesiraForte(ControlSystem cs, AudioProcessor ap, string id)
         {
+            _rs232Controlled = true;
+            _cs = cs;
+            _id = id;
+            _rs232Port = ap.rs232Port;
+            _cs.serialDataReceived += _cs_serialDataReceived;
+        }
+
+        public void Connect()
+        {
+            if (!_ipControlled) return;
+
             _commsHandler = new IPConnectionHandler(_cs, _comms, _id);
             _commsHandler.newMessageEvent += _commsHandler_newMessageEvent;
             _commsHandler.Connect();
@@ -25,6 +44,8 @@ namespace H_and_F_Room_Controller
 
         public void Disconnect()
         {
+            if (!_ipControlled) return;
+
             _commsHandler.Disconnect();
             _commsHandler = null;
         }
@@ -34,44 +55,43 @@ namespace H_and_F_Room_Controller
 
         }
 
+        private void _cs_serialDataReceived(int port, string data)
+        {
+            if (port == _rs232Port)
+                ConsoleLogger.WriteLine($"Received From Com Port {port}: " + data);
+        }
+
         private void SendMessage(string msg)
         {
-            _commsHandler.SendMessage(msg);
+            if (_ipControlled) _commsHandler.SendMessage(msg + "\x0A");
+            if (_rs232Controlled) _cs.SendSerialData(_rs232Port, msg + "\x0A");
         }
 
-        public void ChangeMatrixConnection(string componentName, int newState, int inputIndex, int outputIndex)
-        {
-            SendMessage(componentName + " set crosspointLevel " + inputIndex + " " + outputIndex + " " + newState);
-        }
+        public void SubscribeToComponent(string instanceTag, string blockChannel, string blockAttribute, string subscriptionID)
+        => SendMessage($"{instanceTag} subscribe {blockAttribute} {blockChannel} {subscriptionID} 100");
 
-        public void MuteOn(string componentName)
-        {
-            SendMessage(componentName + " set mute 1 true");
-        }
+        public void UnsbscribeFromComponent(string instanceTag, string blockChannel, string blockAttribute, string subscriptionID)
+        => SendMessage($"{instanceTag} unsubscribe {blockAttribute} {blockChannel} {subscriptionID}");
 
-        public void MuteOff(string componentName)
-        {
-            SendMessage(componentName + " set mute 1 false");
-        }
+        public void ChangeMatrixConnection(string instanceTag, int newState, int inputIndex, int outputIndex)
+        => SendMessage($"{instanceTag} set crosspointLevel {inputIndex} {outputIndex} {newState}");
 
-        public void MuteToggle(string componentName)
-        {
-            SendMessage(componentName + " toggle mute 1");
-        }
+        public void MuteOn(string instanceTag, string blockChannel) 
+        => SendMessage($"{instanceTag} set mute {blockChannel} true");
 
-        public void VolUp(string componentName)
-        {
-            SendMessage(componentName + " increment level 1 2");
-        }
+        public void MuteOff(string instanceTag, string blockChannel)
+        => SendMessage($"{instanceTag} set mute {blockChannel} false");
 
-        public void VolDown(string componentName)
-        {
-            SendMessage(componentName + " decrement level 1 2");
-        }
+        public void MuteToggle(string instanceTag, string blockChannel)
+        => SendMessage($"{instanceTag} toggle mute {blockChannel}");
 
-        public void VolLevelChange(string componentName, int newLevel)
-        {
-            SendMessage(componentName + " set level 1 " + newLevel);
-        }
+        public void SliderLevelUp(string instanceTag, string blockChannel)
+        => SendMessage($"{instanceTag} increment level {blockChannel} 1");
+
+        public void SliderLevelDown(string instanceTag, string blockChannel)
+        => SendMessage($"{instanceTag} decrement level {blockChannel} 1");
+
+        public void SliderLevelChange(string instanceTag, int newLevel, string blockChannel)
+        => SendMessage($"{instanceTag} set level {blockChannel} " + newLevel);
     }
 }

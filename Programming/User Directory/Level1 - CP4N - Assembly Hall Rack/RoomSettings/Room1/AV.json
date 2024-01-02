@@ -1,0 +1,38 @@
+{
+    "NVXRxs": [16, 17],
+    "NVXTxs": [],
+
+    "AudioProcessor":
+    {
+        "controlType": 0,
+
+        "ip": "",
+        "TCPport": 0,
+
+        "rs232Port": 1,
+
+        "controlComponents": [
+            ["volLevelComponent", "1"],
+            ["volMuteComponent", "1"],
+            ["micLevelComponent", "1"],
+            ["micMuteComponent", "1"]
+        ]
+    },
+
+    "Displays": [],
+
+    "MotorizedScreens": [],
+
+    "Cameras": [
+        {
+            "name": "PTZ-1",
+            "ip": "192.168.1.86",
+            "controlType": 0
+        },
+        {
+            "name": "PTZ-2",
+            "ip": "192.168.1.86",
+            "controlType": 0
+        }
+    ]
+}

@@ -25,17 +25,22 @@ namespace H_and_F_Room_Controller
             bool shouldInitialiseBACnet = false;
             roomIDsWithClimateControl = new List<int>();
 
-            for (int i = 0; i < FileOperations.GetNumberOfRooms(); i++)
+            foreach(var directory in FileOperations.GetRoomDirectories())
             {
-                RoomCoreInfo roomData = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(i + 1, "Core"));
-                rooms.Add(new Room(_cs, roomData.roomID, this));
+                int roomFolderNamePos = directory.Split('/').Length - 1;
+                string roomFolderName = directory.Split('/')[roomFolderNamePos];
+                int roomID = int.Parse(roomFolderName.Replace("Room", ""));
+
+
+                RoomCoreInfo roomData = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(roomID, "Core"));
+                rooms.Add(new Room(_cs, roomID, this));
 
                 //Check if Rooms have Temp Control
                 foreach (var menuItem in roomData.menuItems)
                     if (menuItem.menuItemName.Contains("Temperature"))
                     {
                         shouldInitialiseBACnet = true;
-                        roomIDsWithClimateControl.Add(i+1);
+                        roomIDsWithClimateControl.Add(roomID);
                     }
             }
 
@@ -87,24 +92,21 @@ namespace H_and_F_Room_Controller
                         ClimateControlValues ccv = JsonConvert.DeserializeObject<ClimateControlValues>(FileOperations.loadRoomJson(roomID, "ClimateControl"));
 
                         if (ControlSystem.debugEnabled)
+                        {
                             ConsoleLogger.WriteLine($"------------------------------------ Climate Control bacnet exercise for Room{roomID} ------------------------------------");
-                        //First Write previously saved values
-                        if (ControlSystem.debugEnabled)
+                            //First Write previously saved values
                             ConsoleLogger.WriteLine("Writing Setpoint: " + ccv.setpoint);
-                        _bacnetComms.SetNewSetpointValue(ccv.setpoint_AV_ID, ccv.setpoint);
-                        if (ControlSystem.debugEnabled)
+                            _bacnetComms.SetNewSetpointValue(ccv.setpoint_AV_ID, ccv.setpoint);
                             ConsoleLogger.WriteLine("Writing Occupancy: " + ccv.occupancy);
-                        _bacnetComms.SetNewOccupancyMode(ccv.occupancy_MSV_ID, ccv.occupancy);
+                            _bacnetComms.SetNewOccupancyMode(ccv.occupancy_MSV_ID, ccv.occupancy);
 
-                        ccv.currentTemp = _bacnetComms.ReadSpaceTempValue(ccv.currentTemp_AV_ID);
-                        if (ControlSystem.debugEnabled)
+                            ccv.currentTemp = _bacnetComms.ReadSpaceTempValue(ccv.currentTemp_AV_ID);
                             ConsoleLogger.WriteLine("Curent Temp: " + ccv.currentTemp);
-                        ccv.setpoint = _bacnetComms.ReadSetpointValue(ccv.setpoint_AV_ID);
-                        if (ControlSystem.debugEnabled)
+                            ccv.setpoint = _bacnetComms.ReadSetpointValue(ccv.setpoint_AV_ID);
                             ConsoleLogger.WriteLine("Curent SetPoint: " + ccv.setpoint);
-                        ccv.spaceCO2 = _bacnetComms.ReadCo2Value(ccv.spaceCO2_AV_ID);
-                        if (ControlSystem.debugEnabled)
+                            ccv.spaceCO2 = _bacnetComms.ReadCo2Value(ccv.spaceCO2_AV_ID);
                             ConsoleLogger.WriteLine("Curent CO2: " + ccv.spaceCO2);
+                        }
 
                         FileOperations.saveRoomClimateValues(roomID, ccv);
 

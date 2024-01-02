@@ -147,16 +147,12 @@ namespace H_and_F_Room_Controller
 
                 _eventListeners.Add(new Tuple<uint, HttpListenerContext, string>(roomID, context, IP));
 
-                if(_eventListeners.Count == 1) cs.GetCalendarBookings();
-
-                if (_eventListeners.Count > 1)
-                    CheckForDuplicates();
+                if (_eventListeners.Count == 1) cs.GetCalendarBookings();
+                if (_eventListeners.Count > 1) CheckForDuplicates();
 
                 ConsoleLogger.WriteLine(_eventListeners.Count + " Event Listeners: ");
                 foreach (Tuple<uint, HttpListenerContext, string> entry in _eventListeners)
-                {
                     ConsoleLogger.WriteLine("IP: " + entry.Item3 + " || Room: " + entry.Item1);
-                }
 
             }
             catch (Exception ex)
@@ -170,10 +166,8 @@ namespace H_and_F_Room_Controller
             Tuple<uint, HttpListenerContext, string> itemToCheck = _eventListeners.Last();
 
             for(int i = 0; i < _eventListeners.Count - 1; i++)
-            {
                 if (_eventListeners[i].Item3 == itemToCheck.Item3)
                     _eventListeners.RemoveAt(i);
-            }
         }
     }
 }

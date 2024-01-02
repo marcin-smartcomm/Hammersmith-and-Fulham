@@ -8,6 +8,8 @@ namespace H_and_F_Room_Controller
 {
     public class IPConnectionHandler
     {
+        public bool terminateConnectionAttempts = false;
+
         public event Action<string> newMessageEvent;
 
         ControlSystem _cs;
@@ -25,11 +27,24 @@ namespace H_and_F_Room_Controller
         {
             if (!_keepConnectionAlive)
             {
-                ConsoleLogger.WriteLine("Tryign to connect to: " + _id + " (" + _comms.AddressClientConnectedTo + ")");
-                _comms.ConnectToServerAsync(ClientConnectCallBackFunction);
-                _comms.SocketStatusChange += _comms_SocketStatusChange;
-
                 _keepConnectionAlive = true;
+
+                Task.Run(() =>
+                {
+                    while (_comms.ClientStatus != SocketStatus.SOCKET_STATUS_CONNECTED && _keepConnectionAlive)
+                    {
+                        ConsoleLogger.WriteLine("Tryign to connect to: " + _id + " (" + _comms.AddressClientConnectedTo + ")");
+                        _comms.ConnectToServerAsync(ClientConnectCallBackFunction);
+                        _comms.SocketStatusChange += _comms_SocketStatusChange;
+
+                        Thread.Sleep(5000);
+                        if (_comms.ClientStatus != SocketStatus.SOCKET_STATUS_CONNECTED && _keepConnectionAlive)
+                        {
+                            _comms.DisconnectFromServer();
+                            _comms.SocketStatusChange -= _comms_SocketStatusChange;
+                        }
+                    }
+                });
             }
         }
         public void Disconnect()
@@ -88,16 +103,10 @@ namespace H_and_F_Room_Controller
             }
             if (clientSocketStatus == SocketStatus.SOCKET_STATUS_NO_CONNECT && _keepConnectionAlive)
             {
-                Task.Run(() =>
-                {
-                    while (_comms.ClientStatus == SocketStatus.SOCKET_STATUS_NO_CONNECT)
-                    {
-                        Disconnect();
-                        Thread.Sleep(2000);
-                        Connect();
-                        Thread.Sleep(2000);
-                    }
-                });
+                ConsoleLogger.WriteLine($"Re-attempting to connect with {_id} ({_comms.AddressClientConnectedTo})");
+                Disconnect();
+                Thread.Sleep(2000);
+                Connect();
             }
         }
     }

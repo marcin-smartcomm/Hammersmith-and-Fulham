@@ -74,7 +74,7 @@ function ActivateRoomBtn(roomBtn, roomsAvailable)
     {
       document.getElementById("masterRoomSelected").innerHTML = roomBtn.innerHTML.replace("Floor 0", "").replace("Floor 1", "").replace("Floor 2", "").replace("Floor 3", "").replace("Floor 4", "").replace("Floor 5", "").replace("<br>", "");
 
-      document.getElementById("combineRoomsTopSectionText").innerHTML = "Select Slave Rooms";
+      document.getElementById("combineRoomsTopSectionText").innerHTML = "Select Secondary Rooms";
 
       masterRoomSelected = roomBtn;
 

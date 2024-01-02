@@ -4,25 +4,57 @@
       "boxName": "BBC 2",
       "nvxStreamAddress": "https://192.68.10.10/live.sdp",
       "cp4IRPortNum": 1,
-      "icons": "fa-solid fa-tv"
+      "icons": "fa-solid fa-tv",
+      "type": "freeview"
     },
     {
       "boxName": "BBC News",
       "nvxStreamAddress": "https://192.68.10.11/live.sdp",
       "cp4IRPortNum": 2,
-      "icons": "fa-solid fa-tv"
+      "icons": "fa-solid fa-tv",
+      "type": "freeview"
     },
     {
       "boxName": "Sky News",
       "nvxStreamAddress": "https://192.68.10.13/live.sdp",
       "cp4IRPortNum": 3,
-      "icons": "fa-solid fa-tv"
+      "icons": "fa-solid fa-tv",
+      "type": "freeview"
     },
     {
       "boxName": "BBC Parliament",
       "nvxStreamAddress": "https://192.68.10.14/live.sdp",
       "cp4IRPortNum": 4,
-      "icons": "fa-solid fa-tv"
+      "icons": "fa-solid fa-tv",
+      "type": "freeview"
+    },
+    {
+      "boxName": "Signage Player 1",
+      "nvxStreamAddress": "https://192.68.10.15/live.sdp",
+      "cp4IRPortNum": 4,
+      "icons": "fa-solid fa-tv",
+      "type": "signage"
+    },
+    {
+      "boxName": "Signage Player 2",
+      "nvxStreamAddress": "https://192.68.10.16/live.sdp",
+      "cp4IRPortNum": 4,
+      "icons": "fa-solid fa-tv",
+      "type": "signage"
+    },
+    {
+      "boxName": "Signage Player 3",
+      "nvxStreamAddress": "https://192.68.10.17/live.sdp",
+      "cp4IRPortNum": 4,
+      "icons": "fa-solid fa-tv",
+      "type": "signage"
+    },
+    {
+      "boxName": "Signage Player 4",
+      "nvxStreamAddress": "https://192.68.10.18/live.sdp",
+      "cp4IRPortNum": 4,
+      "icons": "fa-solid fa-tv",
+      "type": "signage"
     }
   ]
 }

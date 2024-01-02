@@ -10,6 +10,7 @@ namespace H_and_F_Core
         {
             try
             {
+                ConsoleLogger.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
                 string absolutePath = @"../../user/";
                 StreamReader sr = new StreamReader(absolutePath + configFile + ".json");
 

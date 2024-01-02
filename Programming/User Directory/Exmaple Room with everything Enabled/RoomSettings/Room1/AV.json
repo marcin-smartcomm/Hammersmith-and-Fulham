@@ -2,18 +2,32 @@
     "NVXRxs": [16],
     "NVXTxs": [32],
 
-    "BiampIP": "192.168.1.202",
-    "BiampPort": 23,
+    "AudioProcessor":
+    {
+        "controlType": 0,
 
-    "TVs": [
+        "ip": "",
+        "TCPport": 0,
+
+        "rs232Port": 1,
+
+        "controlComponents": [
+            ["volLevelComponent", "1"],
+            ["volMuteComponent", "1"],
+            ["micLevelComponent", "1"],
+            ["micMuteComponent", "1"]
+        ]
+    },
+
+    "Displays": [
         {
-            "ipid": 0,
+            "displayType": 0,
             "controlType": 1,
             "nvxRXConnected": 16,
-            "rs232Commands": []
+            "motorizedScreenAttached": 0
         },
         {
-            "ipid": 0,
+            "displayType": 0,
             "controlType": 0,
             "nvxRXConnected": 16,
             "rs232Commands": 
@@ -22,13 +36,23 @@
                 "PowerOff",
                 "HDMI1",
                 "HDMI2"
-            ]
+            ],
+            "motorizedScreenAttached": 0
         },
         {
+            "displayType": 0,
             "ipid": 48,
             "controlType": 2,
-            "nvxRXConnected": 16,
-            "rs232Commands": []
+            "motorizedScreenAttached": 1
+        }
+    ],
+
+    "MotorizedScreens": [
+        {
+            "id": 1,
+            "relay": 1,
+            "screenUpRelayState": true,
+            "screenDownRelayState": false
         }
     ],
 

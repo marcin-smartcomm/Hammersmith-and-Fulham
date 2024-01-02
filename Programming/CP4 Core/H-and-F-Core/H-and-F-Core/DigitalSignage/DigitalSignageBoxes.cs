@@ -6,6 +6,7 @@ namespace H_and_F_Core
     {
         public int boxID { get; set; }
         public string boxIPAddress { get; set; }
+        public string[] rs232Commands { get; set; }
     }
 
     public class DigitalSignageBoxes

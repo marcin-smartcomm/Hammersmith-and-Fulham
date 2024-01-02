@@ -68,7 +68,7 @@ function ActivateRoomSelectSpBtns()
 
             if(panelType == "iPadM")
             {
-                DisplayConnectingSubpage()
+                DisplayConnectingSubpage(roomBtn.id)
                 currentRoomInfo = null;
                 RoomChangeCall(roomBtn.id)
                 serverIP = roomBtn.id.split(':')[0]
@@ -86,24 +86,26 @@ function ActivateRoomSelectSpBtns()
     });
 }
 
-function DisplayConnectingSubpage()
+function DisplayConnectingSubpage(hostInfo)
 {
     var mainProjectBody = document.getElementById("mainProjectBody")
 
     var connectingPopUp = document.createElement("div")
     connectingPopUp.style.position = "absolute";
+    connectingPopUp.style.top = "100px";
     connectingPopUp.style.width = "100%";
     connectingPopUp.style.height = "100%";
     connectingPopUp.style.top = "0"
     connectingPopUp.classList.add("centered")
-    connectingPopUp.style.backgroundColor = "#00000080"
+    connectingPopUp.style.backgroundColor = "#00000099"
     connectingPopUp.id = "connectingPopUp"
 
     var connectingElement = document.createElement("div")
-    connectingElement.innerHTML = "Connecting ...";
+    connectingElement.innerHTML = `Connecting to ${hostInfo}...`;
     connectingElement.style.color = "white";
     connectingElement.style.fontSize = "250%";
     connectingElement.style.margin = "auto"
+    connectingElement.style.backgroundColor = "grey"
 
     connectingPopUp.appendChild(connectingElement)
     mainProjectBody.appendChild(connectingPopUp)

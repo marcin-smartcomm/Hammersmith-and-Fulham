@@ -5,8 +5,7 @@
       "panelIP": "192.168.1.131",
       "panelType": "TSW",
       "serverIP": "192.168.1.243",
-      "roomID": 0,
-      "lightingServerIP": ""
+      "roomID": 0
     },
     {
       "roomName": "Foyer / Shared Workspace",
@@ -14,16 +13,7 @@
       "panelIP": "192.168.1.86",
       "panelType": "iPadM",
       "serverIP": "192.168.1.243",
-      "roomID": 1,
-      "lightingServerIP": ""
-    },
-    {
-      "slaveID": 0,
-      "panelIP": "192.168.1.87",
-      "panelType": "iPadS",
-      "serverIP": "192.168.1.243",
-      "roomID": 1,
-      "lightingServerIP": ""
+      "roomID": 1
     },
     {
       "roomName": "Foyer / Shared Workspace",
@@ -31,8 +21,7 @@
       "panelIP": "192.168.1.220",
       "panelType": "iPadS",
       "serverIP": "192.168.1.243",
-      "roomID": 1,
-      "lightingServerIP": ""
+      "roomID": 1
     },
     {
       "roomName": "Registar Waiting Room",
@@ -40,8 +29,7 @@
       "panelIP": "192.168.1.221",
       "panelType": "iPadS",
       "serverIP": "192.168.1.243",
-      "roomID": 2,
-      "lightingServerIP": ""
+      "roomID": 2
     },
     {
       "roomName": "Nigel Playfair Room",
@@ -49,8 +37,7 @@
       "panelIP": "192.168.1.222",
       "panelType": "iPadS",
       "serverIP": "192.168.1.244",
-      "roomID": 3,
-      "lightingServerIP": ""
+      "roomID": 3
     },
     {
       "roomName": "Opposition Office",
@@ -58,8 +45,7 @@
       "panelIP": "192.168.1.223",
       "panelType": "iPadS",
       "serverIP": "192.168.1.246",
-      "roomID": 2,
-      "lightingServerIP": ""
+      "roomID": 2
     }
   ]
 }

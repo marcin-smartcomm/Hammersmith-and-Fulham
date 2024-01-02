@@ -9,7 +9,7 @@ function ProcessAdminAssistanceEntries(allEntries)
 {
     if(currentSubpage !== "Admin-Assistance") return;
 
-    if(!systemAlertsInitialized)
+    if(!adminAssistanceInitialized)
     {
         let backBtn = document.getElementById("adminAssistancePageBackBtn")
         let clearBtn = document.getElementById("adminAssistancePageClearBtn")
