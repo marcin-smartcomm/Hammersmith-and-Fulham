@@ -6,14 +6,16 @@ namespace H_and_F_Room_Controller
     {
         TV,
         Projector,
-        ProductionUnit
+        ProductionUnit,
+        NoDisplay
     }
 
     public enum DisplayControlType
     {
         rs232,
         cec,
-        roomView
+        roomView,
+        noControl
     }
 
     public enum DisplayCommand

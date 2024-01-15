@@ -143,6 +143,8 @@ function AddFreeviewEventListener(btn, freeviewName)
 
 function HighlightCurrentlySelectedSource(currentSource)
 {
+    ClearCurrentlySelectedSourceIndicator()
+
     $.each($("[id^=menuItemText]"), function (i, element) {
         if(element.textContent == currentSource.sourceName)
             element.parentElement.innerHTML += `<div class='source-selected-indicator'></div>`
@@ -153,4 +155,9 @@ function HighlightCurrentlySelectedSource(currentSource)
     });
 
     AddEventListeners()
+}
+
+function ClearCurrentlySelectedSourceIndicator()
+{
+    $('.source-selected-indicator').remove()
 }

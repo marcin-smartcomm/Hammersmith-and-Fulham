@@ -188,22 +188,41 @@ namespace H_and_F_Room_Controller
 
                     response = "{ \"itemSelectedProcessed\": \"true\" }";
                 }
-                else if (incomingRequest.Contains("ChangeSouceSelected"))
-                {
-                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
-                    string sourceName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
-
-                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
-                    foundRoom.ChangeSourceSelected(sourceName);
-
-                    response = "{ \"sourceChanged\": \"true\" }";
-                }
                 else if (incomingRequest.Contains("/GetCurrentSource"))
                 {
                     string roomID = incomingRequest.Split('?')[1];
 
                     Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
                     response = foundRoom.GetCurrentSource();
+                }
+
+                #endregion
+
+                #region Production Unit Calls
+
+                else if (incomingRequest.Contains("GetProductionUnitSources"))
+                {
+                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    
+                    response = FileOperations.loadRoomJson(int.Parse(roomID), "AVSources");
+                }
+                else if (incomingRequest.Contains("UpdateProductionUnitStream"))
+                {
+                    string roomID = incomingRequest.Split('?')[1].Split(':')[0];
+                    string sourceName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+                    
+                    response = "{ \"ProductionUnitSource\": \""+ foundRoom.UpdateProductionUnitStream(sourceName) + "\" }";
+                }
+                else if (incomingRequest.Contains("GetCurrentProductionStream"))
+                {
+                    string roomID = incomingRequest.Split('?')[1];
+
+                    Room foundRoom = _controlSystem.roomManager.rooms.Find(x => x.GetRoomID() == int.Parse(roomID));
+
+                    response = "{ \"ProductionUnitSource\": \"" + foundRoom.GetCurrentProductionStream() + "\" }";
                 }
 
                 #endregion

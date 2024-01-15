@@ -29,7 +29,6 @@ function getRoomDataCall(roomID)
             if(panelType.includes("iPad")) 
             {
                 InitializeHomeScreen()
-                GetCurrentSourceCall(result.roomID, true)
             }
 
             
@@ -108,23 +107,6 @@ function ChangeTempCall(roomID, direction)
     });
 }
 
-function SetNewSourceCall(roomID, sourceName)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/ChangeSouceSelected",
-        dataType: "json",
-        data: roomID + ':' + sourceName,
-        success: function (result) {
-            //TV.js
-            ProcessFreeviewSourceSelected(result);
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
 function GetCurrentSourceCall(roomID, changePage)
 {
     $.ajax({
@@ -135,11 +117,9 @@ function GetCurrentSourceCall(roomID, changePage)
         success: function (result) {
             //SubpageManager.js
             if(changePage) ChangeSubpageToSelectedSource(result)
-            else {
-                //Menu.js
-                if(currentSubpage == "Menu") 
-                    HighlightCurrentlySelectedSource(result)
-            }
+            
+            if(currentSubpage == "Menu") 
+                HighlightCurrentlySelectedSource(result)
         },
         error: function () {
             console.error("Error in communication")
@@ -186,9 +166,7 @@ function ShutdownRoomCall(roomID)
         url: "http://"+serverIP+":50000/api/RoomShutdown",
         dataType: "json",
         data: roomID+'',
-        success: function (result) {
-            if(result.roomShutDown) 
-                openSubpage("Menu")
+        success: function () {
         },
         error: function () {
             console.error("Error in communication")
@@ -523,6 +501,60 @@ function SetSmallHallDisplayControlOpitonCall(option)
     });
 }
 
+function GetProductionUnitSourcesCall(roomID)
+{
+    $.ajax({
+        type: "GET",
+        url: "http://"+serverIP+":50000/api/GetProductionUnitSources",
+        dataType: "json",
+        data: roomID+'',
+        success: function (result) {
+            PopulateRecordableSourcesList(result)
+        },
+        error: function (err) {
+            console.log(err)
+            console.error("Error in communication")
+        },
+        timeout: 2000
+    });
+}
+
+function GetCurrentlySelectedStreamCall(roomID)
+{
+    $.ajax({
+        type: "GET",
+        url: "http://"+serverIP+":50000/api/GetCurrentProductionStream",
+        dataType: "json",
+        data: roomID+'',
+        success: function (result) {
+            UpdateSelectedStreamFb(result.ProductionUnitSource)
+        },
+        error: function (err) {
+            console.log(err)
+            console.error("Error in communication")
+        },
+        timeout: 2000
+    });
+}
+
+function UpdateProductionUnitStreamCall(roomID, sourceName)
+{
+    $.ajax({
+        type: "GET",
+        url: "http://"+serverIP+":50000/api/UpdateProductionUnitStream",
+        dataType: "json",
+        data: roomID+':'+sourceName,
+        success: function (result) {
+            UpdateSelectedStreamFb(result.ProductionUnitSource)
+        },
+        error: function (err) {
+            console.log(err)
+            console.error("Error in communication")
+        },
+        timeout: 2000
+    });
+}
+
 function SubscribeToRoomEvents(roomID)
 {
     eventStreamSource = new EventSource("http://"+serverIP+":50001/api/events?"+roomID)
@@ -605,9 +637,6 @@ function ProcessIncomingEvent(event)
         if(event.data.includes("Source"))
             if(sideMenuCurrentlyDisplayed == "Main")
                 GetCurrentSourceCall(currentRoomInfo.roomID, true)
-
-        if(event.data.includes("RoomOff"))
-            InitializeHomeScreen()
     }
     if(event.data.includes("TIME"))
     {

@@ -1,5 +1,5 @@
 {
-    "NVXRxs": [16],
+    "NVXRxs": [16, 17, 18, 19, 20],
     "NVXTxs": [],
 
     "AudioProcessor":
@@ -24,17 +24,30 @@
             "displayType": 1,
             "controlType": 2,
             "ipid": 48,
+            "nvxRXConnected": 16,
             "motorizedScreenID": 1
         },
         {
             "displayType": 0,
             "controlType": 2,
-            "ipid": 49
+            "ipid": 49,
+            "nvxRXConnected": 17
         },
         {
             "displayType": 0,
             "controlType": 2,
-            "ipid": 50
+            "ipid": 50,
+            "nvxRXConnected": 18
+        },
+        {
+            "displayType": 3,
+            "controlType": 3,
+            "nvxRXConnected": 19
+        },
+        {
+            "displayType": 3,
+            "controlType": 3,
+            "nvxRXConnected": 20
         }
     ],
 

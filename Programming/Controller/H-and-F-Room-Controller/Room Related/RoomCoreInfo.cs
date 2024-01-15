@@ -20,6 +20,8 @@ namespace H_and_F_Room_Controller
 
         public string sourceSelected { get; set; }
 
+        public string videoProductionStreamSelected { get; set; }
+
         public bool signageAccess { get; set; }
 
         public List<RoomMenuItem> menuItems { get; set; }

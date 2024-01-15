@@ -3,52 +3,72 @@
     {
       "sourceName": "Freeview 1",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/F1live.sdp"
+      "sourceStreamAddress": "192.168.1.100/F1live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": false
     },
     {
       "sourceName": "Freeview 2",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/F2live.sdp"
+      "sourceStreamAddress": "192.168.1.100/F2live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": false
     },
     {
       "sourceName": "Freeview 3",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/F3live.sdp"
+      "sourceStreamAddress": "192.168.1.100/F3live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": false
     },
     {
       "sourceName": "Freeview 4",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/F4live.sdp"
+      "sourceStreamAddress": "192.168.1.100/F4live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": false
     },
     {
       "sourceName": "PC-Laptop",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/PClive.sdp"
+      "sourceStreamAddress": "192.168.1.100/PClive.sdp",
+      "camerasRequired": true,
+      "canBeRecorded": true
     },
     {
       "sourceName": "HDMI Input FOH",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/HDMI1live.sdp"
+      "sourceStreamAddress": "192.168.1.100/HDMI1live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": true
     },
     {
       "sourceName": "HDMI Input Right",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/HDMI2live.sdp"
+      "sourceStreamAddress": "192.168.1.100/HDMI2live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": true
     },
     {
       "sourceName": "HDMI Input Left",
       "sourceType": "AV",
-      "sourceStreamAddress": "192.168.1.100/HDMI3live.sdp"
+      "sourceStreamAddress": "192.168.1.100/HDMI3live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": true
     },
     {
       "sourceName": "Audio Conference",
       "sourceType": "A",
-      "sourceStreamAddress": "192.168.1.100/AClive.sdp"
+      "sourceStreamAddress": "192.168.1.100/AClive.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": true
     },
     {
       "sourceName": "Off",
       "sourceType": "",
-      "sourceStreamAddress": ""
+      "sourceStreamAddress": "",
+      "camerasRequired": false,
+      "canBeRecorded": false
     }
   ]
 }

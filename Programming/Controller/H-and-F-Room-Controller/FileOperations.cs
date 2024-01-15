@@ -8,7 +8,7 @@ namespace H_and_F_Room_Controller
 {
     public static class FileOperations
     {
-        public static void saveRoomData(string roomID, string settingType, RoomCoreInfo roomData)
+        public static void saveRoomData(string roomID, RoomCoreInfo roomData)
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -16,9 +16,9 @@ namespace H_and_F_Room_Controller
             string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
             try
             {
-                File.Delete(absolutePath + settingType + ".json");
+                File.Delete(absolutePath + "Core.json");
                 File.WriteAllText(
-                    absolutePath + settingType + ".json",
+                    absolutePath + "Core.json",
                     JsonConvert.SerializeObject(roomData, Formatting.Indented, serializerSettings)
                     );
             }catch (Exception ex)

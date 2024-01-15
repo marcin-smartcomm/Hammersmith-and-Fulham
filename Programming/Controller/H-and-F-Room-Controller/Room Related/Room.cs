@@ -1,6 +1,5 @@
 ﻿using Crestron.SimplSharp.CrestronSockets;
 using Crestron.SimplSharpPro;
-using Crestron.SimplSharpPro.AudioDistribution;
 using Crestron.SimplSharpPro.CrestronConnected;
 using Crestron.SimplSharpPro.DM.Streaming;
 using Newtonsoft.Json;
@@ -24,6 +23,7 @@ namespace H_and_F_Room_Controller
         DmNvx360[] _nvxTransmitters;
         DmNvxD30[] _nvxReceivers;
 
+        List<Display> _allDisplays;
         List<Display> _roomViewDisplays;
         List<Display> _cecDisplays;
         List<Display> _rs232Displays;
@@ -65,6 +65,7 @@ namespace H_and_F_Room_Controller
             _mgr = mgr;
             _dco = DisplayControlOption.Both;
 
+            _allDisplays = new List<Display>();
             _cecDisplays = new List<Display>();
             _rs232Displays = new List<Display>();
             _roomViewDisplays = new List<Display>();
@@ -85,6 +86,8 @@ namespace H_and_F_Room_Controller
 
                 foreach (var tv in aVData.Displays)
                 {
+                    _allDisplays.Add(tv);
+
                     if (tv.controlType == DisplayControlType.roomView)
                     {
                         tv.connectedDisplay = new RoomViewConnectedDisplay(tv.ipid, _cs);
@@ -236,7 +239,7 @@ namespace H_and_F_Room_Controller
                 {
                     RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
                     rci.sourceSelected = itemSelected;
-                    FileOperations.saveRoomData(_id.ToString(), "Core", rci);
+                    FileOperations.saveRoomData(_id.ToString(), rci);
 
                     UpdateAudioEquipment(source);
                     UpdateVideoEquipment(source);
@@ -251,6 +254,36 @@ namespace H_and_F_Room_Controller
                 }
         }
 
+        private void UpdateAudioEquipment(AVSource source)
+        {
+            if (source.sourceType.Contains("A"))
+            {
+                if (_audioProcessorSetup.controlType == AudioProcessorControlType.ip)
+                    _audioProcessor.Connect();
+            }
+            else
+            {
+                if (_audioProcessorSetup.controlType == AudioProcessorControlType.ip)
+                    _audioProcessor.Disconnect();
+            }
+        }
+        void UpdateVideoEquipment(AVSource newSource)
+        {
+
+            if (newSource.sourceType.Contains("V"))
+            {
+                PowerOnDisplays();
+                UpdateReceiversStream(newSource);
+            }
+            else
+            {
+                PowerOffDisplays();
+                UpdateReceiversStream(new AVSource { sourceStreamAddress = "" });
+            }
+
+            if (newSource.camerasRequired) ConnectToCameras();
+            else DisconnectFromCameras();
+        }
         void UpdateCoreOnNewSource(AVSource newSource)
         {
             CoreProcessorInfo cpi = JsonConvert.DeserializeObject<CoreProcessorInfo>(FileOperations.loadCoreInfo("CoreProcessorInfo"));
@@ -278,26 +311,65 @@ namespace H_and_F_Room_Controller
 
         #endregion
 
-        #region Video Equipment Control
 
-        void UpdateVideoEquipment(AVSource newSource)
+        #region NVX Control
+
+        void UpdateReceiversStream(AVSource newSource)
         {
-
-            if (newSource.sourceType.Contains("V"))
+            ConsoleLogger.WriteLine("Updating Receivers with following stream: " + newSource.sourceStreamAddress);
+            foreach (var display in _allDisplays)
             {
-                PowerOnDisplays();
-                UpdateReceiverStreams(newSource);
+                if (display.displayType != DisplayType.ProductionUnit)
+                    foreach (var receiver in _nvxReceivers)
+                        if (receiver.ID == display.nvxRXConnected)
+                            receiver.Control.ServerUrl.StringValue = newSource.sourceStreamAddress;
             }
-            else
-            {
-                PowerOffDisplays();
-                UpdateReceiverStreams(new AVSource { sourceStreamAddress = "" });
-            }
-
-            if (newSource.sourceName == "PC-Laptop") ConnectToCameras();
-            else DisconnectFromCameras();
         }
 
+        public string UpdateProductionUnitStream(string itemSelected)
+        {
+            try
+            {
+                RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
+                AVSources sources = JsonConvert.DeserializeObject<AVSources>(FileOperations.loadRoomJson(_id, "AVSources"));
+                AVSource selectedSource = null;
+
+                foreach (var source in sources.sources)
+                    if (source.sourceName == itemSelected)
+                        selectedSource = source;
+
+                ConsoleLogger.WriteLine("Updating Production unit with following stream: " + selectedSource.sourceStreamAddress);
+                foreach (var display in _allDisplays)
+                {
+                    if (display.displayType == DisplayType.ProductionUnit)
+                        foreach (var receiver in _nvxReceivers)
+                            if (receiver.ID == display.nvxRXConnected)
+                            {
+                                receiver.Control.ServerUrl.StringValue = selectedSource.sourceStreamAddress;
+                                rci.videoProductionStreamSelected = selectedSource.sourceName;
+                            }
+                }
+
+                FileOperations.saveRoomData(_id.ToString(), rci);
+
+                return rci.videoProductionStreamSelected;
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Problem in UpdateProductionUnitStream(): " + ex);
+                return "";
+            }
+        }
+
+        public string GetCurrentProductionStream()
+        {
+            RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
+            return rci.videoProductionStreamSelected;
+        }
+
+        #endregion
+
+        #region Camera Controls
         void ConnectToCameras()
         {
             foreach (var cam in _cameras)
@@ -311,13 +383,165 @@ namespace H_and_F_Room_Controller
                     cam.ipComms.Disconnect();
         }
 
-        void UpdateReceiverStreams(AVSource newSource)
+        public void ProcessCameraControlCommand(string camName, string command, string presetNum)
         {
-            ConsoleLogger.WriteLine("Updating Receivers with following stream: " + newSource.sourceStreamAddress);
-            foreach (DmNvxD30 receiver in _nvxReceivers)
-                receiver.Control.ServerUrl.StringValue = newSource.sourceStreamAddress;
+            Camera camToControl = null;
+
+            foreach (var cam in _cameras)
+                if (camName == cam.name) camToControl = cam;
+
+            if (camToControl == null) return;
+
+            ConsoleLogger.WriteLine($"Sending {command} to: {camName} ({camToControl.ip})");
+            /////////////////////////////
+            if (command == "zoom+|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomadd_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x02, 0xFF });
+            }
+            if (command == "zoom+|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomadd_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x00, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "zoom-|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomdec_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x03, 0xFF });
+            }
+            if (command == "zoom-|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomdec_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x00, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "up|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "up_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
+            }
+            if (command == "up|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "up_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "down|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "down_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x02, 0xFF });
+            }
+            if (command == "down|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "down_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "left|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "left_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x03, 0xFF });
+            }
+            if (command == "left|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "left_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "right|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "right_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x02, 0x03, 0xFF });
+            }
+            if (command == "right|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "right_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "leftup|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftup_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x01, 0xFF });
+            }
+            if (command == "leftup|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftup_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "rightup|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightup_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x01, 0xFF });
+            }
+            if (command == "rightup|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightup_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "leftdown|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftdown_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x02, 0xFF });
+            }
+            if (command == "leftdown|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftdown_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "rightdown|start")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightdown_start", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x02, 0x02, 0xFF });
+            }
+            if (command == "rightdown|stop")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightdown_stop", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
+            }
+            /////////////////////////////
+            if (command == "preset|recall")
+            {
+                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "preset_call", presetNum);
+                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x3F, 0x02, byte.Parse(presetNum), 0xFF });
+            }
         }
 
+        public void CameraHTTPControlCommand(Camera cam, string command, string byValue)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    string commandURL =
+                        "http://" + cam.ip + "/ajaxcom?szCmd={\"SysCtrl\":{\"PtzCtrl\":{\"nChanel\":0,\"szPtzCmd\":\"" + command + "\",\"byValue\":" + byValue + "}}}";
+
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(commandURL);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "GET";
+                    httpWebRequest.Timeout = 100;
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        ConsoleLogger.WriteLine($"Received Response from {cam.name}: " + result.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ControlSystem.debugEnabled)
+                        ConsoleLogger.WriteLine("Exception in CameraControlCommand(): " + ex.Message);
+                }
+            });
+        }
+        #endregion
+
+        #region Motorized Screens
         void RollDownMotorizedScreens()
         {
             foreach (var screen in _motorizedScreens)
@@ -335,14 +559,14 @@ namespace H_and_F_Room_Controller
                 if (screen.controlType == MotorizedScreenControlType.rs232) _cs.SendSerialData(screen.rs232Port, screen.rs232Commands[0]);
             }
         }
+        #endregion
 
+        #region Display Control
         void PowerOnDisplays()
         {
             foreach (var display in _roomViewDisplays)
             {
-                if (display.displayType == DisplayType.ProductionUnit) display.connectedDisplay.PowerOn();
-
-                else if (_dco == DisplayControlOption.Both) display.connectedDisplay.PowerOn();
+                if (_dco == DisplayControlOption.Both) display.connectedDisplay.PowerOn();
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) display.connectedDisplay.PowerOn(); }
@@ -353,9 +577,7 @@ namespace H_and_F_Room_Controller
 
             foreach (var display in _cecDisplays) 
             {
-                if (display.displayType == DisplayType.ProductionUnit) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOn);
-
-                else if (_dco == DisplayControlOption.Both) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOn);
+                if (_dco == DisplayControlOption.Both) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOn);
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOn); }
@@ -366,9 +588,7 @@ namespace H_and_F_Room_Controller
 
             foreach (var display in _rs232Displays) 
             {
-                if (display.displayType == DisplayType.ProductionUnit) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOn);
-
-                else if (_dco == DisplayControlOption.Both) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOn);
+                if (_dco == DisplayControlOption.Both) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOn);
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOn); }
@@ -478,162 +698,6 @@ namespace H_and_F_Room_Controller
                 }
         }
 
-        public void ProcessCameraControlCommand(string camName, string command, string presetNum)
-        {
-            Camera camToControl = null;
-
-            foreach (var cam in _cameras)
-                if (camName == cam.name) camToControl = cam;
-
-            if (camToControl == null) return;
-
-            ConsoleLogger.WriteLine($"Sending {command} to: {camName} ({camToControl.ip})");
-            /////////////////////////////
-            if (command == "zoom+|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomadd_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x02, 0xFF });
-            }
-            if (command == "zoom+|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomadd_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x00, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "zoom-|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomdec_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x03, 0xFF });
-            }
-            if (command == "zoom-|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "zoomdec_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x07, 0x00, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "up|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "up_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
-            }
-            if (command == "up|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "up_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "down|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "down_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x02, 0xFF });
-            }
-            if (command == "down|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "down_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "left|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "left_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x03, 0xFF });
-            }
-            if (command == "left|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "left_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "right|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "right_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x02, 0x03, 0xFF });
-            }
-            if (command == "right|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "right_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "leftup|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftup_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x01, 0xFF });
-            }
-            if (command == "leftup|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftup_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "rightup|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightup_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x01, 0xFF});
-            }
-            if (command == "rightup|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightup_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "leftdown|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftdown_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x01, 0x02, 0xFF });
-            }
-            if (command == "leftdown|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "leftdown_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x03, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "rightdown|start")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightdown_start", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x02, 0x02, 0xFF });
-            }
-            if (command == "rightdown|stop")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "rightdown_stop", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x06, 0x01, 0x0C, 0x0A, 0x03, 0x01, 0xFF });
-            }
-            /////////////////////////////
-            if (command == "preset|recall")
-            {
-                if (camToControl.controlType == CameraControlType.http) CameraHTTPControlCommand(camToControl, "preset_call", presetNum);
-                if (camToControl.controlType == CameraControlType.viscaIP) camToControl.ipComms.SendByteMessage(new byte[] { 0x81, 0x01, 0x04, 0x3F, 0x02, byte.Parse(presetNum), 0xFF });
-            }
-        }
-
-        public void CameraHTTPControlCommand(Camera cam, string command, string byValue)
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    string commandURL = 
-                        "http://"+cam.ip+"/ajaxcom?szCmd={\"SysCtrl\":{\"PtzCtrl\":{\"nChanel\":0,\"szPtzCmd\":\""+command+"\",\"byValue\":"+byValue+"}}}";
-
-                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(commandURL);
-                    httpWebRequest.ContentType = "application/json";
-                    httpWebRequest.Method = "GET";
-                    httpWebRequest.Timeout = 100;
-
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                    {
-                        var result = streamReader.ReadToEnd();
-                        ConsoleLogger.WriteLine($"Received Response from {cam.name}: " + result.ToString());
-                    }
-                }catch(Exception ex)
-                {
-                    if(ControlSystem.debugEnabled)
-                        ConsoleLogger.WriteLine("Exception in CameraControlCommand(): " + ex.Message);
-                }
-            });
-        }
-
         public DisplayControlOption setDisplayControlOption(string newOption)
         {
             DisplayControlOption newControlOption = DisplayControlOption.Both;
@@ -647,26 +711,9 @@ namespace H_and_F_Room_Controller
 
         public DisplayControlOption getDisplayControlOption() => _dco;
 
-
         #endregion
 
         #region Audio Equipment Control
-
-        private void UpdateAudioEquipment(AVSource source)
-        {
-            if (source.sourceType.Contains("A"))
-            {
-                if (_audioProcessorSetup.controlType == AudioProcessorControlType.ip)
-                    _audioProcessor.Connect();
-            }
-            else
-            {
-                if (_audioProcessorSetup.controlType == AudioProcessorControlType.ip)
-                    _audioProcessor.Disconnect();
-            }
-        }
-
-
 
         //FAKE FB VARIABLES, DELETE WHEN FB CONNECTED TO AUDIO DSP
         bool volMuted = false;
@@ -791,7 +838,7 @@ namespace H_and_F_Room_Controller
             rci.menuItems.Add(newItem);
             sources.sources.Add(portableTransmitter);
 
-            FileOperations.saveRoomData(_id.ToString(), "Core", rci);
+            FileOperations.saveRoomData(_id.ToString(), rci);
             FileOperations.saveRoomSources(_id.ToString(), sources);
 
             _cs.sse.UpdateAllConnected(_id, "SourceNumber");
@@ -819,7 +866,7 @@ namespace H_and_F_Room_Controller
                     break;
                 }
 
-            FileOperations.saveRoomData(_id.ToString(), "Core", rci);
+            FileOperations.saveRoomData(_id.ToString(), rci);
             FileOperations.saveRoomSources(_id.ToString(), sources);
 
             _cs.sse.UpdateAllConnected(_id, "SourceNumber");
@@ -849,7 +896,7 @@ namespace H_and_F_Room_Controller
                 {
                     RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
                     rci.isGrouped = true;
-                    FileOperations.saveRoomData(_id.ToString(), "Core", rci);
+                    FileOperations.saveRoomData(_id.ToString(), rci);
                     _cs.sse.UpdateAllConnected(_id, "GroupMaster");
 
                     FileOperations.saveMasterRoomInfo(_id, masterRoom);
@@ -890,7 +937,7 @@ namespace H_and_F_Room_Controller
         {
             RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
             rci.isGrouped = false;
-            FileOperations.saveRoomData(_id.ToString(), "Core", rci);
+            FileOperations.saveRoomData(_id.ToString(), rci);
             _cs.sse.UpdateAllConnected(_id, "GroupMaster");
         }
 
@@ -926,7 +973,7 @@ namespace H_and_F_Room_Controller
         public void GroupMasterSourceChanged(AVSource newSource)
         {
             if (newSource.sourceType.Contains("V"))
-                UpdateReceiverStreams(newSource);
+                UpdateReceiversStream(newSource);
         }
 
         public bool GetRoomMasterStatus() => JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core")).isGrouped;
@@ -975,7 +1022,7 @@ namespace H_and_F_Room_Controller
 
         private void MasterRoom_sourceChanged(AVSource newSource)
         {
-            if(newSource.sourceType.Contains("V")) UpdateReceiverStreams(newSource);
+            if(newSource.sourceType.Contains("V")) UpdateReceiversStream(newSource);
         }
 
         #endregion

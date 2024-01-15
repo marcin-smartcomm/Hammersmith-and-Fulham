@@ -3,12 +3,16 @@
     {
       "sourceName": "Audio Input",
       "sourceType": "A",
-      "sourceStreamAddress": "192.168.1.100/live.sdp"
+      "sourceStreamAddress": "192.168.1.100/live.sdp",
+      "camerasRequired": false,
+      "canBeRecorded": true
     },
     {
       "sourceName": "Off",
       "sourceType": "",
-      "sourceStreamAddress": ""
+      "sourceStreamAddress": "",
+      "camerasRequired": false,
+      "canBeRecorded": false
     }
   ]
 }

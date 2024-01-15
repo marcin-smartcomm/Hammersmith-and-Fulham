@@ -12,5 +12,6 @@ namespace H_and_F_Room_Controller
         public string sourceName { get; set; }
         public string sourceType { get; set; }
         public string sourceStreamAddress { get; set; }
+        public bool camerasRequired { get; set; }
     }
 }

@@ -209,6 +209,7 @@ function openSubpage(file, param1, pageIcon, param2, param3)
 function ChangeSubpageToSelectedSource(source)
 {
     if(source.sourceName.includes("Freeview")) source.sourceName = "TV"
+    if(source.sourceName == "Off" && currentSubpage != "Menu") InitializeHomeScreen()
     currentRoomInfo.menuItems.forEach(item => {
         if(source.sourceName === item.menuItemName) 
             openSubpage(item.menuItemPageAssigned, item.menuItemName, item.menuItemIcon)

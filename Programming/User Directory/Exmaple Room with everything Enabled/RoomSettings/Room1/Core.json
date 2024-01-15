@@ -4,6 +4,7 @@
   "floor": 0,
   "roomName": "Small Hall",
   "sourceSelected": "Off",
+  "videoProductionStreamSelected": "Off",
   "signageAccess": false,
   "isGrouped": false,
   "menuItems": [
@@ -41,6 +42,11 @@
       "menuItemName": "Audio Conference",
       "menuItemIcon": "fa-solid fa-music",
       "menuItemPageAssigned": "Audio-Conference"
+    },
+    {
+      "menuItemName": "Video Production",
+      "menuItemIcon": "fa-solid fa-video",
+      "menuItemPageAssigned": "Video-Production"
     }
   ]
 }

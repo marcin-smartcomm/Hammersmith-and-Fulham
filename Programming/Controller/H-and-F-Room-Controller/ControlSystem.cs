@@ -298,7 +298,7 @@ namespace H_and_F_Room_Controller
 
             try
             {
-                if(bookings.value.Count > 0) bookingManager.ProcessBookings(roomID, bookings);
+                if(bookings.value.Count >= 0) bookingManager.ProcessBookings(roomID, bookings);
             }
             catch(Exception ex) { ConsoleLogger.WriteLine("Exception in FetchCalendarBookings() 2: " + ex.ToString()); }
         }

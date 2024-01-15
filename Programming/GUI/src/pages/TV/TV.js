@@ -43,7 +43,7 @@ function InitializeTVPageBtns()
         btn.addEventListener('touchend', function(){
             PlayBtnClickSound()
             btn.classList.remove("btn-generic-pressed")
-            SetNewSourceCall(currentRoomInfo.roomID, ("Freeview "+btn.id.replace("freeviewBoxBtn", "")))
+            NewMenuItemSelectedCall(("Freeview "+btn.id.replace("freeviewBoxBtn", "")))
         })
     });
 }
