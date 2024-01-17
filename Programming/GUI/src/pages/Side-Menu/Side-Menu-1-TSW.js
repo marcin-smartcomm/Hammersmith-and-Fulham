@@ -74,7 +74,6 @@ function InitializeTSWHelpSideMenu()
     for(let i = 0; i < currentRoomInfo.menuItems.length; i++)
     {
         if(currentRoomInfo.menuItems[i].menuItemName.includes("HDMI Input")) continue
-        if(currentRoomInfo.menuItems[i].menuItemName.includes("Audio Conference")) continue
 
         let newBtn = document.createElement("div")
         newBtn.classList.add("side-menu-help-option-btn")

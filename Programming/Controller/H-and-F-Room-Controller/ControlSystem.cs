@@ -470,12 +470,19 @@ namespace H_and_F_Room_Controller
 
         public void ChangeRelayState(uint port, bool newState)
         {
-            if(newState) this.RelayPorts[port].Close();
-            if(!newState) this.RelayPorts[port].Open();
-            ConsoleLogger.WriteLine($"Changed Relay {port} to {newState}");
+            if(this.SupportsRelay)
+            {
+                if (newState) this.RelayPorts[port].Close();
+                if (!newState) this.RelayPorts[port].Open();
+                ConsoleLogger.WriteLine($"Changed Relay {port} to {newState}");
+            }
         }
 
-        public void SendSerialData(uint comPort, string data) => this.ComPorts[comPort].Send(data);
+        public void SendSerialData(uint comPort, string data)
+        {
+            if(this.SupportsComPort)
+                this.ComPorts[comPort].Send(data);
+        }
 
         private void ControlSystem_SerialDataReceived(ComPort ReceivingComPort, ComPortSerialDataEventArgs args)
         {

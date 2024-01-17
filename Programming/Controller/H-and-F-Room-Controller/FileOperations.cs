@@ -128,7 +128,7 @@ namespace H_and_F_Room_Controller
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
+                
             string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
             try
             {

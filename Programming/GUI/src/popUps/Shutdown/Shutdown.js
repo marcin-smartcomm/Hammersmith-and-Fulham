@@ -21,7 +21,7 @@ function InitializeShutdownPopUp()
         confirmBtn.classList.remove('btn-generic-pressed')
         clearSpecificPopUp("shutDownPopUpSection")
 
-        ShutdownRoomCall(currentRoomInfo.roomID)
+        NewMenuItemSelectedCall("Off")
     })
 
     cancelBtn.addEventListener('touchstart', function(){

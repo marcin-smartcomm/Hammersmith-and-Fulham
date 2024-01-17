@@ -269,7 +269,6 @@ namespace H_and_F_Room_Controller
         }
         void UpdateVideoEquipment(AVSource newSource)
         {
-
             if (newSource.sourceType.Contains("V"))
             {
                 PowerOnDisplays();
@@ -338,16 +337,19 @@ namespace H_and_F_Room_Controller
                     if (source.sourceName == itemSelected)
                         selectedSource = source;
 
-                ConsoleLogger.WriteLine("Updating Production unit with following stream: " + selectedSource.sourceStreamAddress);
                 foreach (var display in _allDisplays)
                 {
                     if (display.displayType == DisplayType.ProductionUnit)
                         foreach (var receiver in _nvxReceivers)
+                        {
+                            ConsoleLogger.WriteLine(receiver.ID + ":" + display.nvxRXConnected);
                             if (receiver.ID == display.nvxRXConnected)
                             {
+                                ConsoleLogger.WriteLine("Updating Production unit with following stream: " + selectedSource.sourceStreamAddress);
                                 receiver.Control.ServerUrl.StringValue = selectedSource.sourceStreamAddress;
                                 rci.videoProductionStreamSelected = selectedSource.sourceName;
                             }
+                        }
                 }
 
                 FileOperations.saveRoomData(_id.ToString(), rci);
@@ -604,9 +606,8 @@ namespace H_and_F_Room_Controller
         {
             foreach (var display in _roomViewDisplays)
             {
-                if (display.displayType == DisplayType.ProductionUnit) display.connectedDisplay.PowerOff();
-
-                else if (_dco == DisplayControlOption.Both) display.connectedDisplay.PowerOff();
+                ConsoleLogger.WriteLine("roomview: " + display.nvxRXConnected.ToString());
+                if (_dco == DisplayControlOption.Both) display.connectedDisplay.PowerOff();
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) display.connectedDisplay.PowerOff(); }
@@ -617,9 +618,8 @@ namespace H_and_F_Room_Controller
 
             foreach (var display in _cecDisplays)
             {
-                if (display.displayType == DisplayType.ProductionUnit) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOff);
-
-                else if (_dco == DisplayControlOption.Both) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOff);
+                ConsoleLogger.WriteLine("cec: " + display.nvxRXConnected.ToString());
+                if (_dco == DisplayControlOption.Both) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOff);
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) SendCECCommand(display.nvxRXConnected, DisplayCommand.PowerOff); }
@@ -630,9 +630,8 @@ namespace H_and_F_Room_Controller
 
             foreach (var display in _rs232Displays)
             {
-                if (display.displayType == DisplayType.ProductionUnit) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOff);
-
-                else if (_dco == DisplayControlOption.Both) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOff);
+                ConsoleLogger.WriteLine("rs232: " + display.nvxRXConnected.ToString());
+                if (_dco == DisplayControlOption.Both) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOff);
 
                 else if (_dco == DisplayControlOption.TVOnly)
                 { if (display.displayType == DisplayType.TV) SendRS232Command(display.rs232Commands, display.nvxRXConnected, DisplayCommand.PowerOff); }

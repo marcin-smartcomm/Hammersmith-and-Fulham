@@ -117,9 +117,7 @@ function GetCurrentSourceCall(roomID, changePage)
         success: function (result) {
             //SubpageManager.js
             if(changePage) ChangeSubpageToSelectedSource(result)
-            
-            if(currentSubpage == "Menu") 
-                HighlightCurrentlySelectedSource(result)
+            else HighlightCurrentlySelectedSource(result)
         },
         error: function () {
             console.error("Error in communication")

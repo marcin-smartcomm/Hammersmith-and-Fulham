@@ -255,10 +255,13 @@ function ActivateSideMenuHelpBtns(btns)
             UpdateHelpFb(btns[i].id)
             if(btns[i].innerHTML == "Video Input")
                 openSubpage(`Help-Page-Video-Input`, "Video Input", currentRoomInfo.menuItems[currentRoomInfo.menuItems.length-1].menuItemIcon)
+            else if(btns[i].innerHTML == "Video Production")
+                openSubpage(`Help-Page-Video-Production`, "Video Production", currentRoomInfo.menuItems[currentRoomInfo.menuItems.length-1].menuItemIcon)
             else
                 openSubpage(`Help-Page-${currentRoomInfo.menuItems[i].menuItemName.replace(' ', '-')}`, currentRoomInfo.menuItems[i].menuItemName, currentRoomInfo.menuItems[i].menuItemIcon)
         })
 
+        //If current subpage is one of help buttons, navigate to that help page
         if(currentSubpage.includes(btns[i].innerHTML.replace(' ', '-').replace('/', '-'))) 
         {
             if(btns[i].classList.contains("btn-generic-pressed")) continue
@@ -266,6 +269,8 @@ function ActivateSideMenuHelpBtns(btns)
             btns[i].classList.add("btn-generic-pressed")
             if(btns[i].innerHTML == "Video Input")
                 openSubpage(`Help-Page-Video-Input`, "Video Input", currentRoomInfo.menuItems[currentRoomInfo.menuItems.length-1].menuItemIcon)
+            else if(btns[i].innerHTML == "Video Production")
+                openSubpage(`Help-Page-Video-Production`, "Video Production", currentRoomInfo.menuItems[currentRoomInfo.menuItems.length-1].menuItemIcon)
             else
                 openSubpage(`Help-Page-${currentRoomInfo.menuItems[i].menuItemName.replace(' ', '-')}`, currentRoomInfo.menuItems[i].menuItemName, currentRoomInfo.menuItems[i].menuItemIcon)
         } 

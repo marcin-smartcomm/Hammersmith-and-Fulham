@@ -14,7 +14,6 @@ function ConnectToSystem(){
             CheckRoomMasterCall(currentRoomInfo.roomID)
             GetCurrentDivisionScenarioCall()
             GetLightingProcessorInfoCall(currentRoomInfo.roomID)
-            GetCurrentSourceCall(currentRoomInfo.roomID, true)
         }, 1000);
     }
     if(panelType == "iPadM")
@@ -29,7 +28,6 @@ function ConnectToSystem(){
             InitializeHomeScreen()
             CheckRoomMasterCall(currentRoomInfo.roomID)
             GetLightingProcessorInfoCall(currentRoomInfo.roomID)
-            GetCurrentSourceCall(currentRoomInfo.roomID, true)
         }, 1000);
     }
 }
@@ -209,11 +207,13 @@ function openSubpage(file, param1, pageIcon, param2, param3)
 function ChangeSubpageToSelectedSource(source)
 {
     if(source.sourceName.includes("Freeview")) source.sourceName = "TV"
-    if(source.sourceName == "Off" && currentSubpage != "Menu") InitializeHomeScreen()
+    if(source.sourceName == "Off") InitializeHomeScreen()
+
     currentRoomInfo.menuItems.forEach(item => {
         if(source.sourceName === item.menuItemName) 
             openSubpage(item.menuItemPageAssigned, item.menuItemName, item.menuItemIcon)
     });
+
 }
 
 function openPopUp(file, param1)
