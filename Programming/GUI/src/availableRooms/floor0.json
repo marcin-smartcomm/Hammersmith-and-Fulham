@@ -51,7 +51,7 @@
         },
         {
             "name": "Small Hall",
-            "ipAddress": "192.168.1.100",
+            "ipAddress": "18.134.1.20",
             "roomID": "1",
             "isGroupable": true
         }

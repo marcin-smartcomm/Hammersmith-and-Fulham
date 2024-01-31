@@ -69,10 +69,39 @@ namespace H_and_F_Core
 
                     string reqIPAddress = context.Request.RemoteEndPoint.Address.ToString();
 
+                    bool ipFound = false;
+
                     foreach (var panelInfo in panelInfoList.panels)
                         if(panelInfo.panelIP == reqIPAddress)
+                        {
                             response = JsonConvert.SerializeObject(panelInfo);
+                            ipFound = true;
+                        }
+
+                    if(!ipFound)
+                        foreach (var panelInfo in panelInfoList.panels)
+                            if (panelInfo.panelIP == "0.0.0.0")
+                                response = JsonConvert.SerializeObject(panelInfo);
                 }
+                if(incomingRequest.Contains("/ChangeDefaulPanelType"))
+                {
+                    string newType = incomingRequest.Split('?')[1];
+
+                    PanelInfoList panelInfoList = JsonConvert.DeserializeObject<PanelInfoList>(FileOperations.loadJson("panelSettings"));
+                    PanelInfo panelToChnge = null;
+
+                    foreach (var panelInfo in panelInfoList.panels)
+                        if (panelInfo.panelIP == "0.0.0.0")
+                        {
+                            panelInfo.panelType = newType;
+                            panelToChnge = panelInfo;
+                        }
+
+                    FileOperations.savePanelInfo(panelInfoList);
+
+                    response = JsonConvert.SerializeObject(panelToChnge);
+                }
+
                 else if (incomingRequest.Contains("/RoomData"))
                 {
                     string processorIP = _controlSystem.ipadMaster.connectedRoomProcessorIP, roomID = _controlSystem.ipadMaster.roomID;

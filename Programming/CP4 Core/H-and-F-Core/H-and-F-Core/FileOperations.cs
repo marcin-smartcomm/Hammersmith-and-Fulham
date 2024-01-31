@@ -11,7 +11,7 @@ namespace H_and_F_Core
             try
             {
                 ConsoleLogger.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
-                string absolutePath = @"../../user/";
+                string absolutePath = @"../user/";
                 StreamReader sr = new StreamReader(absolutePath + configFile + ".json");
 
                 string json = sr.ReadToEnd();
@@ -31,7 +31,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "FreeviewBoxes.json");
@@ -53,7 +53,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "AssistanceRequests.json");
@@ -75,7 +75,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "panelSettings.json");
@@ -97,7 +97,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "SystemAlerts.json");
@@ -119,7 +119,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "SlaveiPadsPass.json");
@@ -141,7 +141,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "PortableEquipment/VideoReceivers.json");
@@ -163,7 +163,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "PortableEquipment/TVs.json");
@@ -185,7 +185,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "PortableEquipment/Transmitter.json");
@@ -207,7 +207,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "ColabScreens/VideoReceivers.json");
@@ -229,7 +229,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "GlobalTemp.json");
@@ -251,7 +251,7 @@ namespace H_and_F_Core
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/DigitalSignage/";
+            string absolutePath = @"../user/DigitalSignage/";
             try
             {
                 File.Delete(absolutePath + "zoneAssignment.json");
