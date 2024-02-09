@@ -13,7 +13,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "Core.json");
@@ -31,7 +31,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "AVSources.json");
@@ -51,7 +51,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + settingType + ".json");
@@ -65,32 +65,13 @@ namespace H_and_F_Room_Controller
                 ConsoleLogger.WriteLine("issue in fileManager.saveRoomBookings(): " + ex.ToString());
             }
         }
-        public static void saveUserInfo(int roomID, string settingType, UserInfo userInfo)
-        {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
-            try
-            {
-                File.Delete(absolutePath + settingType + ".json");
-                File.WriteAllText(
-                    absolutePath + settingType + ".json",
-                    JsonConvert.SerializeObject(userInfo, Formatting.Indented, serializerSettings)
-                    );
-            }
-            catch (Exception ex)
-            {
-                ConsoleLogger.WriteLine("issue in fileManager.saveUserInfo(): " + ex.ToString());
-            }
-        }
 
         public static void saveRoomBookingStats(int roomID, CurrentAndNextMeetingInfo currentAndNextMeetingInfo)
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "BookingStats.json");
@@ -109,7 +90,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "MeetingDurations.json");
@@ -129,7 +110,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "MeetingInfoCards.json");
@@ -149,7 +130,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "MasterRoom.json");
@@ -169,7 +150,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
             try
             {
                 File.Delete(absolutePath + "ClimateControl.json");
@@ -189,7 +170,7 @@ namespace H_and_F_Room_Controller
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            string absolutePath = @"../../user/";
+            string absolutePath = @"../user/";
             try
             {
                 File.Delete(absolutePath + "GlobalTemp.json");
@@ -208,7 +189,7 @@ namespace H_and_F_Room_Controller
         {
             try
             {
-                string absolutePath = @"../../user/RoomSettings/Room" + roomID + "/";
+                string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
                 StreamReader sr = new StreamReader(absolutePath + settingType + ".json");
 
                 string json = sr.ReadToEnd();
@@ -227,7 +208,7 @@ namespace H_and_F_Room_Controller
         {
             try
             {
-                string absolutePath = @"../../user/";
+                string absolutePath = @"../user/";
                 StreamReader sr = new StreamReader(absolutePath + $"{jsonFileName}.json");
 
                 string json = sr.ReadToEnd();
@@ -246,7 +227,7 @@ namespace H_and_F_Room_Controller
         {
             try
             {
-                List<string> roomDirectories = Directory.GetDirectories(@"..\..\user\RoomSettings").ToList();
+                List<string> roomDirectories = Directory.GetDirectories(@"..\user\RoomSettings").ToList();
                 return roomDirectories;
             }
             catch (Exception ex) { ConsoleLogger.WriteLine(ex.Message); return null; }

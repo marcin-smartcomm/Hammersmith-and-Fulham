@@ -2,6 +2,7 @@
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.CrestronConnected;
 using Crestron.SimplSharpPro.DM.Streaming;
+using log4net.Repository.Hierarchy;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -84,18 +85,35 @@ namespace H_and_F_Room_Controller
             {
                 RoomAVData aVData = JsonConvert.DeserializeObject<RoomAVData>(FileOperations.loadRoomJson(_id, "AV"));
 
-                foreach (var tv in aVData.Displays)
-                {
-                    _allDisplays.Add(tv);
+                InitializeDisplays(aVData);
+                InitializeMotorizedScreens(aVData);
+                InitializeNVXs(aVData);
+                InitializeAudioProcessor(aVData);
+                InitializeCameras(aVData);
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Exception in InitializeRoomAV() while registering AV Equipment: " + ex);
+            }
+        }
 
-                    if (tv.controlType == DisplayControlType.roomView)
+        void InitializeDisplays(RoomAVData aVData)
+        {
+            try
+            {
+                if (aVData.Displays == null) ConsoleLogger.WriteLine("No Displays Defined");
+                else foreach (var tv in aVData.Displays)
                     {
-                        tv.connectedDisplay = new RoomViewConnectedDisplay(tv.ipid, _cs);
-                        _roomViewDisplays.Add(tv);
+                        _allDisplays.Add(tv);
+
+                        if (tv.controlType == DisplayControlType.roomView)
+                        {
+                            tv.connectedDisplay = new RoomViewConnectedDisplay(tv.ipid, _cs);
+                            _roomViewDisplays.Add(tv);
+                        }
+                        if (tv.controlType == DisplayControlType.cec) _cecDisplays.Add(tv);
+                        if (tv.controlType == DisplayControlType.rs232) _rs232Displays.Add(tv);
                     }
-                    if (tv.controlType == DisplayControlType.cec) _cecDisplays.Add(tv);
-                    if (tv.controlType == DisplayControlType.rs232) _rs232Displays.Add(tv);
-                }
 
                 if (_roomViewDisplays.Count > 0)
                 {
@@ -106,14 +124,34 @@ namespace H_and_F_Room_Controller
                     }
                 }
 
-                foreach (var motorizedScreen in aVData.motorizedScreens) _motorizedScreens.Add(motorizedScreen);
-
                 ConsoleLogger.WriteLine($"RoomView Displays: {_roomViewDisplays.Count} || RS232 Displays: {_rs232Displays.Count} || CEC Displays: {_cecDisplays.Count}");
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Exception in InitializeDisplays(): " + ex);
+            }
+        }
+        void InitializeMotorizedScreens(RoomAVData aVData)
+        {
+            try
+            {
+                if (aVData.motorizedScreens == null) ConsoleLogger.WriteLine("No Motorized Screens Defined");
+                else foreach (var motorizedScreen in aVData.motorizedScreens) _motorizedScreens.Add(motorizedScreen);
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Exception in InitializeMotorizedScreens(): " + ex);
+            }
+        }
+        void InitializeNVXs(RoomAVData aVData)
+        {
+            try
+            {
+                if (aVData.NVXTxs == null) ConsoleLogger.WriteLine("No NVX Transmitters Defined");
+                else if (aVData.NVXTxs.Length >= 0) _nvxTransmitters = new DmNvx360[aVData.NVXTxs.Length];
 
-                if (aVData.NVXTxs.Length >= 0)
-                    _nvxTransmitters = new DmNvx360[aVData.NVXTxs.Length];
-                if (aVData.NVXRxs.Length >= 0)
-                    _nvxReceivers = new DmNvxD30[aVData.NVXRxs.Length];
+                if (aVData.NVXRxs == null) ConsoleLogger.WriteLine("No NVX Receivers Defined");
+                else if (aVData.NVXRxs.Length >= 0) _nvxReceivers = new DmNvxD30[aVData.NVXRxs.Length];
 
                 if (_nvxTransmitters.Length > 0)
                 {
@@ -136,10 +174,20 @@ namespace H_and_F_Room_Controller
                         ConsoleLogger.WriteLine("Registering Rx with IPID: " + aVData.NVXRxs[i]);
                     }
                 }
-
-                if (aVData.AudioProcessor != null)
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Exception in InitializeNVXs(): " + ex);
+            }
+        }
+        void InitializeAudioProcessor(RoomAVData aVData)
+        {
+            try
+            {
+                if (aVData.AudioProcessor == null) ConsoleLogger.WriteLine("No Audio Processor Defined");
+                else
                 {
-                    if(aVData.AudioProcessor.controlType == AudioProcessorControlType.ip)
+                    if (aVData.AudioProcessor.controlType == AudioProcessorControlType.ip)
                     {
                         _audioProcessorComms = new TCPClient(aVData.AudioProcessor.ip, aVData.AudioProcessor.TCPport, 4096);
                         _audioProcessor = new TesiraForte(_cs, _audioProcessorComms, $"Room{_id} Audio Processor");
@@ -149,20 +197,30 @@ namespace H_and_F_Room_Controller
 
                     _audioProcessorSetup = aVData.AudioProcessor;
                 }
-
-                foreach (var cam in aVData.Cameras)
-                {
-                    if(cam.controlType == CameraControlType.http) _cameras.Add(cam);
-                    if(cam.controlType == CameraControlType.viscaIP)
-                    {
-                        cam.ipComms = new IPConnectionHandler(_cs, new TCPClient(cam.ip, 5500, 4096), cam.name);
-                        _cameras.Add(cam);
-                    }
-                }
             }
             catch (Exception ex)
             {
-                ConsoleLogger.WriteLine("Exception in InitializeRoomAV() while registering AV Equipment: " + ex);
+                ConsoleLogger.WriteLine("Exception in InitializeAudioProcessor(): " + ex);
+            }
+        }
+        void InitializeCameras(RoomAVData aVData)
+        {
+            try
+            {
+                if (aVData.Cameras == null) ConsoleLogger.WriteLine("No Cameras Defined");
+                else foreach (var cam in aVData.Cameras)
+                    {
+                        if (cam.controlType == CameraControlType.http) _cameras.Add(cam);
+                        if (cam.controlType == CameraControlType.viscaIP)
+                        {
+                            cam.ipComms = new IPConnectionHandler(_cs, new TCPClient(cam.ip, 5500, 4096), cam.name);
+                            _cameras.Add(cam);
+                        }
+                    }
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.WriteLine("Exception in InitializeCameras(): " + ex);
             }
         }
 
@@ -310,7 +368,6 @@ namespace H_and_F_Room_Controller
 
         #endregion
 
-
         #region NVX Control
 
         void UpdateReceiversStream(AVSource newSource)
@@ -331,25 +388,19 @@ namespace H_and_F_Room_Controller
             {
                 RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(_id, "Core"));
                 AVSources sources = JsonConvert.DeserializeObject<AVSources>(FileOperations.loadRoomJson(_id, "AVSources"));
-                AVSource selectedSource = null;
 
-                foreach (var source in sources.sources)
-                    if (source.sourceName == itemSelected)
-                        selectedSource = source;
+                AVSource selectedSource = sources.sources.Find(x => x.sourceName == itemSelected);
 
                 foreach (var display in _allDisplays)
                 {
-                    if (display.displayType == DisplayType.ProductionUnit)
+                    if (display.displayType == DisplayType.NoDisplay)
                         foreach (var receiver in _nvxReceivers)
-                        {
-                            ConsoleLogger.WriteLine(receiver.ID + ":" + display.nvxRXConnected);
                             if (receiver.ID == display.nvxRXConnected)
                             {
-                                ConsoleLogger.WriteLine("Updating Production unit with following stream: " + selectedSource.sourceStreamAddress);
+                                ConsoleLogger.WriteLine($"Updating Production unit {receiver.ID} with following stream: " + selectedSource.sourceStreamAddress);
                                 receiver.Control.ServerUrl.StringValue = selectedSource.sourceStreamAddress;
                                 rci.videoProductionStreamSelected = selectedSource.sourceName;
                             }
-                        }
                 }
 
                 FileOperations.saveRoomData(_id.ToString(), rci);

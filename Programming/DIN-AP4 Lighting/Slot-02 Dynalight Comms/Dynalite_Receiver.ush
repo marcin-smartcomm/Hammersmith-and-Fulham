@@ -1,0 +1,74 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=3.01.17
+  InclDatVrs=1.14
+  CrossCplrVrs=1.1
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=||3This module is designed as an interface between the other Crestron||1
+  Cmn2=modules\\   and the dynalite systems. This means:\\   - it takes||1
+  Cmn3=care of the checksum calculation of both incomming and outgoing||1
+  Cmn4=messages.\\   - it handles the appropriate time that has to be kept||1
+  Cmn5=between two outgoing messages.\\   - it sends the incomming messages||1
+  Cmn6=to the corresponding area (i.e. to the "Dynalite_Area"-module\\||1
+  Cmn7=||4for which the message is intented).\\     \\   INPUTS:\\   	
+  Cmn8=	RX$: Buffers the incomming messages for handling.\\   		FROM_AREAS$:
+  Cmn9=||1Buffers the outgoing messages (comming from the "Dynalite_Area"-
+  Cmn10=module), \\   		             to append the checksum and send them||1
+  Cmn11=out with the appropriate interval\\   OUTPUTS:\\   		TX$: Output||1
+  Cmn12=to the Dynalite System\\   		TO_AREA$: After handling the messages||1
+  Cmn13=in RX$ will be sent over this signal to \\   		          the right||1
+  Cmn14="Dynalite_Area"-module.  \\   \\   So, one program will probably||1
+  Cmn15=contain one Dynalite_Receiver module with multiple Dynalite_Area||1
+  Cmn16=modules.\\||3
+[END]
+[BEGIN]
+  InputList2Cue1=RX$
+  InputList2SigType1=Serial
+  InputList2Cue2=FROM_AREAS$
+  InputList2SigType2=Serial
+  OutputList2Cue1=TX$
+  OutputList2SigType1=Serial
+  OutputList2Cue2=TO_AREA$[#]
+  OutputList2SigType2=Serial
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,216,225,248,249,266,310,
+  Name=Dynalite_Receiver
+  SmplCName=Dynalite_Receiver.usp
+  Code=1
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=2
+  MaxVariableInputsList2=2
+  MinVariableOutputs=0
+  MaxVariableOutputs=0
+  MinVariableOutputsList2=2
+  MaxVariableOutputsList2=256
+  Expand=expand_randomly
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  NVStorage=10
+  ParamSigType1=String
+  ParamCue1=[Reference Name]
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_Dynalite_Receiver
+  SymJam=NonExclusive
+[END]

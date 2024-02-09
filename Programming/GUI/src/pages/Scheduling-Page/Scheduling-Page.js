@@ -86,6 +86,12 @@ function LoadMiddleSection(type)
     rawFile.DONE;
 }
 
+function GetOrganiserName(organiserName)
+{
+    if(organiserName.includes('zz_CivicCampus')) return currentRoomInfo.roomName
+    else return organiserName
+}
+
 function InitializeReservedSection(result)
 {
     if(result.currentMeetingSubject.length > 20)
@@ -103,7 +109,7 @@ function InitializeReservedSection(result)
 
     document.getElementById('meetingSubjectValue').innerHTML = result.currentMeetingSubject
 
-    document.getElementById('meetingOrganiserValue').innerHTML = result.currentMeetingOrganiser
+    document.getElementById('meetingOrganiserValue').innerHTML = GetOrganiserName(result.currentMeetingOrganiser)
 
     document.getElementById('meetingDurationValue').innerHTML = result.currentMeetingStartEndTime
 }
@@ -306,8 +312,8 @@ function ShowMeetingInfoPopUp(meetingInfo)
 function FillOutMeetingInfoPopUp(meetingInfo)
 {
     document.getElementById("meetingDetailsPopupSubject").innerHTML = meetingInfo.meetingSubject
-    document.getElementById("meetingDetailsPopupOrganiser").innerHTML = meetingInfo.meetingOrganiser
-    document.getElementById("meetingDetailsPopupOrganiser2").innerHTML = meetingInfo.meetingOrganiser
+    document.getElementById("meetingDetailsPopupOrganiser").innerHTML = GetOrganiserName(meetingInfo.meetingOrganiser)
+    document.getElementById("meetingDetailsPopupOrganiser2").innerHTML = GetOrganiserName(meetingInfo.meetingOrganiser)
     document.getElementById("meetingDetailsPopupDuration").innerHTML = meetingInfo.meetingDurationText
 
     var closeBtn = document.getElementById("meetingDetailsPopupCloseBtn");
@@ -348,7 +354,7 @@ function ShowNewMeetingPopUp(newMeetingInfo)
 
 function FillOutNewMeetingPopUp(meetingInfo)
 {
-    document.getElementById("newMeetingOrganiser").innerHTML = meetingInfo.organiser;
+    document.getElementById("newMeetingOrganiser").innerHTML = GetOrganiserName(meetingInfo.organiser);
     document.getElementById("newMeetingStartTime").innerHTML = meetingInfo.startTime;
     for(let i = 0; i < meetingInfo.endTimes.length; i++)
     {

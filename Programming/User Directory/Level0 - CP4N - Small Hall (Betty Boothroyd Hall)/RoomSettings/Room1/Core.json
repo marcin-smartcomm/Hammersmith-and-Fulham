@@ -1,0 +1,57 @@
+{
+  "roomID": 1,
+  "floor": 0,
+  "roomName": "Betty Boothroyd Hall",
+  "emailAddress": "zz_CivicCampus_SmallHall@lbhf.gov.uk",
+  "isGrouped": false,
+  "sourceSelected": "Off",
+  "videoProductionStreamSelected": "Off",
+  "signageAccess": false,
+  "menuItems": [
+    {
+      "menuItemName": "Temperature Control",
+      "menuItemIcon": "fa-solid fa-temperature-half",
+      "menuItemPageAssigned": "Temperature-Control"
+    },
+    {
+      "menuItemName": "Lighting",
+      "menuItemIcon": "fa-regular fa-lightbulb",
+      "menuItemPageAssigned": "Lighting"
+    },
+    {
+      "menuItemName": "TV",
+      "menuItemIcon": "fa-solid fa-tv",
+      "menuItemPageAssigned": "TV"
+    },
+    {
+      "menuItemName": "PC-Laptop",
+      "menuItemIcon": "fa-solid fa-laptop",
+      "menuItemPageAssigned": "PC-Laptop"
+    },
+    {
+      "menuItemName": "Audio Conference",
+      "menuItemIcon": "fa-solid fa-music",
+      "menuItemPageAssigned": "Audio-Conference"
+    },
+    {
+      "menuItemName": "HDMI Input FOH",
+      "menuItemIcon": "fa-solid fa-ticket",
+      "menuItemPageAssigned": "PC-Laptop"
+    },
+    {
+      "menuItemName": "HDMI Input Right",
+      "menuItemIcon": "fa-solid fa-ticket",
+      "menuItemPageAssigned": "PC-Laptop"
+    },
+    {
+      "menuItemName": "HDMI Input Left",
+      "menuItemIcon": "fa-solid fa-ticket",
+      "menuItemPageAssigned": "PC-Laptop"
+    },
+    {
+      "menuItemName": "Video Production",
+      "menuItemIcon": "fa-solid fa-video",
+      "menuItemPageAssigned": "Video-Production"
+    }
+  ]
+}

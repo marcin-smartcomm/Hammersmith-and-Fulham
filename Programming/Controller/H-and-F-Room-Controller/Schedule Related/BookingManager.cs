@@ -292,73 +292,50 @@ namespace H_and_F_Room_Controller
 
         string GetCurrenMeetinStartEndTime(Bookings currentBookings)
         {
-            string currentMeetingStartEndTimeString = "";
+            int startHour = currentBookings.value[curretMeetingIndex].start.dateTime.Hour;
+            int startMinute = currentBookings.value[curretMeetingIndex].start.dateTime.Minute;
+            int endHour = currentBookings.value[curretMeetingIndex].end.dateTime.Hour;
+            int endMinute = currentBookings.value[curretMeetingIndex].end.dateTime.Minute;
 
-            int currentMeetingStartHour = currentBookings.value[curretMeetingIndex].start.dateTime.Hour;
-            
-            if (currentMeetingStartHour < 10)
-                currentMeetingStartEndTimeString = "0" + currentMeetingStartHour + ":";
-            else
-                currentMeetingStartEndTimeString = currentMeetingStartHour.ToString() + ":";
+            return GetStartEndTimeInString(startHour, startMinute, endHour, endMinute);
+        }
+        string GetNextMeetinStartEndTime(Bookings currentBookings, int nextBookingIndex)
+        {
+            int startHour = currentBookings.value[nextBookingIndex].start.dateTime.Hour;
+            int startMinute = currentBookings.value[nextBookingIndex].start.dateTime.Minute;
+            int endHour = currentBookings.value[nextBookingIndex].end.dateTime.Hour;
+            int endMinute = currentBookings.value[nextBookingIndex].end.dateTime.Minute;
 
-            int currentMeetingStartMinute = currentBookings.value[curretMeetingIndex].start.dateTime.Minute;
-
-            if (currentMeetingStartMinute < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingStartMinute;
-            else
-                currentMeetingStartEndTimeString += currentMeetingStartMinute.ToString();
-
-            currentMeetingStartEndTimeString += " - ";
-
-            int currentMeetingEndHour = currentBookings.value[curretMeetingIndex].end.dateTime.Hour;
-
-            if (currentMeetingEndHour < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingEndHour + ":";
-            else
-                currentMeetingStartEndTimeString += currentMeetingEndHour.ToString() + ":";
-
-            int currentMeetingEndMinute = currentBookings.value[curretMeetingIndex].end.dateTime.Minute;
-
-            if (currentMeetingEndMinute < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingEndMinute;
-            else
-                currentMeetingStartEndTimeString += currentMeetingEndMinute.ToString();
-
-            return currentMeetingStartEndTimeString;
+            return GetStartEndTimeInString(startHour, startMinute, endHour, endMinute);
         }
         string GetSpecificMeetingStartEndTime(Bookings currentBookings, int meetingIndex)
         {
-            string currentMeetingStartEndTimeString = "";
+            int startHour = currentBookings.value[meetingIndex].start.dateTime.Hour;
+            int startMinute = currentBookings.value[meetingIndex].start.dateTime.Minute;
+            int endHour = currentBookings.value[meetingIndex].end.dateTime.Hour;
+            int endMinute = currentBookings.value[meetingIndex].end.dateTime.Minute;
 
-            int currentMeetingStartHour = currentBookings.value[meetingIndex].start.dateTime.Hour;
+            return GetStartEndTimeInString(startHour, startMinute, endHour, endMinute);
+        }
+        string GetStartEndTimeInString(int startHour, int startMinute, int endHour, int endMinute)
+        {
+            string currentMeetingStartEndTimeString;
+            if (startHour < 10) currentMeetingStartEndTimeString = "0" + startHour + ":";
+            else currentMeetingStartEndTimeString = startHour.ToString() + ":";
 
-            if (currentMeetingStartHour < 10)
-                currentMeetingStartEndTimeString = "0" + currentMeetingStartHour + ":";
-            else
-                currentMeetingStartEndTimeString = currentMeetingStartHour.ToString() + ":";
 
-            int currentMeetingStartMinute = currentBookings.value[meetingIndex].start.dateTime.Minute;
-
-            if (currentMeetingStartMinute < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingStartMinute;
-            else
-                currentMeetingStartEndTimeString += currentMeetingStartMinute.ToString();
+            if (startMinute < 10) currentMeetingStartEndTimeString += "0" + startMinute;
+            else currentMeetingStartEndTimeString += startMinute.ToString();
 
             currentMeetingStartEndTimeString += " - ";
 
-            int currentMeetingEndHour = currentBookings.value[meetingIndex].end.dateTime.Hour;
 
-            if (currentMeetingEndHour < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingEndHour + ":";
-            else
-                currentMeetingStartEndTimeString += currentMeetingEndHour.ToString() + ":";
+            if (endHour < 10) currentMeetingStartEndTimeString += "0" + endHour + ":";
+            else currentMeetingStartEndTimeString += endHour.ToString() + ":";
 
-            int currentMeetingEndMinute = currentBookings.value[meetingIndex].end.dateTime.Minute;
 
-            if (currentMeetingEndMinute < 10)
-                currentMeetingStartEndTimeString += "0" + currentMeetingEndMinute;
-            else
-                currentMeetingStartEndTimeString += currentMeetingEndMinute.ToString();
+            if (endMinute < 10) currentMeetingStartEndTimeString += "0" + endMinute;
+            else currentMeetingStartEndTimeString += endMinute.ToString();
 
             return currentMeetingStartEndTimeString;
         }
@@ -391,43 +368,6 @@ namespace H_and_F_Room_Controller
             newBookingStats.nextMeetingStartEndTime = GetNextMeetinStartEndTime(currentBookings, nextBookingIndex);
             newBookingStats.nextMeetingOrganiser = currentBookings.value[nextBookingIndex].organizer.emailAddress.name;
             newBookingStats.nextMeetingSubject = currentBookings.value[nextBookingIndex].subject;
-        }
-
-        string GetNextMeetinStartEndTime(Bookings currentBookings, int nextBookingIndex)
-        {
-            string nextMeetingStartEndTimeString = "";
-
-            int nextMeetingStartHour = currentBookings.value[nextBookingIndex].start.dateTime.Hour;
-
-            if (nextMeetingStartHour < 10)
-                nextMeetingStartEndTimeString = "0" + nextMeetingStartHour + ":";
-            else
-                nextMeetingStartEndTimeString = nextMeetingStartHour.ToString() + ":";
-
-            int nextMeetingStartMinute = currentBookings.value[nextBookingIndex].start.dateTime.Minute;
-
-            if (nextMeetingStartMinute < 10)
-                nextMeetingStartEndTimeString += "0" + nextMeetingStartMinute;
-            else
-                nextMeetingStartEndTimeString += nextMeetingStartMinute.ToString();
-
-            nextMeetingStartEndTimeString += " - ";
-
-            int nextMeetingEndHour = currentBookings.value[nextBookingIndex].end.dateTime.Hour;
-
-            if (nextMeetingEndHour < 10)
-                nextMeetingStartEndTimeString += "0" + nextMeetingEndHour + ":";
-            else
-                nextMeetingStartEndTimeString += nextMeetingEndHour.ToString() + ":";
-
-            int nextMeetingEndMinute = currentBookings.value[nextBookingIndex].end.dateTime.Minute;
-
-            if (nextMeetingEndMinute < 10)
-                nextMeetingStartEndTimeString += "0" + nextMeetingEndMinute;
-            else
-                nextMeetingStartEndTimeString += nextMeetingEndMinute.ToString();
-
-            return nextMeetingStartEndTimeString;
         }
 
         int FillTimeUntilInfo(CurrentAndNextMeetingInfo newBookingStats, Bookings currentBookings, int nextMeetingIndex)
@@ -488,7 +428,7 @@ namespace H_and_F_Room_Controller
             List<string> availableEndTimes = GetAvaliableEndTimes(startTimes, availableStartTimeInMinutes, 30, 4);
 
             NewMeetingInfo newMeetingInfo = new NewMeetingInfo();
-            newMeetingInfo.organiser = JsonConvert.DeserializeObject<UserInfo>(FileOperations.loadRoomJson(Int32.Parse(roomID), "UserInfo")).displayName;
+            newMeetingInfo.organiser = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(Int32.Parse(roomID), "Core")).roomName;
             newMeetingInfo.startTime = availableStartTime;
             newMeetingInfo.endTimes = availableEndTimes;
 
@@ -497,10 +437,10 @@ namespace H_and_F_Room_Controller
 
         public void CreateNewMeeting(string roomID, string meetingSubject, string startTime, string endTime)
         {
-            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "UserInfo"));
+            RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "Core"));
             ConsoleLogger.WriteLine("Creating New Meeting");
 
-            var url = "https://graph.microsoft.com/v1.0/users/" + userInfo.mail + "/events";
+            var url = "https://graph.microsoft.com/v1.0/users/" + rci.emailAddress + "/events";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -548,11 +488,11 @@ namespace H_and_F_Room_Controller
 
         public void EndCurrentMeeting(string roomID)
         {
-            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "UserInfo"));
+            RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "Core"));
             CurrentAndNextMeetingInfo currentMeetingInfo = JsonConvert.DeserializeObject<CurrentAndNextMeetingInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "BookingStats"));
             ConsoleLogger.WriteLine("Ending Meeting");
 
-            var url = "https://graph.microsoft.com/v1.0/users/"+userInfo.mail+"/events/"+currentMeetingInfo.currentMeetingID;
+            var url = "https://graph.microsoft.com/v1.0/users/"+rci.emailAddress +"/events/"+currentMeetingInfo.currentMeetingID;
             ConsoleLogger.WriteLine("rewuest: " + url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -632,11 +572,11 @@ namespace H_and_F_Room_Controller
 
         public void ExtendCurrentMeeting(string roomID, string timeReqested)
         {
-            UserInfo userInfo = JsonConvert.DeserializeObject<UserInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "UserInfo"));
+            RoomCoreInfo rci = JsonConvert.DeserializeObject<RoomCoreInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "Core"));
             CurrentAndNextMeetingInfo currentMeetingInfo = JsonConvert.DeserializeObject<CurrentAndNextMeetingInfo>(FileOperations.loadRoomJson(int.Parse(roomID), "BookingStats"));
             ConsoleLogger.WriteLine("Exteding Meeting");
 
-            var url = "https://graph.microsoft.com/v1.0/users/" + userInfo.mail + "/events/" + currentMeetingInfo.currentMeetingID;
+            var url = "https://graph.microsoft.com/v1.0/users/" + rci.emailAddress + "/events/" + currentMeetingInfo.currentMeetingID;
             ConsoleLogger.WriteLine("rewuest: " + url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

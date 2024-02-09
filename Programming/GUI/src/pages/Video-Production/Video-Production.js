@@ -33,9 +33,11 @@ function ActivateProductionSrcButtons()
 
      $(this).on('touchend', () => {
       $(this).removeClass('btn-generic-pressed')
+      GetCurrentlySelectedStreamCall(currentRoomInfo.roomID)
      })
 
      $(this).on('click', () => {
+      PlayBtnClickSound()
       UpdateProductionUnitStreamCall(currentRoomInfo.roomID, $(this).text())
      })
 
@@ -44,7 +46,6 @@ function ActivateProductionSrcButtons()
 
 function UpdateSelectedStreamFb(selectedStream)
 {
-  console.log(selectedStream);
   $.each($('.video-production-src-btn'), function (i, srcBtn) { 
 
     if($(this).text() == selectedStream) $(this).addClass('btn-generic-pressed')

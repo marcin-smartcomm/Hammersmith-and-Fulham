@@ -11,19 +11,21 @@ function SideMenuBookingsInfoFill(currentAndNextBookingInfo)
     if(currentAndNextBookingInfo.currentMeetingSubject.length > 20)
     currentAndNextBookingInfo.currentMeetingSubject = currentAndNextBookingInfo.currentMeetingSubject.slice(0, 20) + "..."
 
+    currentAndNextBookingInfo.currentMeetingOrganiser = GetOrganiserName(currentAndNextBookingInfo.currentMeetingOrganiser)
     if(currentAndNextBookingInfo.currentMeetingOrganiser.length > 15)
     currentAndNextBookingInfo.currentMeetingOrganiser = currentAndNextBookingInfo.currentMeetingOrganiser.slice(0, 15) + "..."
 
     if(currentAndNextBookingInfo.nextMeetingSubject.length > 20)
     currentAndNextBookingInfo.nextMeetingSubject = currentAndNextBookingInfo.nextMeetingSubject.slice(0, 20) + "..."
 
+    currentAndNextBookingInfo.nextMeetingOrganiser = GetOrganiserName(currentAndNextBookingInfo.nextMeetingOrganiser)
     if(currentAndNextBookingInfo.nextMeetingOrganiser.length > 15)
     currentAndNextBookingInfo.nextMeetingOrganiser = currentAndNextBookingInfo.nextMeetingOrganiser.slice(0, 15) + "..."
 
     if(currentAndNextBookingInfo.currentMeetingStartEndTime != "")
     {
         document.getElementById('currentMeetingDuration').innerHTML = "Now: " + currentAndNextBookingInfo.currentMeetingStartEndTime;
-        document.getElementById('currentMeetingNameAndSubject').innerHTML =  currentAndNextBookingInfo.currentMeetingOrganiser + " - " + currentAndNextBookingInfo.currentMeetingSubject;
+        document.getElementById('currentMeetingNameAndSubject').innerHTML = currentAndNextBookingInfo.currentMeetingOrganiser + " - " + currentAndNextBookingInfo.currentMeetingSubject;
     }
     else
     {
@@ -34,7 +36,7 @@ function SideMenuBookingsInfoFill(currentAndNextBookingInfo)
     if(currentAndNextBookingInfo.nextMeetingStartEndTime != "")
     {
         document.getElementById('nextMeetingDuration').innerHTML = "Next booking: " + currentAndNextBookingInfo.nextMeetingStartEndTime;
-        document.getElementById('nextMeetingNameAndSubject').innerHTML =  currentAndNextBookingInfo.nextMeetingOrganiser + " - " + currentAndNextBookingInfo.nextMeetingSubject;
+        document.getElementById('nextMeetingNameAndSubject').innerHTML = currentAndNextBookingInfo.nextMeetingOrganiser + " - " + currentAndNextBookingInfo.nextMeetingSubject;
     }
     else
     {

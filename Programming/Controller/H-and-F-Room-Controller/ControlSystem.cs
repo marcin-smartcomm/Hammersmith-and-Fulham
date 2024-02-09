@@ -9,7 +9,6 @@ using Crestron.SimplSharp;                              // For Basic SIMPL# Clas
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threading
 using Crestron.SimplSharpPro.UI;
-using System.Runtime.CompilerServices;
 
 namespace H_and_F_Room_Controller
 {
@@ -217,7 +216,6 @@ namespace H_and_F_Room_Controller
                     {
                         ConsoleLogger.WriteLine("-----------------------------------------------------------------------------------");
                         ConsoleLogger.WriteLine("Fetching Calendar Info for " + emailsAddressToFetch);
-                        FetchUserInfo(emailsAddressToFetch, roomID);
                         FetchCalendarBookings(emailsAddressToFetch, roomID);
                     }else
                     {
@@ -229,43 +227,6 @@ namespace H_and_F_Room_Controller
                     Thread.Sleep(1000);
                 }
             });
-        }
-
-        void FetchUserInfo(string emailAddressToFetch, int roomID)
-        {
-            UserInfo userInfo = new UserInfo();
-            ConsoleLogger.WriteLine("Fetching User Info");
-
-            var url = "https://graph.microsoft.com/v1.0/users/" + emailAddressToFetch;
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.Timeout = 5000;
-            request.PreAuthenticate = true;
-            request.Headers.Add("Authorization", "Bearer " + microsoftAuthToken);
-
-            var httpResponse = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                try
-                {
-                    var result = streamReader.ReadToEnd();
-                    userInfo = JsonConvert.DeserializeObject<UserInfo>(result);
-                    ConsoleLogger.WriteLine("User Name: " + userInfo.displayName);
-                    ConsoleLogger.WriteLine("User Email: " + userInfo.mail);
-                }
-                catch (Exception ex)
-                { ConsoleLogger.WriteLine("Exception in FetchUserInfo() 1: " + ex.ToString()); }
-            }
-
-            try
-            {
-                FileOperations.saveUserInfo(roomID, "UserInfo", userInfo);
-            }
-            catch (Exception ex)
-            {
-                ConsoleLogger.WriteLine("Exception in FetchUserInfo() 2: " + ex);
-            }
         }
 
         void FetchCalendarBookings(string emailAddressToFetch, int roomID)

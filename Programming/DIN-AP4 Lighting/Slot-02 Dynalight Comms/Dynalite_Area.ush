@@ -1,0 +1,90 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=3.01.17
+  InclDatVrs=1.14
+  CrossCplrVrs=1.1
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=This module is designed to control one area of the dynalite network.
+  Cmn2=||1So probably more \\then one of these modules is included in one||1
+  Cmn3=program together with one "Dynalite_Receiver" \\module which controls||1
+  Cmn4=the communication.\\\\INPUTS:\\	- classic$: when high the module||1
+  Cmn5=sends commands in the classic form\\	- program$: When triggered||1
+  Cmn6=the module will send out the command to safe the current \\	||4
+  Cmn7=||8channel-level to the current selected preset.\\	- preset$[MAXPRESETS]:
+  Cmn8=||1When triggered the corresponding preset will go on. \\	- RX$:||2
+  Cmn9=||4The messages coming from the Dynalite Sytem via the Dynalite_Receiver||1
+  Cmn10=module.\\	- area$:    This input defines the area number the module||1
+  Cmn11=will be controlling.\\                Therefor it has to be triggered||1
+  Cmn12=at the beginning of the program.\\                (ex: analog init||1
+  Cmn13=--> 1d = area1; 2d = area2 ...\\	- fade$:    When setting a channel||1
+  Cmn14=to a certain value via the channel$[MAXCHANNELS], a\\	||:
+  Cmn15=||2fade time must be given. 1d = 1sec ; 2d = 2sec....\\	- channel$[MAXCHANNELS]:
+  Cmn16=||1sets the channel to the given value\\	||I
+  Cmn17=0d = 0%; 65535d = 100%\\	                        \\OUTPUTS: \\	-
+  Cmn18=||1TX$: Output to the Dynalite system via the Dynalite_Receiver module\\
+  Cmn19=	- preset_fb$[MAXPRESETS]: Feedback of which preset is currently||1
+  Cmn20=selected.\\	- channel_fb$[MAXCHANNELS]: Gives feedback all the channels.
+[END]
+[BEGIN]
+  InputCue1=classic$
+  InputSigType1=Digital
+  InputCue2=program$
+  InputSigType2=Digital
+  InputCue3=preset$[#]
+  InputSigType3=Digital
+  OutputCue1=preset_fb$[#]
+  OutputSigType1=Digital
+  InputList2Cue1=RX$
+  InputList2SigType1=Serial
+  InputList2Cue2=area$
+  InputList2SigType2=Analog
+  InputList2Cue3=fade$
+  InputList2SigType3=Analog
+  InputList2Cue4=channel$[#]
+  InputList2SigType4=Analog
+  OutputList2Cue1=TX$
+  OutputList2SigType1=Serial
+  OutputList2Cue2=channel_fb$[#]
+  OutputList2SigType2=Analog
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,216,225,248,249,266,310,
+  Name=Dynalite_Area
+  SmplCName=Dynalite_Area.usp
+  Code=1
+  MinVariableInputs=3
+  MaxVariableInputs=172
+  MinVariableInputsList2=4
+  MaxVariableInputsList2=258
+  MinVariableOutputs=1
+  MaxVariableOutputs=170
+  MinVariableOutputsList2=2
+  MaxVariableOutputsList2=256
+  Expand=expand_randomly
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  NVStorage=10
+  ParamSigType1=String
+  ParamCue1=[Reference Name]
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_Dynalite_Area
+  SymJam=NonExclusive
+[END]

@@ -188,7 +188,6 @@
     <Compile Include="Schedule Related\MeetingInfoCard.cs" />
     <Compile Include="Schedule Related\MicrosoftAppIntegrationInfo.cs" />
     <Compile Include="Schedule Related\NewMeetingInfo.cs" />
-    <Compile Include="Schedule Related\UserInfo.cs" />
     <Compile Include="SSE_Server.cs" />
     <Compile Include="WebServer.cs" />
   </ItemGroup>
