@@ -25,6 +25,7 @@ namespace H_and_F_Core
             {
                 if(this.SupportsEthernet)
                 {
+                    FileOperations.InitializeFileSystem();
                     ConsoleLogger.ConsoleLoggerStart(55555);
 
                     sse = new SSE_Server(this);

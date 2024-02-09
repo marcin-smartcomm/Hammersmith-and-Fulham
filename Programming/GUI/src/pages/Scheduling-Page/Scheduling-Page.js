@@ -257,7 +257,6 @@ function DrawBookingSlot(startHour, startMinute, endHour, endMinute, bookingInde
 
 function DetermineActiveTimeBlocks(currentTimeInMinutes)
 {
-    console.log(timelineInitialized)
     if(timelineInitialized) return;
 
     var nodes = document.getElementById('schedulingTimlineGrid').childNodes;

@@ -50,6 +50,7 @@ namespace H_and_F_Room_Controller
                 {
                     try
                     {
+                        FileOperations.InitializeFileSystem();
                         ConsoleLogger cs = new ConsoleLogger();
                         cs.ConsoleLoggerStart(55555, this); 
 

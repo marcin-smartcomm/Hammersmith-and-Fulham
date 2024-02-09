@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Crestron.SimplSharp;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,18 +9,37 @@ namespace H_and_F_Room_Controller
 {
     public static class FileOperations
     {
+        static string _GlobalPath, _RoomSettingsPath, _roomDirectoryPath;
+        static JsonSerializerSettings _serializerSettings;
+
+        public static void InitializeFileSystem()
+        {
+            if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
+            {
+                _RoomSettingsPath = "/user/RoomSettings";
+                _roomDirectoryPath = @"\user\RoomSettings";
+                _GlobalPath = "/user/";
+            }
+            else if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Server)
+            {
+                _RoomSettingsPath = "../user/RoomSettings";
+                _roomDirectoryPath = @"..\user\RoomSettings";
+                _RoomSettingsPath = "../user/";
+            }
+
+            _serializerSettings = new JsonSerializerSettings();
+            _serializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        }
+
         public static void saveRoomData(string roomID, RoomCoreInfo roomData)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/Core.json";
             try
             {
-                File.Delete(absolutePath + "Core.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "Core.json",
-                    JsonConvert.SerializeObject(roomData, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(roomData, Formatting.Indented, _serializerSettings)
                     );
             }catch (Exception ex)
             {
@@ -28,16 +48,13 @@ namespace H_and_F_Room_Controller
         }
         public static void saveRoomSources(string roomID, AVSources sources)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/AVSources.json";
             try
             {
-                File.Delete(absolutePath + "AVSources.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "AVSources.json",
-                    JsonConvert.SerializeObject(sources, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(sources, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -48,16 +65,13 @@ namespace H_and_F_Room_Controller
 
         public static void saveRoomBookings(int roomID, string settingType, Bookings bookingData)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/{settingType}.json";
             try
             {
-                File.Delete(absolutePath + settingType + ".json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + settingType + ".json",
-                    JsonConvert.SerializeObject(bookingData, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(bookingData, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -68,18 +82,16 @@ namespace H_and_F_Room_Controller
 
         public static void saveRoomBookingStats(int roomID, CurrentAndNextMeetingInfo currentAndNextMeetingInfo)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/BookingStats.json";
             try
             {
-                File.Delete(absolutePath + "BookingStats.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "BookingStats.json",
-                    JsonConvert.SerializeObject(currentAndNextMeetingInfo, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(currentAndNextMeetingInfo, Formatting.Indented, _serializerSettings)
                     );
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 ConsoleLogger.WriteLine("issue in fileManager.saveRoomBookingStats(): " + ex.ToString());
             }
@@ -87,16 +99,13 @@ namespace H_and_F_Room_Controller
 
         public static void saveMeetingDurations(int roomID, MeetingDurations meetingDurations)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/MeetingDurations.json";
             try
             {
-                File.Delete(absolutePath + "MeetingDurations.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "MeetingDurations.json",
-                    JsonConvert.SerializeObject(meetingDurations, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(meetingDurations, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -107,16 +116,13 @@ namespace H_and_F_Room_Controller
 
         public static void saveMeetingInfoCards(int roomID, MeetingInfoCardCollection meetingInfoCardsCollection)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/MeetingInfoCards.json";
             try
             {
-                File.Delete(absolutePath + "MeetingInfoCards.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "MeetingInfoCards.json",
-                    JsonConvert.SerializeObject(meetingInfoCardsCollection, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(meetingInfoCardsCollection, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -127,16 +133,13 @@ namespace H_and_F_Room_Controller
 
         public static void saveMasterRoomInfo(int roomID, GroupMasterRoom masterRoom)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/MasterRoom.json";
             try
             {
-                File.Delete(absolutePath + "MasterRoom.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "MasterRoom.json",
-                    JsonConvert.SerializeObject(masterRoom, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(masterRoom, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -147,16 +150,13 @@ namespace H_and_F_Room_Controller
 
         public static void saveRoomClimateValues(int roomID, ClimateControlValues climateValues)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
+            string filePath = $@"{_RoomSettingsPath}/Room{roomID}/ClimateControl.json";
             try
             {
-                File.Delete(absolutePath + "ClimateControl.json");
+                File.Delete(filePath);
                 File.WriteAllText(
-                    absolutePath + "ClimateControl.json",
-                    JsonConvert.SerializeObject(climateValues, Formatting.Indented, serializerSettings)
+                    filePath,
+                    JsonConvert.SerializeObject(climateValues, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -167,16 +167,12 @@ namespace H_and_F_Room_Controller
 
         public static void saveGlobalTemp(GlobalTemp globalTemp)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
-            string absolutePath = @"../user/";
             try
             {
-                File.Delete(absolutePath + "GlobalTemp.json");
+                File.Delete(_GlobalPath + "GlobalTemp.json");
                 File.WriteAllText(
-                    absolutePath + "GlobalTemp.json",
-                    JsonConvert.SerializeObject(globalTemp, Formatting.Indented, serializerSettings)
+                    _GlobalPath + "GlobalTemp.json",
+                    JsonConvert.SerializeObject(globalTemp, Formatting.Indented, _serializerSettings)
                     );
             }
             catch (Exception ex)
@@ -189,13 +185,8 @@ namespace H_and_F_Room_Controller
         {
             try
             {
-                string absolutePath = @"../user/RoomSettings/Room" + roomID + "/";
-                StreamReader sr = new StreamReader(absolutePath + settingType + ".json");
-
-                string json = sr.ReadToEnd();
-                sr.Close();
-
-                return json;
+                string filePath = $@"{_RoomSettingsPath}/Room{roomID}/";
+                using (StreamReader sr = new StreamReader(filePath + settingType + ".json")) return sr.ReadToEnd();
             }
             catch (Exception ex)
             {
@@ -206,16 +197,7 @@ namespace H_and_F_Room_Controller
 
         public static string loadCoreInfo(string jsonFileName)
         {
-            try
-            {
-                string absolutePath = @"../user/";
-                StreamReader sr = new StreamReader(absolutePath + $"{jsonFileName}.json");
-
-                string json = sr.ReadToEnd();
-                sr.Close();
-
-                return json;
-            }
+            try { using (StreamReader sr = new StreamReader(_GlobalPath + $"{jsonFileName}.json")) return sr.ReadToEnd(); }
             catch (Exception ex)
             {
                 ConsoleLogger.WriteLine("issue in fileManager.loadMicrosoftInfo()\n" + ex.ToString());
@@ -227,7 +209,7 @@ namespace H_and_F_Room_Controller
         {
             try
             {
-                List<string> roomDirectories = Directory.GetDirectories(@"..\user\RoomSettings").ToList();
+                List<string> roomDirectories = Directory.GetDirectories($@"{_roomDirectoryPath}").ToList();
                 return roomDirectories;
             }
             catch (Exception ex) { ConsoleLogger.WriteLine(ex.Message); return null; }
