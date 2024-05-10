@@ -166,7 +166,7 @@ function ActivateCombineBtn(combineBtn)
       });
     }
     
-    SendRoomsToBeGroupedCall(roomsToSend)
+    CoreProcessorAjaxPOSTCall("GroupRooms", roomsToSend);
 
     openSubpage("Combine-Rooms", "Combine Rooms", 'fa-solid fa-gear')
     openPopUp("Grouping-Results", roomsToSend[0].name)

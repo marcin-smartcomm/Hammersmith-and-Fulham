@@ -1,6 +1,8 @@
 function InitializePTZControlSp(pageName, pageIcon)
 {
-    GetCamerasCall(currentRoomInfo.roomID)
+    AddCamerasToList(
+        RoomProcessorAjaxGETCall("GetCameras", [currentRoomInfo.roomID])
+    )
     InitializePTZControlBtns(pageName, pageIcon)
 }
 
@@ -158,5 +160,5 @@ function AddCamerasToList(cameras)
 function ProcessCameraCommand(command, byValue)
 {
     let camName = $('#ptzcamSelectBtn').find(":selected").text()
-    CameraControlCall(currentRoomInfo.roomID, camName, command, byValue)
+    RoomProcessorAjaxGETCall("CameraControl", [currentRoomInfo.roomID, camName, command, byValue])
 }

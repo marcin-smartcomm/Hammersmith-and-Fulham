@@ -1,6 +1,8 @@
 function InitializeVideoProductionSp()
 {
-  GetProductionUnitSourcesCall(currentRoomInfo.roomID)
+  PopulateRecordableSourcesList(
+    RoomProcessorAjaxGETCall("GetProductionUnitSources", [currentRoomInfo.roomID])
+  )
 }
 
 async function PopulateRecordableSourcesList(sourceList)
@@ -18,7 +20,8 @@ async function PopulateRecordableSourcesList(sourceList)
     if(i == sourceList.sources.length-1)
     setTimeout(() => {
       ActivateProductionSrcButtons()
-      GetCurrentlySelectedStreamCall(currentRoomInfo.roomID)
+      var result = RoomProcessorAjaxGETCall("GetCurrentProductionStream", [currentRoomInfo.roomID])
+      UpdateSelectedStreamFb(result.ProductionUnitSource)
     }, 200);
   });
 }
@@ -33,12 +36,14 @@ function ActivateProductionSrcButtons()
 
      $(this).on('touchend', () => {
       $(this).removeClass('btn-generic-pressed')
-      GetCurrentlySelectedStreamCall(currentRoomInfo.roomID)
+      var result = RoomProcessorAjaxGETCall("GetCurrentProductionStream", [currentRoomInfo.roomID])
+      UpdateSelectedStreamFb(result.ProductionUnitSource)
      })
 
      $(this).on('click', () => {
       PlayBtnClickSound()
-      UpdateProductionUnitStreamCall(currentRoomInfo.roomID, $(this).text())
+      var result = RoomProcessorAjaxGETCall("UpdateProductionUnitStream", [currentRoomInfo.roomID, $(this).text()])
+      UpdateSelectedStreamFb(result.ProductionUnitSource)
      })
 
   });

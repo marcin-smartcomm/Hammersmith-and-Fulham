@@ -1,6 +1,8 @@
 function InitialzieColabScreensMainSp()
 {
-  GetColabScreensCal()
+  PopulateColabDataOnScreen(
+    CoreProcessorAjaxGETCall("GetColabScreens", [])
+  )
 }
 
 function PopulateColabDataOnScreen(receivers)

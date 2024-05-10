@@ -1,556 +1,31 @@
 let eventStreamSource = "";
 
-function getRoomDataCall(roomID)
+function RoomProcessorAjaxGETCall(endpoint, params)
 {
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/RoomData",
-        dataType: "json",
-        data: roomID + '',
-        success: function (result) {
-            if(panelType == "TSW" || panelType == "iPadS")
-            {
-                GetRoomAssistanceStateCall(result.floor, result.roomName)
-                currentRoomInfo = result;
-                if(eventStreamSource.readyState != 1)
-                    SubscribeToRoomEvents(currentRoomInfo.roomID);
-            }
-            if(panelType == "iPadM")
-            {
-                if(currentRoomInfo != null) 
-                    DisconnectFromEvents()
+    let dataToSend = ''
 
-                currentRoomInfo = result;
+    if(params.length === 1) dataToSend = params[0];
+    else if (params.length > 1)
+    {
+        $.each(params, function (i, value) { 
+            if(i === params.length-1) dataToSend += value
+            else dataToSend += value+':'
+        });
+    }
 
-                SubscribeToRoomEvents(currentRoomInfo.roomID);
-            }
+    var responseJSON = "";
+    $.get(`http://${serverIP}:50000/api/${endpoint}?${dataToSend}`)
+    .done(function(response) {responseJSON = response})
+    .fail(function(xhr, status, error) 
+    {
+        console.log(xhr + "/" + status + "/" + error);
+        responseJSON = "Error"
+    })
+    
+    console.log(`Room Request: ${endpoint}`);
+    console.log(responseJSON);
 
-            if(panelType == "iPadM" || panelType == "iPadS") ClearConnectingPopUp()
-            if(panelType.includes("iPad")) 
-            {
-                InitializeHomeScreen()
-            }
-
-            
-        },
-        error: function (err) {
-            console.log(err)
-            console.error("Error in communication")
-            if(panelType == "iPadM" || panelType == "iPadS")
-            {
-                ClearConnectingPopUp()
-
-                if(err.readyState === 4)
-                    document.getElementById("projectBody").innerHTML = `<span class=\"unable-to-connect\"> Unable to connect to selected zone <br> Reason: Request reached ${serverIP}, but could not be fulfilled </span>`
-                if(err.readyState === 0)
-                    document.getElementById("projectBody").innerHTML = `<span class=\"unable-to-connect\"> Unable to connect to selected zone <br> Reason: ${serverIP} did not respond within expected time </span>`
-
-                LoadSideMenu("FloorList")
-                ActivateSideMenuBtns()
-                document.getElementById("backBtn").remove()
-            }
-        },
-        timeout: 3000
-    });
-}
-
-function UpdateRoomDataCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/RoomData",
-        dataType: "json",
-        data: roomID + '',
-        success: function (result) {
-            currentRoomInfo = result;
-
-            if(currentSubpage == "Menu")
-                openSubpage("Menu")
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetRoomTemperatureDataCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/RoomTemperatures",
-        dataType: "json",
-        data: roomID + '',
-        success: function (result) {
-            //Temperature-Control.js
-            populateTemperatureControlSp(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function ChangeTempCall(roomID, direction)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/ChangeTemp",
-        dataType: "json",
-        data: roomID + ':' + direction,
-        success: function (result) {
-            //Temperature-Control.js
-            updateCurrentSetpoint(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetCurrentSourceCall(roomID, changePage)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetCurrentSource",
-        dataType: "json",
-        data: roomID + '',
-        success: function (result) {
-            //SubpageManager.js
-            if(changePage) ChangeSubpageToSelectedSource(result)
-            else HighlightCurrentlySelectedSource(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetFireAlarmStateCall()
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/FireAlarmState",
-        dataType: "json",
-        data: '',
-        success: function (result) {
-            if(result.fireAlarmState == "True") ProcessFireAlarmState("1")
-            if(result.fireAlarmState == "False") ProcessFireAlarmState("0")
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function NewMenuItemSelectedCall(newItemName)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/NewMenuItemSelected",
-        dataType: "json",
-        data: currentRoomInfo.roomID+':'+newItemName,
-        success: function (result) {
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function ShutdownRoomCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/RoomShutdown",
-        dataType: "json",
-        data: roomID+'',
-        success: function () {
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function CheckRoomMasterCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetGroupMasterStatus",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            if(result.roomMasterStatus == "True")
-            {
-                if(document.getElementById("virtuallyGroupedPopUp") == null)
-                    openPopUp("Virtually-Grouped")
-                GetGroupMasterDetailsCall(currentRoomInfo.roomID)
-            }
-            if(result.roomMasterStatus == "False")
-                if(document.getElementById("virtuallyGroupedPopUp") != null)
-                {
-                var parentElement = $("#virtuallyGroupedPopUp").parent()
-                clearSpecificPopUp("virtuallyGroupedPopUp")
-                parentElement.remove()
-                }
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetGroupMasterDetailsCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetGroupMasterDetails",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            //Virtually-Grouped.js
-            FillOutGroupMasterInfo(result);
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function RestoreFromVirtualGroupCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/RestoreFromVirtualGroup",
-        dataType: "json",
-        data: roomID+'',
-        success: function () {
-            //Virtually-Grouped.js
-            CheckRoomMasterCall(roomID);
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetCurrentDivisionScenarioCall()
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetDivisionInfo",
-        dataType: "json",
-        data: '',
-        success: function (result) {
-
-            $.each(result.roomIDsNotInPlay, function (i, valueOfElement) { 
-                 if(currentRoomInfo.roomID === result.roomIDsNotInPlay[i])
-                 {
-                    HideGroupedPopUp()
-                    return;
-                 }
-            });
-
-            $.each(result.slaveRoomIDs, function (i, valueOfElement) { 
-                 if(currentRoomInfo.roomID === result.slaveRoomIDs[i])
-                 {
-                    if(document.getElementById("physicallyGroupedPopUp") == null)
-                        openPopUp("Physically-Grouped")
-                    return;
-                 }
-            });
-
-            if(currentRoomInfo.roomID === result.masterRoomID) {
-                HideGroupedPopUp()
-            }
-
-            if(result.masterRoomID === -1) HideGroupedPopUp()
-
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function GetLightingProcessorInfoCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetLightingInfo",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            lightingServerIP = result.LightingProcessorIP,
-            lightingAreaNumber = result.LightingAreaNumber
-        },
-        error: function () {
-            console.error("Error in communication")
-        }
-    });
-}
-
-function SetNewLightingSceneCall(newSceneName)
-{
-    console.log(newSceneName)
-    $.ajax({
-        type: "GET",
-        url: "http://"+lightingServerIP+":50000/api/SetNewScene",
-        dataType: "json",
-        data: lightingAreaNumber+':'+newSceneName,
-        success: function () {
-            UpdateLightingSceneFb(newSceneName)
-            setTimeout(() => {
-                GetCurrentLightingSceneCall()
-            }, 2000);
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetCurrentLightingSceneCall()
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+lightingServerIP+":50000/api/GetCurrentScene",
-        dataType: "json",
-        data: lightingAreaNumber+'',
-        success: function (result) {
-            //Lighting.js
-            UpdateLightingSceneFb(result.currentScene)
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetCamerasCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetCameras",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            //PTZ-Control.js
-            if(currentSubpage == "PTZ-Control") AddCamerasToList(result)
-
-            //PC-Laptop.js
-            if(currentSubpage == "PC-Laptop") DeterminePTZControlBtnFunctionality(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function CameraControlCall(roomID, camName, command, byValue)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/CameraControl",
-        dataType: "json",
-        data: roomID+':'+camName+':'+command+':'+byValue,
-        success: function (result) {},
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function VolChangeCall(roomID, direction, state)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/ChangeVolumeLevel",
-        dataType: "json",
-        data: roomID+':'+direction+':'+state,
-        success: function (result) {console.log(result)},
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function MuteVolCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/MuteVolume",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {console.log(result)},
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function MicChangeCall(roomID, direction, state)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/ChangeMicLevel",
-        dataType: "json",
-        data: roomID+':'+direction+':'+state,
-        success: function (result) {console.log(result)},
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function MuteMicCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/MuteMic",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {console.log(result)},
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetSliderLevelCall(roomID, sliderName)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetSliderLevel",
-        dataType: "json",
-        data: roomID+':'+sliderName,
-        success: function (result) {
-            if(sliderName == 'vol') UpdateVolLevel(result.VolLevel)
-            if(sliderName == 'mic') UpdateMicLevel(result.MicLevel)
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetMuteStateCall(roomID, settingName)
-{
-    console.log("http://"+serverIP+":50000/api/GetMuteState")
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetMuteState",
-        dataType: "json",
-        data: roomID+':'+settingName,
-        success: function (result) {
-            if(settingName == 'vol') UpdateVolMuteState((result.VolMuteState === 'True'))
-            if(settingName == 'mic') UpdateMicMuteState((result.MicMuteState === 'True'))
-        },
-        error: function (err) {
-            console.log(err)
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetSmallHallDisplayControlOpitonCall()
-{
-    $.ajax({
-        type: "GET",
-        url: "http://192.168.1.241:50000/api/GetDisplayControlOption",
-        dataType: "json",
-        data: '1',
-        success: function (result) {
-            //Screen-Control.js
-            PopulateSmallHallSection(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function SetSmallHallDisplayControlOpitonCall(option)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://192.168.1.241:50000/api/SetDisplayControlOption",
-        dataType: "json",
-        data: `1` + `:` + option,
-        success: function (result) {
-            //Screen-Control.js
-            PopulateSmallHallSection(result)
-        },
-        error: function () {
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetProductionUnitSourcesCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetProductionUnitSources",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            PopulateRecordableSourcesList(result)
-        },
-        error: function (err) {
-            console.log(err)
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function GetCurrentlySelectedStreamCall(roomID)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/GetCurrentProductionStream",
-        dataType: "json",
-        data: roomID+'',
-        success: function (result) {
-            UpdateSelectedStreamFb(result.ProductionUnitSource)
-        },
-        error: function (err) {
-            console.log(err)
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
-}
-
-function UpdateProductionUnitStreamCall(roomID, sourceName)
-{
-    $.ajax({
-        type: "GET",
-        url: "http://"+serverIP+":50000/api/UpdateProductionUnitStream",
-        dataType: "json",
-        data: roomID+':'+sourceName,
-        success: function (result) {
-            UpdateSelectedStreamFb(result.ProductionUnitSource)
-        },
-        error: function (err) {
-            console.log(err)
-            console.error("Error in communication")
-        },
-        timeout: 2000
-    });
+    return responseJSON;
 }
 
 function SubscribeToRoomEvents(roomID)
@@ -610,15 +85,22 @@ function ProcessIncomingEvent(event)
             }
         }
         if(event.data.includes("FireAlarm")) ProcessFireAlarmState(event.data.split(':')[2])
-        if(event.data.includes("SourceNumber")) UpdateRoomDataCall(currentRoomInfo.roomID)
+        if(event.data.includes("SourceNumber")) 
+        {
+            var result = RoomProcessorAjaxGETCall("RoomData", [currentRoomInfo.roomID])
+            currentRoomInfo = result;
+            if(currentSubpage == "Menu") openSubpage("Menu")
+        }
         if(event.data.includes("GroupMaster")) 
-            if(panelType == "TSW") CheckRoomMasterCall(currentRoomInfo.roomID)
+            if(panelType == "TSW") CheckRoomMasterState(currentRoomInfo.roomID)
         if(event.data.includes("DivisionChanged")) 
-            if(panelType == "TSW") GetCurrentDivisionScenarioCall()
+            if(panelType == "TSW") GetCurrentDivisionScenario()
 
         if(event.data.includes("Climate"))
             if(currentSubpage == "Temperature-Control")
-                GetRoomTemperatureDataCall(currentRoomInfo.roomID)
+                PopulateTemperatureControlSp(
+                    RoomProcessorAjaxGETCall("RoomTemperatures", [currentRoomInfo.roomID])
+                )
 
         if(event.data.includes("VolLevel"))
             UpdateVolLevel(event.data.split(':')[2])
@@ -634,12 +116,15 @@ function ProcessIncomingEvent(event)
 
         if(event.data.includes("Source"))
             if(sideMenuCurrentlyDisplayed == "Main")
-                GetCurrentSourceCall(currentRoomInfo.roomID, true)
+                {
+                    var result = RoomProcessorAjaxGETCall("GetCurrentSource", [currentRoomInfo.roomID])
+                    ChangeSubpageToSelectedSource(result)
+                }
     }
     if(event.data.includes("TIME"))
     {
         ProcessNewTimeInfo(event)
-        if(fireAlarm) GetFireAlarmStateCall()
+        if(fireAlarm) CheckFireAlarm()
     }
 }
 

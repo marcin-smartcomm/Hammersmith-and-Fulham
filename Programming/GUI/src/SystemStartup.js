@@ -9,11 +9,28 @@ let assistanceRequired = "false";
 let systemClickSoundsEnabled = false;
 let menuItemsBlocked = false;
 let btnClickSound = new Audio("./sounds/click.mp3")
+let scriptsLoaded = 0;
 
-document.onload = InitializeSystemVariables();
+document.onload = WaitForLastScriptToLoad();
+
+function WaitForLastScriptToLoad()
+{
+    var body = document.getElementsByTagName("body")[0];    
+    
+    body.addEventListener("load", function(event) {
+        if (event.target.nodeName === "SCRIPT")
+        {
+            //When last script from index.html loads, start system
+            if(event.target.getAttribute("src") == "./popUps/Physically-Grouped/Physically-Grouped.js")
+                InitializeSystemVariables()
+        }
+    }, true);
+}
 
 function InitializeSystemVariables()
 {
+    $.ajaxSetup({async: false, timeout: 2000});
+
     var request = new XMLHttpRequest();
     request.open("GET", './panelSettings.json', false);
     request.onreadystatechange = function ()
@@ -30,7 +47,10 @@ function InitializeSystemVariables()
     request.send(null)
     request.DONE;
 
-    GetPanelSettingsCall()
+    FillOutPanelSettings(CoreProcessorAjaxGETCall("PanelInfo", []))
+    $("#logo").on('touchend', function () {
+        location.reload();
+    });
 }
 
 function FillOutPanelSettings(setupInfo)
@@ -86,7 +106,8 @@ function StartAssistancePoll()
 {
     if(!assistancePollTimer)
         assistanceInterval = setInterval(() => {
-            GetRoomAssistanceStateCall(currentRoomInfo.floor, currentRoomInfo.roomName)
+            var result = CoreProcessorAjaxGETCall("RoomAssistanceState", [currentRoomInfo.floor, currentRoomInfo.roomName])
+            ProcessAssistanceRequestState(result)
         }, 3000);
 
     assistancePollTimer = true;
@@ -97,4 +118,23 @@ function StopAssistancePoll()
         clearInterval(assistanceInterval)
 
     assistancePollTimer = false;
+}
+function ProcessAssistanceRequestState(result)
+{
+    assistanceRequired = result.roomAssistanceState;
+
+    //SystemVariables.js
+    if(assistanceRequired == "true" && result.assistanceAcknowledged == "False") StartAssistancePoll()
+    if(assistanceRequired == "true" && result.assistanceAcknowledged == "True")
+    {
+        StopAssistancePoll()
+        assistanceRequired = "false"
+        openPopUp("Assistance-Coming")
+
+        if(document.getElementById("assistanceBtn") !== null)
+        {
+            document.getElementById("assistanceBtn").classList.remove("btn-generic-pressed")
+        }
+    } 
+    if(assistanceRequired == "false") StopAssistancePoll()
 }

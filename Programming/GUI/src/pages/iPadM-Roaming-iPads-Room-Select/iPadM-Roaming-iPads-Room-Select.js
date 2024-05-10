@@ -46,7 +46,10 @@ function ActivateRoomSelectRoamingBtns()
         })
         roomBtn.addEventListener("click", function(){
             roomBtn.classList.remove("btn-generic-pressed")
-            RoamingiPadRoomChangeCall(roomBtn.id)
+
+            var result = CoreProcessorAjaxGETCall("RoamingiPadRoomChange", [roomBtn.id])
+            if(result.request == "conplete")
+                openSubpage("iPadM-Roaming-iPads", "Roaming iPads", 'fa-solid fa-tablet-screen-button')
         })
     });
 }

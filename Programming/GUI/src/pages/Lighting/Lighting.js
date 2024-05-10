@@ -1,15 +1,15 @@
 function InitializeLightingSp()
 {
     InitializeLightingPageBtns()
-    GetCurrentLightingSceneCall()
+    UpdateLightingSceneFb(
+        LightingProcessorAjaxGETCall("GetCurrentScene", [lightingAreaNumber])
+    )
 }
 
 function InitializeLightingPageBtns()
 {
     let lightingOnBtn = document.getElementById("lightingOnBtn")
     let lightingOffBtn = document.getElementById("lightingOffBtn")
-    // let lightingRaiseBtn = document.getElementById("lightingRaiseBtn")
-    // let lightingLowerBtn = document.getElementById("lightingLowerBtn")
     let lightingSceneBtns = document.querySelectorAll(".lighting-page-scene-controls-btn")
 
     lightingOnBtn.addEventListener('touchstart', function(){
@@ -18,7 +18,7 @@ function InitializeLightingPageBtns()
     lightingOnBtn.addEventListener('touchend', function(){
         lightingOnBtn.classList.remove("btn-generic-pressed")
         PlayBtnClickSound()
-        SetNewLightingSceneCall(lightingOnBtn.getAttribute("name"))
+        SetNewLightingScene(lightingOnBtn.getAttribute("name"))
     })
 
     lightingOffBtn.addEventListener('touchstart', function(){
@@ -27,24 +27,8 @@ function InitializeLightingPageBtns()
     lightingOffBtn.addEventListener('touchend', function(){
         lightingOffBtn.classList.remove("btn-generic-pressed")
         PlayBtnClickSound()
-        SetNewLightingSceneCall(lightingOffBtn.getAttribute("name"))
+        SetNewLightingScene(lightingOffBtn.getAttribute("name"))
     })
-
-    // lightingRaiseBtn.addEventListener('touchstart', function(){
-    //     lightingRaiseBtn.classList.add("btn-generic-pressed")
-    // }, { passive: "true" })
-    // lightingRaiseBtn.addEventListener('touchend', function(){
-    //     lightingRaiseBtn.classList.remove("btn-generic-pressed")
-    //     PlayBtnClickSound()
-    // })
-
-    // lightingLowerBtn.addEventListener('touchstart', function(){
-    //     lightingLowerBtn.classList.add("btn-generic-pressed")
-    // }, { passive: "true" })
-    // lightingLowerBtn.addEventListener('touchend', function(){
-    //     lightingLowerBtn.classList.remove("btn-generic-pressed")
-    //     PlayBtnClickSound()
-    // })
 
     lightingSceneBtns.forEach(sceneBtn => {
         sceneBtn.addEventListener('touchstart', function(){
@@ -53,9 +37,20 @@ function InitializeLightingPageBtns()
         sceneBtn.addEventListener('touchend', function(){
             sceneBtn.classList.remove("btn-generic-pressed")
             PlayBtnClickSound()
-            SetNewLightingSceneCall(sceneBtn.getAttribute("name"))
+            SetNewLightingScene(sceneBtn.getAttribute("name"))
         })
     });
+}
+
+function SetNewLightingScene(sceneName)
+{
+    LightingProcessorAjaxGETCall("SetNewScene", [lightingAreaNumber, sceneName])
+    UpdateLightingSceneFb(newSceneName)
+    setTimeout(() => { 
+        UpdateLightingSceneFb(
+            LightingProcessorAjaxGETCall("GetCurrentScene", [lightingAreaNumber])
+        ) 
+    }, 2000);
 }
 
 function UpdateLightingSceneFb(newScene)
@@ -79,4 +74,11 @@ function UpdateLightingSceneFb(newScene)
                 btn.classList.add("btn-generic-pressed")
         });
     }
+}
+
+function GetLightingProcessorInfo()
+{
+    var result = RoomProcessorAjaxGETCall("GetLightingInfo", [currentRoomInfo.roomID])
+    lightingServerIP = result.LightingProcessorIP,
+    lightingAreaNumber = result.LightingAreaNumber
 }

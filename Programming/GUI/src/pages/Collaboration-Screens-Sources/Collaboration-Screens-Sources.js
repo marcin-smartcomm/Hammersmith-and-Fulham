@@ -2,7 +2,9 @@ let selectedReceiverIPID;
 
 function InitialzieColabScreensSourcesSp(param2, param3)
 {
-  GetColabSourcesCall()
+  PopulateColabSourcesOnScreen(
+    CoreProcessorAjaxGETCall("GetColabSources", [])
+  )
   selectedReceiverIPID = param3
   document.getElementById("pageTopName").innerHTML = param2
 }
@@ -22,7 +24,7 @@ function PopulateColabSourcesOnScreen(sources)
     }, {passive: "true"})
     sourceBtn.addEventListener('touchend', function() {
       sourceBtn.classList.remove("btn-generic-pressed")
-      SetColabSourceCall(selectedReceiverIPID, source.IPID)
+      CoreProcessorAjaxGETCall("SetColabScreenSource", [selectedReceiverIPID, source.IPID])
       openSubpage("Collaboration-Screens-Main", "Collaboration Screens", "fa-solid fa-tv")
     })
   });

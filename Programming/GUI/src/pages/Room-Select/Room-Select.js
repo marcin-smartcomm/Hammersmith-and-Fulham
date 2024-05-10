@@ -68,22 +68,25 @@ function ActivateRoomSelectSpBtns()
 
             if(panelType == "iPadM")
             {
-                DisplayConnectingSubpage(roomBtn.id)
-                currentRoomInfo = null;
-                RoomChangeCall(roomBtn.id)
-                serverIP = roomBtn.id.split(':')[0]
+                RoomBtnPressed(roomBtn, "RoomChange")
+                setTimeout(() => { FillOutPanelSettings(CoreProcessorAjaxGETCall("PanelInfo", [])) }, 100);
             }
 
             if(panelType == "iPadS")
             {
-                DisplayConnectingSubpage()
-                currentRoomInfo = null;
-                SlaveRoomChangeCall(roomBtn.id)
-                serverIP = roomBtn.id.split(':')[0]
-                getRoomDataCall(roomBtn.id.split(':')[1])
+                RoomBtnPressed(roomBtn, "SlaveRoomChange")
+                setTimeout(() => { RoamingDeviceConnectToRoom(roomBtn.id.split(':')[1]) }, 100);
             }
         })
     });
+}
+
+function RoomBtnPressed(roomBtn, slaveOrMaster)
+{
+    DisplayConnectingSubpage(roomBtn.id)
+    currentRoomInfo = null;
+    CoreProcessorAjaxGETCall(slaveOrMaster, [roomBtn.id])
+    serverIP = roomBtn.id.split(':')[0]
 }
 
 function DisplayConnectingSubpage(hostInfo)
@@ -109,10 +112,4 @@ function DisplayConnectingSubpage(hostInfo)
 
     connectingPopUp.appendChild(connectingElement)
     mainProjectBody.appendChild(connectingPopUp)
-}
-
-function ClearConnectingPopUp()
-{
-    if(document.getElementById("connectingPopUp") != null)
-        $("#connectingPopUp").remove();
 }

@@ -198,8 +198,8 @@ namespace H_and_F_Core
 
                 else if (incomingRequest.Contains("/AssistanceRequest"))
                 {
-                    string floor = incomingRequest.Split('?')[1].Split('|')[0];
-                    string roomName = incomingRequest.Split('?')[1].Split('|')[1].Replace("%20", " ");
+                    string floor = incomingRequest.Split('?')[1].Split(':')[0];
+                    string roomName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
 
                     AssistanceCards allAssistanceCards = JsonConvert.DeserializeObject<AssistanceCards>(FileOperations.loadJson("AssistanceRequests"));
 
@@ -223,8 +223,8 @@ namespace H_and_F_Core
                 }
                 else if (incomingRequest.Contains("/RoomAssistanceState"))
                 {
-                    string floor = incomingRequest.Split('?')[1].Split('|')[0];
-                    string roomName = incomingRequest.Split('?')[1].Split('|')[1].Replace("%20", " ");
+                    string floor = incomingRequest.Split('?')[1].Split(':')[0];
+                    string roomName = incomingRequest.Split('?')[1].Split(':')[1].Replace("%20", " ");
 
                     AssistanceCards allAssistanceCards = JsonConvert.DeserializeObject<AssistanceCards>(FileOperations.loadJson("AssistanceRequests"));
 

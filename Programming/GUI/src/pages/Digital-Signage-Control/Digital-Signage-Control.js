@@ -1,6 +1,8 @@
 function InitializeDigitalSignageControlSp()
 {
-    GetDigitalSignageDataCall()
+    PopulateDigitalSignageSection(
+        CoreProcessorAjaxGETCall("DigitalSignage", [])
+    )
 }
 
 function PopulateDigitalSignageSection(data)
@@ -55,7 +57,8 @@ function InitialisePowerSections()
         });
         $(btn).on("click", function () {
             if(!$(this).hasClass("processing") && !$(`#OffBtn${i+1}`).hasClass("processing"))
-            DigitalSignagePowerCall(btn.id.replace("OnBtn", ""), "On")
+            CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OnBtn", ""), "On"])
+            BlinkDigitalSignagePwrBtn(btn.id.replace("OnBtn", ""), "On")
         });
     });
 
@@ -70,7 +73,8 @@ function InitialisePowerSections()
         });
         $(btn).on("click", function () {
             if(!$(this).hasClass("processing") && !$(`#OnBtn${i+1}`).hasClass("processing"))
-            DigitalSignagePowerCall(btn.id.replace("OffBtn", ""), "Off")
+            CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OffBtn", ""), "Off"])
+            BlinkDigitalSignagePwrBtn(btn.id.replace("OffBtn", ""), "Off")
         });
     });
 }
@@ -88,7 +92,7 @@ function InitialiseScheduleSections()
             $(this).removeClass("btn-generic-pressed")
         });
         $(btn).on("click", function () {
-            DigitalSignageScheduleTimeCall(btn.id.replace("RaiseBtn", ""), "up")
+            CoreProcessorAjaxGETCall("DigitalSignage/ScheduleOffTime", [btn.id.replace("RaiseBtn", ""), "up"])
         });
     });
 
@@ -100,7 +104,7 @@ function InitialiseScheduleSections()
             $(this).removeClass("btn-generic-pressed")
         });
         $(btn).on("click", function () {
-            DigitalSignageScheduleTimeCall(btn.id.replace("LowerBtn", ""), "down")
+            CoreProcessorAjaxGETCall("DigitalSignage/ScheduleOffTime", [btn.id.replace("LowerBtn", ""), "down"])
         });
     });
 }

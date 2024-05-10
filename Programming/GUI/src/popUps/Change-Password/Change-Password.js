@@ -91,7 +91,9 @@ function InitializeChangePassPopUp()
 
     if(!formFilled) return
 
-    SendNewPassRequestCall(oldPassInputField.value, newPassInputField.value, newPassConfirmInputField.value)
+    ProcessNewPassResponse(
+      CoreProcessorAjaxGETCall("ChngePassRequest", [oldPassInputField.value, newPassInputField.value, newPassConfirmInputField.value])
+    )
   }
 }
 

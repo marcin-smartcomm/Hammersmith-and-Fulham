@@ -1,6 +1,7 @@
 function InitializeTVSp()
 {
-    GetAvailableFreeviewBoxesCall()
+    var result = CoreProcessorAjaxGETCall("FreeviewBoxes", [])
+    AddFreeviewBtnsTVPage(result)
 }
 
 function AddFreeviewBtnsTVPage(freeviewBoxes)
@@ -43,7 +44,7 @@ function InitializeTVPageBtns()
         btn.addEventListener('touchend', function(){
             PlayBtnClickSound()
             btn.classList.remove("btn-generic-pressed")
-            NewMenuItemSelectedCall(("Freeview "+btn.id.replace("freeviewBoxBtn", "")))
+            RoomProcessorAjaxGETCall("NewMenuItemSelected", [currentRoomInfo.roomID, ("Freeview "+btn.id.replace("freeviewBoxBtn", ""))])
         })
     });
 }

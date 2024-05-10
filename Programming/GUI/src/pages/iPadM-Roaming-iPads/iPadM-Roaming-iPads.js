@@ -24,7 +24,7 @@ function InitializeRoamingiPadSp()
         openPopUp("Change-Password")
     })
 
-    GetSlaveAssignedRoomsCall()
+    AddSlaveRoomsToName(CoreProcessorAjaxGETCall("SlaveRooms", []))
 }
 
 function AddSlaveRoomsToName(roomNames)

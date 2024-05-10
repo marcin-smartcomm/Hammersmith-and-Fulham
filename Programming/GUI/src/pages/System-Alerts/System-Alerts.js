@@ -2,7 +2,15 @@ let systemAlertsInitialized = false;
 
 function InitializeSystemAlertsSp()
 {
-    GetSystemAlertsCall()
+    ProcessSystemAlertsResponse(CoreProcessorAjaxGETCall("SystemAlerts", []))
+}
+
+function ProcessSystemAlertsResponse(result)
+{
+    ProcessSystemAlertsEntries(result)
+
+    //Side-Menu.js
+    ProcessSystemAlertsData(result)
 }
 
 function ProcessSystemAlertsEntries(allEntries)
@@ -40,6 +48,13 @@ function ProcessSystemAlertsEntries(allEntries)
 
     for(let i = 0; i < allEntries.cardList.length; i++)
         AddSystemAlertEntry(allEntries.cardList[i])
+}
+
+function ClearSystemAlertsCall()
+{
+    var result = CoreProcessorAjaxGETCall("ClearSystemAlerts")
+    if(result.alertsCleared == "true")
+        ClearSystemAlertsEntries()
 }
 
 function AddSystemAlertEntry(entryData)

@@ -21,7 +21,7 @@ function InitializeFreeviewKeypadSp(freeviewID)
         }, {passive: "true"})
         btn.addEventListener("touchend", function() {
             btn.classList.remove("btn-generic-pressed")
-            FreeviewBtnPressCall(freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", ""));
+            CoreProcessorAjaxGETCall("FreeviewBtnPress", [freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", "")])
         })
     }
 }

@@ -1,7 +1,7 @@
 function InitializeScreenSaverVariables()
 {
     let fireAlarmPoll = setInterval(() => {
-        GetFireAlarmStateCall()
+        CheckFireAlarm()
     }, 5000);
 
     document.getElementById('screenSaver').addEventListener('touchend', function() {

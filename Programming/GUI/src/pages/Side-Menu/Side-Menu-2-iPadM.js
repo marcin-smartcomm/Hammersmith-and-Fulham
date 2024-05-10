@@ -79,9 +79,7 @@ function ActivateiPadMMainSideMenu()
         PlayBtnClickSound()
         volBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Volume")
-        ActivateSideMenuBtns()
-        GetSliderLevelCall(currentRoomInfo.roomID, 'vol')
-        GetMuteStateCall(currentRoomInfo.roomID, 'vol')
+        UpdateAudioData("vol")
     })
 
     micBtn.addEventListener("touchstart", function(){
@@ -91,9 +89,7 @@ function ActivateiPadMMainSideMenu()
         PlayBtnClickSound()
         micBtn.classList.remove('btn-generic-pressed')
         LoadSideMenu("Mic")
-        ActivateSideMenuBtns()
-        GetSliderLevelCall(currentRoomInfo.roomID, 'mic')
-        GetMuteStateCall(currentRoomInfo.roomID, 'mic')
+        UpdateAudioData("mic")
     })
 
     shutdownBtn.addEventListener("touchstart", function(){
@@ -108,8 +104,8 @@ function ActivateiPadMMainSideMenu()
     roomName.innerHTML = currentRoomInfo.roomName
 
     GetBookingsInfoCall(currentRoomInfo.roomID)
-    GetAssistanceRequestsCall()
-    GetSystemAlertsCall()
+    ProcessAssistanceRequests(CoreProcessorAjaxGETCall("RoomAssistanceRequests", []))
+    ProcessSystemAlertsResponse(CoreProcessorAjaxGETCall("SystemAlerts", []))
 }
 function ActivateiPadMSettingsSideMenu()
 {

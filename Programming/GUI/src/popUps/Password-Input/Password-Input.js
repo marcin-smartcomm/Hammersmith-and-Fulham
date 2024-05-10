@@ -22,7 +22,9 @@ function InitalizePasswordInputPopUp()
         {
             let pass = inputField.value;
             console.log("pass: " + pass)
-            CheckIfPassCorrectCall(pass)
+            ProcessPasswordCheckResult(
+                CoreProcessorAjaxGETCall("SlaveiPadPassCheck", [pass])
+            )
         }
     })
 }

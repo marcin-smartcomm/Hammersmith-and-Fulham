@@ -1,6 +1,8 @@
 function InitializeGlobalTempSp()
 {
-  GetGlobalTempCall()
+  UpdateMasterTemp(
+    CoreProcessorAjaxGETCall("GetMasterTemp", [])
+  )
 
     $("#temperatureRaiseBtn").on("touchstart", function () {
       $(this).addClass("btn-generic-pressed")
@@ -8,7 +10,9 @@ function InitializeGlobalTempSp()
     $("#temperatureRaiseBtn").on("touchend", function () {
       $(this).removeClass("btn-generic-pressed")
       PlayBtnClickSound()
-      ChangeGlobalTempCall("Up")
+      UpdateMasterTemp(
+        CoreProcessorAjaxGETCall("SetMasterTemp", ["Up"])
+      )
     });
 
     $("#temperatureLowerBtn").on("touchstart", function () {
@@ -17,12 +21,14 @@ function InitializeGlobalTempSp()
     $("#temperatureLowerBtn").on("touchend", function () {
       $(this).removeClass("btn-generic-pressed")
       PlayBtnClickSound()
-      ChangeGlobalTempCall("Down")
+      UpdateMasterTemp(
+        CoreProcessorAjaxGETCall("SetMasterTemp", ["Down"])
+      )
     });
 }
 
 function UpdateMasterTemp(newTemp)
 {
   if(currentSubpage == "iPadM-Global-Temp")
-    $("#masterTargetTempValue").text(newTemp);
+    $("#masterTargetTempValue").text(newTemp.globalTemp);
 }

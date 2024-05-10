@@ -1,7 +1,9 @@
 function InitalizeTemperatureControlSp()
 {
     InitializeTemperatureControlBtns()
-    GetRoomTemperatureDataCall(currentRoomInfo.roomID)
+    PopulateTemperatureControlSp(
+        RoomProcessorAjaxGETCall("RoomTemperatures", [currentRoomInfo.roomID])
+    )
 }
 
 function InitializeTemperatureControlBtns()
@@ -15,7 +17,9 @@ function InitializeTemperatureControlBtns()
     raiseBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         raiseBtn.classList.remove('btn-generic-pressed')
-        ChangeTempCall(currentRoomInfo.roomID, "Up")
+        UpdateCurrentSetpoint(
+            RoomProcessorAjaxGETCall("ChangeTemp", [currentRoomInfo.roomID, "Up"])
+        )
     })
 
     lowerBtn.addEventListener('touchstart', function(){
@@ -24,11 +28,13 @@ function InitializeTemperatureControlBtns()
     lowerBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         lowerBtn.classList.remove('btn-generic-pressed')
-        ChangeTempCall(currentRoomInfo.roomID, "Down")
+        UpdateCurrentSetpoint(
+            RoomProcessorAjaxGETCall("ChangeTemp", [currentRoomInfo.roomID, "Down"])
+        )
     })
 }
 
-function populateTemperatureControlSp(climateData)
+function PopulateTemperatureControlSp(climateData)
 {
     if(currentSubpage == "Temperature-Control")
     {
@@ -42,7 +48,7 @@ function populateTemperatureControlSp(climateData)
     }
 }
 
-function updateCurrentSetpoint(climateData)
+function UpdateCurrentSetpoint(climateData)
 {
     if(!climateData.setpoint.toString().includes("."))
         climateData.setpoint = `${climateData.setpoint}.0`

@@ -2,7 +2,15 @@ let adminAssistanceInitialized = false;
 
 function InitializeAdminAssistanceSp()
 {
-    GetAssistanceRequestsCall()
+    ProcessAssistanceRequests(CoreProcessorAjaxGETCall("RoomAssistanceRequests", []))
+}
+
+function ProcessAssistanceRequests(result)
+{
+    ProcessAdminAssistanceEntries(result)
+ 
+    //Side-Menu.js
+    ProcessAdminAssistanceData(result)
 }
 
 function ProcessAdminAssistanceEntries(allEntries)
@@ -38,6 +46,20 @@ function ProcessAdminAssistanceEntries(allEntries)
 
     for(let i = 0; i < allEntries.cards.length; i++)
         AddAssistanceEntry(allEntries.cards[i], i)
+}
+
+function ClearAssistanceRequestsCall()
+{
+    var result = CoreProcessorAjaxGETCall("ClearAssistanceRequests", [])
+
+    if(result.allRequestsAck == "true")
+    {
+        if(document.getElementById("adminAssistanceEntriesSection") !== null)
+            document.getElementById("adminAssistanceEntriesSection").innerHTML = ""
+        ProcessAssistanceRequests(CoreProcessorAjaxGETCall("RoomAssistanceRequests", []))
+    }
+
+    if(result.allRequestsAck == "False") openPopUp("Acknowledge-requests")
 }
 
 function AddAssistanceEntry(entryData, id)
@@ -91,7 +113,7 @@ function AddAssistanceEntry(entryData, id)
             checkbox.checked = true
             checkbox.disabled = true
             roomName.style.color = "var(--generic-text-color-inactive)"
-            AcknowledgeAssistanceRequestCall(entryData.requestID)
+            CoreProcessorAjaxGETCall("AcknowledgeAssistanceRequest", [entryData.requestID])
         }
     })
 

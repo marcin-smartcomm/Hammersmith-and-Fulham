@@ -46,7 +46,7 @@ function ActivateRoomSelectPortableBtns(portableEquipmentToChange)
         })
         roomBtn.addEventListener("click", function(){
             roomBtn.classList.remove("btn-generic-pressed")
-            ChangePortableEquipmentAssignmentCall(portableEquipmentToChange, roomBtn.id.split(':')[0], roomBtn.id.split(':')[1])
+            CoreProcessorAjaxGETCall("ChangePortableEquipmentAssignment", [portableEquipmentToChange, roomBtn.id.split(':')[0], roomBtn.id.split(':')[1]]);
             openSubpage("iPadM-Portable-Equipment", "Portable Equipment", "fa-solid fa-tv")
         })
     });

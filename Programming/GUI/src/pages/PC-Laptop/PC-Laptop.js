@@ -2,7 +2,9 @@ function InitializePCLaptopSp(pageName, pageIcon)
 {
     $('#sourceName').text(pageName)
     InitializePCLaptopBtns(pageName, pageIcon)
-    GetCamerasCall(currentRoomInfo.roomID)
+    DeterminePTZControlBtnFunctionality(
+        RoomProcessorAjaxGETCall("GetCameras", [currentRoomInfo.roomID])
+    )
 }
 
 function InitializePCLaptopBtns(pageName, pageIcon)

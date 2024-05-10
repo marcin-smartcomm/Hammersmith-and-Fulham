@@ -16,9 +16,7 @@ function ActivateiPadSMainSideMenu()
       PlayBtnClickSound()
       volBtn.classList.remove('btn-generic-pressed')
       LoadSideMenu("Volume")
-      ActivateSideMenuBtns()
-      GetSliderLevelCall(currentRoomInfo.roomID, 'vol')
-      GetMuteStateCall(currentRoomInfo.roomID, 'vol')
+      UpdateAudioData("vol")
   })
 
   micBtn.addEventListener("touchstart", function(){
@@ -28,9 +26,7 @@ function ActivateiPadSMainSideMenu()
       PlayBtnClickSound()
       micBtn.classList.remove('btn-generic-pressed')
       LoadSideMenu("Mic")
-      ActivateSideMenuBtns()
-      GetSliderLevelCall(currentRoomInfo.roomID, 'mic')
-      GetMuteStateCall(currentRoomInfo.roomID, 'mic')
+      UpdateAudioData("mic")
   })
 
   settingsBtn.addEventListener("touchstart", function(){

@@ -215,7 +215,7 @@ namespace H_and_F_Core
             {
                 File.Delete(_absolutePath + "DigitalSignage/zoneAssignment.json");
                 File.WriteAllText(
-                    _absolutePath + "zoneAssignment.json",
+                    _absolutePath + "DigitalSignage/zoneAssignment.json",
                     JsonConvert.SerializeObject(signageZones, Formatting.Indented, _serializerSettings)
                     );
                 return true;

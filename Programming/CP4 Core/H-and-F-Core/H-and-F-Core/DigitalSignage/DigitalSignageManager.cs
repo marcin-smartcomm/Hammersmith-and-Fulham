@@ -46,14 +46,14 @@ namespace H_and_F_Core
 
         static void SignagePlayersHTTPPost(List<string> IPs, string rs232Command)
         {
-            Task.Run(() =>
+            foreach (var ip in IPs)
             {
-                foreach (var ip in IPs)
+                Task.Run(() =>
                 {
                     ConsoleLogger.WriteLine("Sending Command to: " + ip + " || Action: " + rs232Command);
                     ntbPost.SendCommand(ip, rs232Command);
-                }
-            });
+                });
+            }
         }
 
         public static async void ScheduleTimeUp(int zoneID)

@@ -33,7 +33,7 @@ function InitializeFreeviewMainSp(freeviewID)
             }, {passive: "true"})
             btn.addEventListener("touchend", function() {
                 btn.classList.remove("freeview-main-btn-keypad-pressed")
-                FreeviewBtnPressCall(freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", ""));
+                CoreProcessorAjaxGETCall("FreeviewBtnPress", [freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", "")])
             })
         }
         else
@@ -43,7 +43,7 @@ function InitializeFreeviewMainSp(freeviewID)
             }, {passive: "true"})
             btn.addEventListener("touchend", function() {
                 btn.classList.remove("btn-generic-pressed")
-                FreeviewBtnPressCall(freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", ""));
+                CoreProcessorAjaxGETCall("FreeviewBtnPress", [freeviewID.replace("freeviewBtn", ""), btn.id.replace("freeviewCtrlBtn", "")])
             })
         }
     }
@@ -75,7 +75,8 @@ function InitializeBoxNameChange(freeviewID)
             pageName.style.width = "70%"
             pageName.innerHTML = `TV: Saving ...`
 
-            ChangeFreeviewNameCall(freeviewID.replace("freeviewBtn", ""), newName)
+            var result = CoreProcessorAjaxGETCall("NewFreeviewName", [freeviewID.replace("freeviewBtn", ""), newName])
+            document.getElementById("pageTopName").innerHTML = `TV: ${result.newFreeviewName.split('-')[1]}`
         }
     })
 }

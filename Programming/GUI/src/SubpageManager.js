@@ -5,31 +5,110 @@ let sideMenuCurrentlyDisplayed;
 let fireAlarm = false;
 let currentTimeoutValue;
 
+function PanelBoot()
+{
+    if(panelType == "TSW")
+    {
+        currentTimeoutValue = 5
+        CrComLib.publishEvent('n', 17203, currentTimeoutValue);
+        OldTimeoutValue = currentTimeoutValue;
+        
+        resetTimer();
+        CheckFireAlarm()
+        openSubpage("Screensaver");
+    }
+    else ConnectToSystem();
+}
+function CheckFireAlarm()
+{
+    var result = RoomProcessorAjaxGETCall("FireAlarmState", [])
+    if(result.fireAlarmState == "True") ProcessFireAlarmState("1")
+    if(result.fireAlarmState == "False") ProcessFireAlarmState("0")
+}
+
 function ConnectToSystem(){
     if(panelType == "TSW")
     {
-        getRoomDataCall("999")
-        setTimeout(() => {
-            InitializeHomeScreen()
-            CheckRoomMasterCall(currentRoomInfo.roomID)
-            GetCurrentDivisionScenarioCall()
-            GetLightingProcessorInfoCall(currentRoomInfo.roomID)
-        }, 1000);
+        if(ConnectToRoom("999"))
+        {
+            CheckAssistanceState()
+            setTimeout(() => {
+                InitializeHomeScreen()
+                CheckRoomMasterState(currentRoomInfo.roomID)
+                GetCurrentDivisionScenario()
+                GetLightingProcessorInfo(currentRoomInfo.roomID)
+            }, 1000);
+        }
+        else 
+            location.reload()
     }
     if(panelType == "iPadM")
     {
-        getRoomAssignedCall()
+        var result = CoreProcessorAjaxGETCall("RoomData", []);
+        if(result == "NotDefined")
+        {
+            LoadSideMenu("FloorList")
+            ActivateSideMenuBtns()
+        }
+        else
+        {
+            serverIP = result.connectedRoomProcessorIP;
+            if(currentRoomInfo != null) DisconnectFromEvents()
+            RoamingDeviceConnectToRoom(result.roomID)
+            GetLightingProcessorInfo(result.roomID)
+        }
         SubscribeToCoreEvents()
     }
     if(panelType == "iPadS")
     {
-        getRoomDataCall(roomAssigned)
+        RoamingDeviceConnectToRoom(roomAssigned)
         setTimeout(() => {
-            InitializeHomeScreen()
-            CheckRoomMasterCall(currentRoomInfo.roomID)
-            GetLightingProcessorInfoCall(currentRoomInfo.roomID)
+            CheckRoomMasterState(currentRoomInfo.roomID)
+            GetLightingProcessorInfo(currentRoomInfo.roomID)
         }, 1000);
     }
+}
+
+function RoamingDeviceConnectToRoom(roomID)
+{
+    if(ConnectToRoom(roomID))
+    {
+        ClearConnectingPopUp()
+        InitializeHomeScreen()
+    }
+    else HandleFailedRoomConnectionAttempt()
+}
+function ConnectToRoom(roomID)
+{
+    if(RoomProcessorAjaxGETCall("RoomData", [roomID]) == "Error") return false;
+    else
+    {
+        currentRoomInfo = RoomProcessorAjaxGETCall("RoomData", [roomID]);
+        if(eventStreamSource.readyState != 1)
+            SubscribeToRoomEvents(currentRoomInfo.roomID);
+
+        return true;
+    }
+}
+function HandleFailedRoomConnectionAttempt()
+{
+    ClearConnectingPopUp()
+    LoadSideMenu("FloorList")
+    ActivateSideMenuBtns()
+    document.getElementById("backBtn").remove()
+    setTimeout(() => {
+        alert(`Can not communicate with ${serverIP}`);
+    }, 250);
+}
+function CheckAssistanceState()
+{
+    var response = CoreProcessorAjaxGETCall("RoomAssistanceState", [currentRoomInfo.floor, currentRoomInfo.roomName])
+    ProcessAssistanceRequestState(response)
+}
+function ClearConnectingPopUp()
+{
+    if(document.getElementById("connectingPopUp") != null)
+        $("#connectingPopUp").remove();
 }
 
 let time;
@@ -50,24 +129,6 @@ function logout() {
 function resetTimer() {
     clearTimeout(time);
     time = setTimeout(logout, (currentTimeoutValue*60*1000)-1000)
-}
-
-function PanelBoot()
-{
-    if(panelType == "TSW")
-    {
-        currentTimeoutValue = 5
-        CrComLib.publishEvent('n', 17203, currentTimeoutValue);
-        OldTimeoutValue = currentTimeoutValue;
-        
-        resetTimer();
-        GetFireAlarmStateCall()
-        openSubpage("Screensaver");
-    }
-    else
-    {
-        ConnectToSystem();
-    }
 }
 
 function InitializeHomeScreen()
@@ -336,7 +397,17 @@ function InitializeTemplatePageBts()
         if(assistanceRequired == "false") assistanceBtn.classList.remove('btn-generic-pressed')
         if(assistanceRequired == "false") 
         {
-            SendAssistanceCall(currentRoomInfo.floor, currentRoomInfo.roomName);
+            var result = CoreProcessorAjaxGETCall("AssistanceRequest", [currentRoomInfo.floor, currentRoomInfo.roomName])
+            if(result == "Error") openPopUp("Assistance-Request-Failed")
+            else if(result.roomAssistanceCall == "true")
+            {
+                assistanceRequired = "true"
+            
+                //SubpageManager.js
+                ProcessAssitanceState()
+                StartAssistancePoll()
+            }
+            else openPopUp("Assistance-Coming")
         }
     })
 

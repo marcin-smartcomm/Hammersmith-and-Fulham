@@ -93,7 +93,7 @@ namespace H_and_F_Core
         {
             cone = new CrestronOne(ipId, this);
             // This must match project name on control system exactly
-            cone.ParameterProjectName.Value = "H-and-F-Main-GUI";
+            cone.ParameterProjectName.Value = "H-and-F-iPad-GUI";
 
 
 

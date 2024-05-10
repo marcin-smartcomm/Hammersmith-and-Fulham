@@ -319,7 +319,7 @@ function FillOutMeetingInfoPopUp(meetingInfo)
     closeBtn.addEventListener('touchstart', function() {
         closeBtn.classList.add('selected-grey-block')
     }, {passive: "true"})
-    closeBtn.addEventListener('touchend', function() {
+    closeBtn.addEventListener('click', function() {
         closeBtn.classList.remove('selected-grey-block')
         timelineInitialized = false;
         PlayBtnClickSound()
@@ -376,7 +376,7 @@ function FillOutNewMeetingPopUp(meetingInfo)
     closeBtn.addEventListener('touchstart', function() {
         closeBtn.classList.add('selected-grey-block')
     }, {passive: "true"})
-    closeBtn.addEventListener('touchend', function() {
+    closeBtn.addEventListener('click', function() {
         closeBtn.classList.remove('selected-grey-block')
         timelineInitialized = false;
         PlayBtnClickSound()
@@ -443,7 +443,7 @@ function FillOutEndMeetingPopUp(endTime)
     closeBtn.addEventListener('touchstart', function() {
         closeBtn.classList.add('selected-grey-block')
     }, {passive: "true"})
-    closeBtn.addEventListener('touchend', function() {
+    closeBtn.addEventListener('click', function() {
         PlayBtnClickSound()
         closeBtn.classList.remove('selected-grey-block')
         timelineInitialized = false;
@@ -492,7 +492,7 @@ function FillOutExtendMeetingPopUp(endAndExtendTimes)
     closeBtn.addEventListener('touchstart', function() {
         closeBtn.classList.add('selected-grey-block')
     }, {passive: "true"})
-    closeBtn.addEventListener('touchend', function() {
+    closeBtn.addEventListener('click', function() {
         closeBtn.classList.remove('selected-grey-block')
         timelineInitialized = false;
         openSubpage("Scheduling-Page")

@@ -96,30 +96,30 @@ function ActivateVolSideMenu()
     volUpBtn.addEventListener("touchstart", function(){
         PlayBtnClickSound()
         volUpBtn.classList.add('btn-generic-pressed')
-        VolChangeCall(currentRoomInfo.roomID, "up", true)
+        RoomProcessorAjaxGETCall("ChangeVolumeLevel", [currentRoomInfo.roomID, "up", true])
     }, { passive: "true" })
     volUpBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volUpBtn.classList.remove('btn-generic-pressed')
-        VolChangeCall(currentRoomInfo.roomID, "up", false)
+        RoomProcessorAjaxGETCall("ChangeVolumeLevel", [currentRoomInfo.roomID, "up", false])
     })
 
     volDownBtn.addEventListener("touchstart", function(){
         PlayBtnClickSound()
         volDownBtn.classList.add('btn-generic-pressed')
-        VolChangeCall(currentRoomInfo.roomID, "down", true)
+        RoomProcessorAjaxGETCall("ChangeVolumeLevel", [currentRoomInfo.roomID, "down", true])
     }, { passive: "true" })
     volDownBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volDownBtn.classList.remove('btn-generic-pressed')
-        VolChangeCall(currentRoomInfo.roomID, "down", false)
+        RoomProcessorAjaxGETCall("ChangeVolumeLevel", [currentRoomInfo.roomID, "down", false])
     })
 
     volMuteBtn.addEventListener("touchstart", function(){
     }, { passive: "true" })
     volMuteBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
-        MuteVolCall(currentRoomInfo.roomID)
+        RoomProcessorAjaxGETCall("MuteVolume", [currentRoomInfo.roomID])
     })
 
     volSlider.disabled = true;
@@ -171,30 +171,30 @@ function ActivateMicSideMenu()
     volUpBtn.addEventListener("touchstart", function(){
         PlayBtnClickSound()
         volUpBtn.classList.add('btn-generic-pressed')
-        MicChangeCall(currentRoomInfo.roomID, "up", true)
+        RoomProcessorAjaxGETCall("ChangeMicLevel", [currentRoomInfo.roomID, "up", true])
     }, { passive: "true" })
     volUpBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volUpBtn.classList.remove('btn-generic-pressed')
-        MicChangeCall(currentRoomInfo.roomID, "up", false)
+        RoomProcessorAjaxGETCall("ChangeMicLevel", [currentRoomInfo.roomID, "up", false])
     })
 
     volDownBtn.addEventListener("touchstart", function(){
         PlayBtnClickSound()
         volDownBtn.classList.add('btn-generic-pressed')
-        MicChangeCall(currentRoomInfo.roomID, "down", true)
+        RoomProcessorAjaxGETCall("ChangeMicLevel", [currentRoomInfo.roomID, "down", true])
     }, { passive: "true" })
     volDownBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         volDownBtn.classList.remove('btn-generic-pressed')
-        MicChangeCall(currentRoomInfo.roomID, "down", false)
+        RoomProcessorAjaxGETCall("ChangeMicLevel", [currentRoomInfo.roomID, "down", false])
     })
 
     volMuteBtn.addEventListener("touchstart", function(){
     }, { passive: "true" })
     volMuteBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
-        MuteMicCall(currentRoomInfo.roomID)
+        RoomProcessorAjaxGETCall("MuteMic", [currentRoomInfo.roomID])
     })
 
     volSlider.disabled = true;
@@ -221,6 +221,18 @@ function UpdateMicMuteState(newState)
 
     if(newState) volMuteBtn.classList.add('btn-generic-pressed')
     if(!newState) volMuteBtn.classList.remove('btn-generic-pressed')
+}
+
+function UpdateAudioData(audioType)
+{
+    ActivateSideMenuBtns()
+    var result = RoomProcessorAjaxGETCall("GetSliderLevel", [currentRoomInfo.roomID, audioType])
+    if(audioType == 'vol') UpdateVolLevel(result.VolLevel)
+    if(audioType == 'mic') UpdateMicLevel(result.MicLevel)
+        
+    result = RoomProcessorAjaxGETCall("GetMuteState", [currentRoomInfo.roomID, audioType])
+    if(settingName == 'vol') UpdateVolMuteState((result.VolMuteState === 'True'))
+    if(settingName == 'mic') UpdateMicMuteState((result.MicMuteState === 'True'))
 }
 
 function ActivateHelpSideMenu()

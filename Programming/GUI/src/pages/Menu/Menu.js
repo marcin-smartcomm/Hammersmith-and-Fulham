@@ -1,8 +1,13 @@
 function IniitalizeMenuSp()
 {
     AddMenuBtns()
-    if(panelType == "iPadM") GetAvailableFreeviewBoxesCall()
-    GetCurrentSourceCall(currentRoomInfo.roomID, false)
+    if(panelType == "iPadM")
+    {
+        var result = CoreProcessorAjaxGETCall("FreeviewBoxes", [])
+        AddFreeviewBtns(result)
+    }
+    var result = RoomProcessorAjaxGETCall("GetCurrentSource", [currentRoomInfo.roomID])
+    HighlightCurrentlySelectedSource(result)
 }
 
 function AddMenuBtns()
@@ -65,7 +70,7 @@ function AddEventListeners()
             if(!menuItemsBlocked)
             {
                 openSubpage(currentRoomInfo.menuItems[i].menuItemPageAssigned, currentRoomInfo.menuItems[i].menuItemName, currentRoomInfo.menuItems[i].menuItemIcon)
-                NewMenuItemSelectedCall(currentRoomInfo.menuItems[i].menuItemName)
+                RoomProcessorAjaxGETCall("NewMenuItemSelected", [currentRoomInfo.roomID, currentRoomInfo.menuItems[i].menuItemName])
                 PlayBtnClickSound()
             }
         })
