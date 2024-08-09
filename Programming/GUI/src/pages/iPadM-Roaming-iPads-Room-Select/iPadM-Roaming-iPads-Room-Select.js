@@ -12,6 +12,9 @@ function InitializeRoomSelectRoamingiPadsSp(floor, slaveiPadID)
     }
     request.send(null)
     request.DONE;
+    
+    RoamingiPadAddReturnButton();
+    RoamingiPadInitializeReturnFromRoomSelectButton(slaveiPadID);
 }
 
 function FillRoomsAvailableSectioniPadM(roomsAvailable, slaveiPadID)
@@ -51,5 +54,19 @@ function ActivateRoomSelectRoamingBtns()
             if(result.request == "conplete")
                 openSubpage("iPadM-Roaming-iPads", "Roaming iPads", 'fa-solid fa-tablet-screen-button')
         })
+    });
+}
+
+function RoamingiPadInitializeReturnFromRoomSelectButton(slaveiPadID)
+{
+    $('#backBtn').on('touchstart', function () {
+        $(this).addClass('btn-generic-pressed')
+    });
+    $('#backBtn').on('touchend', function () {
+        $(this).removeClass('btn-generic-pressed')
+    });
+    $('#backBtn').on('click', function () {
+        PlayBtnClickSound()
+        openSubpage("iPadM-Roaming-iPads-Floor-Select", `Roaming iPads (${slaveiPadID})`, "fa-solid fa-tablet-screen-button", (slaveiPadID))
     });
 }

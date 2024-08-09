@@ -18,7 +18,7 @@ function CoreProcessorAjaxGETCall(endpoint, params)
     .done(function(response) {responseJSON = response})
     .fail(function(xhr, status, error) 
     {
-        alert(`Can not communicate with ${coreServerIP}`);
+        alert(`Unable to communicate with Core Processor (${coreServerIP})`);
         responseJSON = "Error"
     })
     

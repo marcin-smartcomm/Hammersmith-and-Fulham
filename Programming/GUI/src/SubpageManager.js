@@ -3,16 +3,11 @@ let currentSubpage;
 let sideMenuVis;
 let sideMenuCurrentlyDisplayed;
 let fireAlarm = false;
-let currentTimeoutValue;
 
 function PanelBoot()
 {
     if(panelType == "TSW")
     {
-        currentTimeoutValue = 5
-        CrComLib.publishEvent('n', 17203, currentTimeoutValue);
-        OldTimeoutValue = currentTimeoutValue;
-        
         resetTimer();
         CheckFireAlarm()
         openSubpage("Screensaver");
@@ -115,7 +110,7 @@ let time;
 
 document.addEventListener('touchstart', function(e)
 {
-    if(currentTimeoutValue > 0)
+    if(panelSettings.screenTimeout > 0)
         resetTimer();
 });
 function logout() {
@@ -128,7 +123,14 @@ function logout() {
 }
 function resetTimer() {
     clearTimeout(time);
-    time = setTimeout(logout, (currentTimeoutValue*60*1000)-1000)
+    try
+    {
+        time = setTimeout(logout, (panelSettings.screenTimeout*60*1000)-1000)
+    }
+    catch
+    {
+        time = setTimeout(logout, (5*60*1000)-1000)
+    }
 }
 
 function InitializeHomeScreen()
@@ -350,6 +352,8 @@ function FillTopOfTemplatePage(pageName, pageIcon)
     document.getElementById("pageTopName").innerHTML = pageName
 }
 
+let prevSubpage, prevPageName, prevIcon;
+
 function InitializeTemplatePageBts()
 {
     let menuBtn = document.getElementById("pageMenuBtn")
@@ -385,7 +389,19 @@ function InitializeTemplatePageBts()
     instructionBtn.addEventListener('touchend', function(){
         PlayBtnClickSound()
         instructionBtn.classList.remove('btn-generic-pressed')
-        LoadSideMenu("Help")
+
+        if(sideMenuCurrentlyDisplayed == "Help")
+        {
+            LoadSideMenu("Main")
+            openSubpage(prevSubpage, prevPageName, `${prevIcon[0]} ${prevIcon[1]}`)
+        }
+        else 
+        {
+            prevSubpage = currentSubpage
+            prevPageName = document.getElementById("pageTopName").innerHTML
+            prevIcon = document.getElementById("pageTopIcon").classList
+            LoadSideMenu("Help")
+        }
         ActivateSideMenuBtns()
     })
 

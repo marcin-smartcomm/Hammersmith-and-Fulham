@@ -51,6 +51,9 @@ function InitializeFreeviewMainSp(freeviewID)
 
 function InitializeBoxNameChange(freeviewID)
 {
+    if($('#freeviewMainPageInputField').length > 0)
+        $('#freeviewMainPageInputField').remove()
+
     let pageName = document.getElementById("pageTopName");
     pageName.innerHTML = "TV: ";
     pageName.style.width = "10%";

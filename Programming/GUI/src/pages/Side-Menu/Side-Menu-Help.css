@@ -27,7 +27,8 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            width: 60%;
+            width: 48%;
+            margin-right: 12%;
             font-size: 200%;
             color: var(--generic-text-color-inactive);
         }

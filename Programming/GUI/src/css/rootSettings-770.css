@@ -19,14 +19,18 @@
     --generic-border-color-active: rgb(152, 252, 85);
     --generic-text-color-inactive: white;
     --generic-text-color-active: black;
+    --generic-text-color-schedule-grey: rgb(173, 173, 173);
+    --generic-text-color-schedule-white: white;
+    --schedule-bg-color-grey: rgb(26,26,26);
+
+    /* SCHEDULING PAGE */
+    --bg-color-scheduling: grey;
 
     /* REST OF VARIABLES */
     --generic-border-color-grey: grey;
 
     --generic-text-color-schedule-green: rgb(128, 229, 128);
-    --generic-text-color-schedule-grey: rgb(173, 173, 173);
     --generic-text-color-schedule-red: rgb(230, 50, 80);
-    --generic-text-color-schedule-white: white;
     
     --generic-bg-color-schedule-white: 255,255,255;
     --generic-bg-color-schedule-black: 0,0,0;

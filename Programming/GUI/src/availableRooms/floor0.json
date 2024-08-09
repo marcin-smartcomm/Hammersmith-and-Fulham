@@ -8,7 +8,7 @@
             "isGroupable": true
         },
         {
-            "name": "Registar Waiting Room",
+            "name": "Registrar Waiting Room",
             "ipAddress": "192.168.1.250",
             "roomID": "2",
             "isGroupable": true

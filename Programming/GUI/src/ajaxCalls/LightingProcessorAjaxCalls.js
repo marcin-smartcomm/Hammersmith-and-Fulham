@@ -16,7 +16,7 @@ function LightingProcessorAjaxGETCall(endpoint, params)
     .done(function(response) {responseJSON = response})
     .fail(function(xhr, status, error) 
     {
-        console.log(xhr + "/" + status + "/" + error);
+        alert(`Unable to communicate with Lighting Processor (${lightingServerIP})`)
         responseJSON = "Error"
     })
     

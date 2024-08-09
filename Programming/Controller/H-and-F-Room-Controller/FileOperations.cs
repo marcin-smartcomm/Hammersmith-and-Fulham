@@ -24,7 +24,7 @@ namespace H_and_F_Room_Controller
             {
                 _RoomSettingsPath = "../user/RoomSettings";
                 _roomDirectoryPath = @"..\user\RoomSettings";
-                _RoomSettingsPath = "../user/";
+                _GlobalPath = "../user/";
             }
 
             _serializerSettings = new JsonSerializerSettings();

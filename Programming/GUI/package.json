@@ -6,8 +6,8 @@
   "scripts": {
     "webserver": "./node_modules/.bin/ws --directory src --port 8888 --static.maxage 1",
     "build:archive": "ch5-cli archive -p WSCH5P -d src -o .",
-    "build:deploy": "ch5-cli deploy -H 192.168.1.131 -p -t touchscreen H-and-F-Main-GUI.ch5z",
-    "build:deployweb": "ch5-cli deploy -H 192.168.1.241 -p -t web dist/prod/H-and-F-Main-GUI.ch5z",
+    "build:deploy": "ch5-cli deploy -H 192.168.1.131 -p -t touchscreen H-and-F-TSW-GUI.ch5z",
+    "build:deployweb": "ch5-cli deploy -H 192.168.1.241 -p -t web dist/prod/H-and-F-TSW-GUI.ch5z",
     "officeBuild:deploy": "ch5-cli deploy -H 10.10.100.250 -t touchscreen WSCH5P.ch5z"
   },
   "keywords": [],

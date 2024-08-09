@@ -37,7 +37,7 @@ function GetSmallHallDisplayControlOpitonCall()
 {
     $.ajax({
         type: "GET",
-        url: "http://192.168.1.241:50000/api/GetDisplayControlOption",
+        url: "http://13.41.46.89:50000/api/GetDisplayControlOption",
         dataType: "json",
         data: '1',
         success: function (result) {
@@ -55,7 +55,7 @@ function SetSmallHallDisplayControlOpitonCall(option)
 {
     $.ajax({
         type: "GET",
-        url: "http://192.168.1.241:50000/api/SetDisplayControlOption",
+        url: "http://13.41.46.89:50000/api/SetDisplayControlOption",
         dataType: "json",
         data: `1` + `:` + option,
         success: function (result) {

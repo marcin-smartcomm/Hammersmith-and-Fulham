@@ -57,8 +57,10 @@ function InitialisePowerSections()
         });
         $(btn).on("click", function () {
             if(!$(this).hasClass("processing") && !$(`#OffBtn${i+1}`).hasClass("processing"))
-            CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OnBtn", ""), "On"])
-            BlinkDigitalSignagePwrBtn(btn.id.replace("OnBtn", ""), "On")
+            {
+                CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OnBtn", ""), "On"])
+                BlinkDigitalSignagePwrBtn(btn.id.replace("OnBtn", ""), "On")
+            }
         });
     });
 
@@ -73,8 +75,10 @@ function InitialisePowerSections()
         });
         $(btn).on("click", function () {
             if(!$(this).hasClass("processing") && !$(`#OnBtn${i+1}`).hasClass("processing"))
-            CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OffBtn", ""), "Off"])
-            BlinkDigitalSignagePwrBtn(btn.id.replace("OffBtn", ""), "Off")
+            {
+                CoreProcessorAjaxGETCall("DigitalSignage/Power", [btn.id.replace("OffBtn", ""), "Off"])
+                BlinkDigitalSignagePwrBtn(btn.id.replace("OffBtn", ""), "Off")
+            }
         });
     });
 }

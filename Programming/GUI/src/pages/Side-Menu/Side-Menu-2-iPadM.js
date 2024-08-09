@@ -116,7 +116,6 @@ function ActivateiPadMSettingsSideMenu()
     let digitalSignageBtn = document.getElementById("settingsOptionBtn4")
     let combineRoomsBtn = document.getElementById("settingsOptionBtn5")
     let lightModeBtn = document.getElementById("settingsOptionBtn6")
-    let lightModeStateText = document.getElementById("lightModeStateText")
     let screenControlBtn = document.getElementById("settingsOptionBtn7")
 
     let sideMenuCloseBtn = document.getElementById("sideMenuSettingsCloseBtn")
@@ -173,23 +172,20 @@ function ActivateiPadMSettingsSideMenu()
     lightModeBtn.addEventListener("click", function() {
         lightModeBtn.classList.add('btn-generic-pressed')
         PlayBtnClickSound()
-        if(inLightMode)
+        
+        if(currentlySelectedTheme == "light") 
         {
-            ChangeToOriginalTheme()
-            inLightMode = false;
-            lightModeStateText.innerHTML = "Off"
+            ChangeToOriginalTheme();
+            LightModeTextChange(lightModeBtn, "Light")
         }
-        else
+        else if (currentlySelectedTheme == "dark")
         {
-            ChangeToLightMode()
-            inLightMode = true;
-            lightModeStateText.innerHTML = "On"
+            ChangeToLightMode();
+            LightModeTextChange(lightModeBtn, "Dark")
         }
+
         lightModeBtn.classList.remove('btn-generic-pressed')
     })
-
-    if(inLightMode) lightModeStateText.innerHTML = "On"
-    else lightModeStateText.innerHTML = "Off"
 
     sideMenuCloseBtn.addEventListener("touchstart", function(){
         sideMenuCloseBtn.classList.add('btn-generic-pressed')

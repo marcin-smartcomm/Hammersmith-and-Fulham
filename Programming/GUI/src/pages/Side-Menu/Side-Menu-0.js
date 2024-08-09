@@ -231,26 +231,26 @@ function UpdateAudioData(audioType)
     if(audioType == 'mic') UpdateMicLevel(result.MicLevel)
         
     result = RoomProcessorAjaxGETCall("GetMuteState", [currentRoomInfo.roomID, audioType])
-    if(settingName == 'vol') UpdateVolMuteState((result.VolMuteState === 'True'))
-    if(settingName == 'mic') UpdateMicMuteState((result.MicMuteState === 'True'))
+    if(audioType == 'vol') UpdateVolMuteState((result.VolMuteState === 'True'))
+    if(audioType == 'mic') UpdateMicMuteState((result.MicMuteState === 'True'))
 }
 
 function ActivateHelpSideMenu()
 {
     InitializeTSWHelpSideMenu()
     
-    let sideMenuCloseBtn = document.getElementById("sideMenuHelpCloseBtn")
+    // let sideMenuCloseBtn = document.getElementById("sideMenuHelpCloseBtn")
 
-    sideMenuCloseBtn.addEventListener("touchstart", function(){
-        sideMenuCloseBtn.classList.add('btn-generic-pressed')
-    }, { passive: "true" })
-    sideMenuCloseBtn.addEventListener('touchend', function(){
-        PlayBtnClickSound()
-        sideMenuCloseBtn.classList.remove('btn-generic-pressed')
-        LoadSideMenu("Main")
-        if(panelType == "TSW") ActivateTSWMainSideMenu()
-        if(panelType == "iPadS") ActivateiPadSMainSideMenu()
-    })
+    // sideMenuCloseBtn.addEventListener("touchstart", function(){
+    //     sideMenuCloseBtn.classList.add('btn-generic-pressed')
+    // }, { passive: "true" })
+    // sideMenuCloseBtn.addEventListener('touchend', function(){
+    //     PlayBtnClickSound()
+    //     sideMenuCloseBtn.classList.remove('btn-generic-pressed')
+    //     LoadSideMenu("Main")
+    //     if(panelType == "TSW") ActivateTSWMainSideMenu()
+    //     if(panelType == "iPadS") ActivateiPadSMainSideMenu()
+    // })
 }
 
 function ActivateSideMenuHelpBtns(btns)
@@ -357,7 +357,6 @@ function ActivateSettingsSideMenu()
 {
     let panelSettingsBtn = document.getElementById("settingsOptionBtn0")
     let lightModeBtn = document.getElementById("settingsOptionBtn1")
-    let lightModeStateText = document.getElementById("lightModeStateText")
     let sideMenuCloseBtn = document.getElementById("sideMenuSettingsCloseBtn")
 
     panelSettingsBtn.addEventListener("touchstart", function(){
@@ -370,6 +369,10 @@ function ActivateSettingsSideMenu()
         UpdateSettingsFb(panelSettingsBtn.id);
     })
 
+    if(currentlySelectedTheme == "light") 
+        LightModeTextChange(lightModeBtn, "Dark")
+    else LightModeTextChange(lightModeBtn, "Light")
+
     lightModeBtn.addEventListener("touchstart", function(){
         lightModeBtn.classList.add('btn-generic-pressed')
     }, { passive: "true" })
@@ -377,24 +380,17 @@ function ActivateSettingsSideMenu()
         PlayBtnClickSound()
         lightModeBtn.classList.remove('btn-generic-pressed')
 
-        if(inLightMode)
+        if(currentlySelectedTheme == "light") 
         {
-            //SystemVariables.js
-            ChangeToOriginalTheme()
-            inLightMode = false;
-            lightModeStateText.innerHTML = "Off"
+            ChangeToOriginalTheme();
+            LightModeTextChange(lightModeBtn, "Light")
         }
-        else
+        else if (currentlySelectedTheme == "dark")
         {
-            //SystemVariables.js
-            ChangeToLightMode()
-            inLightMode = true;
-            lightModeStateText.innerHTML = "On"
+            ChangeToLightMode();
+            LightModeTextChange(lightModeBtn, "Dark")
         }
     })
-
-    if(inLightMode) lightModeStateText.innerHTML = "On"
-    else lightModeStateText.innerHTML = "Off"
 
     sideMenuCloseBtn.addEventListener("touchstart", function(){
         sideMenuCloseBtn.classList.add('btn-generic-pressed')
@@ -409,6 +405,11 @@ function ActivateSettingsSideMenu()
 
     if(currentSubpage.includes("Panel-Settings")) 
         panelSettingsBtn.classList.add("btn-generic-pressed")
+}
+
+function LightModeTextChange(lightModeBtn, newMode)
+{
+    lightModeBtn.innerHTML = `<div class="side-menu-settings-light-mode-btn-text centered centered-bottom-5">${newMode} Mode</div>`
 }
 
 function ActivateFloorListSideMenu()

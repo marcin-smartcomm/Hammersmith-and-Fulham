@@ -9,14 +9,14 @@ namespace H_and_F_Room_Controller
 {
     public class SSE_Server
     {
-        ControlSystem cs;
+        ControlSystem _cs;
         public List<Tuple<uint, HttpListenerContext, string>> _eventListeners;
 
         public SSE_Server(ControlSystem cs)
         {
             try
             {
-                this.cs = cs;
+                this._cs = cs;
                 _eventListeners = new List<Tuple<uint, HttpListenerContext, string>>();
                 EventListenerAsync();
             }
@@ -66,7 +66,7 @@ namespace H_and_F_Room_Controller
                     ConsoleLogger.WriteLine("_eventListener IP: " + entry.Item3 + " || disconnect request IP: " + IPAddress + " --DELETING--");
                     _eventListeners.Remove(entry);
                     DisconnectFromStream(IPAddress);
-                    if (_eventListeners.Count == 0) cs.refreshCalendarAfterMinutes = 5;
+                    if (_eventListeners.Count == 0) _cs.refreshCalendarAfterMinutes = 5;
                     break;
                 }
                 else
@@ -147,7 +147,7 @@ namespace H_and_F_Room_Controller
 
                 _eventListeners.Add(new Tuple<uint, HttpListenerContext, string>(roomID, context, IP));
 
-                if (_eventListeners.Count == 1) cs.GetCalendarBookings();
+                if (_eventListeners.Count == 1) _cs.GetCalendarBookings();
                 if (_eventListeners.Count > 1) CheckForDuplicates();
 
                 ConsoleLogger.WriteLine(_eventListeners.Count + " Event Listeners: ");

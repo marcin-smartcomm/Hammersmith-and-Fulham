@@ -61,12 +61,14 @@ function ActivateTSWMainSideMenu()
 
 function InitializeTSWHelpSideMenu()
 {
+    document.getElementById('instructionBtn').innerHTML = `<i class="fa-solid fa-chevron-left"></i><div class="centered-bottom">&nbsp;BACK TO CONTROL</div>`;
+
     if(document.querySelectorAll(".side-menu-help-option-btn").length > 0)
     {
         ActivateSideMenuHelpBtns(document.querySelectorAll(".side-menu-help-option-btn"))
         return;
     }
-
+    
     for(let i = 0; i < currentRoomInfo.menuItems.length; i++)
     {
         if(currentRoomInfo.menuItems[i].menuItemName.includes("HDMI Input")) continue

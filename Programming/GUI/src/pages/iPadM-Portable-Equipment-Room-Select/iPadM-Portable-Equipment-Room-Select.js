@@ -12,6 +12,9 @@ function InitializePortableEquipmentRoomSelectSp(floor, portableEquipmentToChang
     }
     request.send(null)
     request.DONE;
+
+    PortableEquipmentAddReturnButton();
+    PortableEquipmentInitializeReturnFromRoomSelectButton(portableEquipmentToChange)
 }
 
 function FillRoomsAvailableSectionPE(roomsAvailable, portableEquipmentToChange)
@@ -49,5 +52,22 @@ function ActivateRoomSelectPortableBtns(portableEquipmentToChange)
             CoreProcessorAjaxGETCall("ChangePortableEquipmentAssignment", [portableEquipmentToChange, roomBtn.id.split(':')[0], roomBtn.id.split(':')[1]]);
             openSubpage("iPadM-Portable-Equipment", "Portable Equipment", "fa-solid fa-tv")
         })
+    });
+}
+
+function PortableEquipmentInitializeReturnFromRoomSelectButton(portableEquipmentToChange)
+{
+    $('#backBtn').on('touchstart', function () {
+        $(this).addClass('btn-generic-pressed')
+    });
+    $('#backBtn').on('touchend', function () {
+        $(this).removeClass('btn-generic-pressed')
+    });
+    $('#backBtn').on('click', function () {
+        PlayBtnClickSound()
+        if(portableEquipmentToChange == "All")
+            openSubpage("iPadM-Portable-Equipment-Floor-Select", `Portable Equipment`, "fa-solid fa-tv", portableEquipmentToChange)
+        else
+            openSubpage("iPadM-Portable-Equipment-Floor-Select", `PE - ${portableEquipmentToChange}`, "fa-solid fa-tv", portableEquipmentToChange)
     });
 }
